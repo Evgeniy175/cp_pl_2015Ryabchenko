@@ -1,6 +1,6 @@
 // by Evgeniy Ryabchenko
 
-// to do: добавь 
+// TODO: литералы заносить в таблицу лексем ; переименовать графы
 
 
 #include "stdafx.h"

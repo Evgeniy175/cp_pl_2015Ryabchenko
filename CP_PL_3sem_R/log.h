@@ -6,6 +6,7 @@
 #include "idTable.h"
 #include "parm.h"
 #include "time.h"
+#include <iomanip>
 #include <fstream>
 #include <iostream>
 #include <cwchar>

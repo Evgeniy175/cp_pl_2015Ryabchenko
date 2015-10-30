@@ -1,18 +1,23 @@
 #pragma once
 
-#define NUMBER_OF_GRAPHS 21
+#define NUMBER_OF_GRAPHS 22
 
-#define GRAPH_TYPE 9, \
-	/* 0 */ NODE(3, RELATION('l', 1), RELATION('n', 4), RELATION('w', 6)), \
+#define GRAPH_TYPE 14, \
+	/* 0 */ NODE(5, RELATION('l', 1), RELATION('n', 4), RELATION('w', 6), RELATION('b', 9), RELATION('n', 12)),  \
 	/* 1 */ NODE(1, RELATION('i', 2)), \
 	/* 2 */ NODE(1, RELATION('n', 3)), \
-	/* 3 */ NODE(1, RELATION('e', 9)), \
+	/* 3 */ NODE(1, RELATION('e', 14)), \
 	/* 4 */ NODE(1, RELATION('u', 5)), \
-	/* 5 */ NODE(1, RELATION('m', 9)), \
+	/* 5 */ NODE(1, RELATION('m', 14)), \
 	/* 6 */ NODE(1, RELATION('a', 7)), \
 	/* 7 */ NODE(1, RELATION('s', 8)), \
-	/* 8 */ NODE(1, RELATION('h', 9)), \
-	/* 9 */ NODE()
+	/* 8 */ NODE(1, RELATION('h', 14)), \
+	/* 9 */ NODE(1, RELATION('o', 10)), \
+	/* 10*/ NODE(1, RELATION('o', 11)), \
+	/* 11*/ NODE(1, RELATION('l', 14)), \
+	/* 12*/ NODE(1, RELATION('i', 13)), \
+	/* 13*/ NODE(1, RELATION('l', 14)), \
+	/* 14*/ NODE()
 
 #define GRAPH_FUNCTION 8, \
 	/* 0 */ NODE(1, RELATION('f', 1)), \
@@ -62,31 +67,31 @@
 	/* 0 */ NODE(1, RELATION(',', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_EQUAL_SIGN 1, \
+#define GRAPH_EQUALLY 1, \
 	/* 0 */ NODE(1, RELATION('=', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_BRACE_OPEN 1, \
+#define GRAPH_LEFTBRACE 1, \
 	/* 0 */ NODE(1, RELATION('{', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_BRACE_CLOSE 1, \
+#define GRAPH_RIGHTBRACE 1, \
 	/* 0 */ NODE(1, RELATION('}', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_PARENTHESIS_OPEN 1, \
+#define GRAPH_LEFTHESIS 1, \
 	/* 0 */ NODE(1, RELATION('(', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_PARENTHESIS_CLOSE 1, \
+#define GRAPH_RIGHTHESIS 1, \
 	/* 0 */ NODE(1, RELATION(')', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_SQBRACKET_OPEN 1, \
+#define GRAPH_SQBRACE_OPEN 1, \
 	/* 0 */ NODE(1, RELATION('[', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_SQBRACKET_CLOSE 1, \
+#define GRAPH_SQBRACE_CLOSE 1, \
 	/* 0 */ NODE(1, RELATION(']', 1)), \
 	/* 1 */ NODE()
 
@@ -94,16 +99,25 @@
 	/* 0 */ NODE(4, RELATION('+', 1), RELATION('-', 1), RELATION('*', 1), RELATION('/', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_NEW_LINE 1, \
+#define GRAPH_NEW_LINE 1,	\
 	/* 0 */ NODE(1, RELATION('@', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_CONDITION 2, \
+#define GRAPH_CONDITION 2,	\
 	/* 0 */ NODE(1, RELATION('i', 1)), \
 	/* 1 */ NODE(1, RELATION('f', 2)), \
 	/* 2 */ NODE()
 
-#define GRAPH_IDENTIFIER 1, \
+#define GRAPH_EXTERN 6,		\
+	/* 0 */ NODE(1, RELATION('e', 1)), \
+	/* 1 */ NODE(1, RELATION('x', 2)), \
+	/* 2 */ NODE(1, RELATION('t', 3)), \
+	/* 3 */ NODE(1, RELATION('e', 4)), \
+	/* 4 */ NODE(1, RELATION('r', 5)), \
+	/* 5 */ NODE(1, RELATION('n', 6)), \
+	/* 6 */ NODE()
+
+#define GRAPH_ID 1, \
 	/* 0 */ NODE(0, 1, "abcdefghijklmnopqrstuvwxyz_"), \
 	/* 1 */ NODE()
 

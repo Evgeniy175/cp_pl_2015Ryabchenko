@@ -78,39 +78,53 @@ namespace Log
 	void writeLt(LOG& log, LT::LexTable* lt)
 	{
 		int currentLineNumber = 0;
-		*log.stream << std::endl << "---Lex table start---";
+		*log.stream << std::endl << std::endl << "---Lex table start---" << std::endl
+			<< "Size: " << lt->size_ << std::endl << std::endl
+			<< "NUMBER\t\t" << "LEXEMA\t\t" << "LINE\t\t" << "TI INDEX" << std::endl;
 
 		for (int i = 0; i < lt->size_; i++)
 		{
-			if (i == 0)	*log.stream << std::endl << "00" << currentLineNumber++ << "   ";
-
-			if (lt->table_[i].lexema_ == LEX_NEWLINE)
-			{
-				if (currentLineNumber < 10)	*log.stream << std::endl << "00" << currentLineNumber++ << "   ";
-				else if (currentLineNumber < 100)	*log.stream << std::endl << "0" << currentLineNumber++ << "   ";
-				else if (currentLineNumber < 1000)	*log.stream << std::endl << "" << currentLineNumber++ << "   ";
-			}
-			else *log.stream << lt->table_[i].lexema_;
+			*log.stream << i << "\t\t" << lt->table_[i].lexema_ << "\t\t" << lt->table_[i].lineNumber_ << "\t\t";
+			if (lt->table_[i].TI_Index_ >= NULL) *log.stream << lt->table_[i].TI_Index_ << std::endl;
+			else *log.stream << "no_matches" << std::endl;
 		};
 
-		*log.stream << std::endl << "---Lex table end---" << std::endl;
+		*log.stream << "---Lex table end---" << std::endl;
 	};
 
 	void writeIt(LOG& log, IT::IdTable* it)
 	{
-		IT::IdDataType* temp = new IT::IdDataType();
-
-		*log.stream << std::endl << "---Identificator table start---" << std::endl;
+		*log.stream << std::endl << std::endl << "---Identificator table start---" << std::endl
+			<< "Help: NaL - Not a Literal\t" << std::endl << "Size: " << it->size_ << std::endl << std::endl
+			<< "NUMBER\t" << "ID\t\t\t" << "TYPE\t\t" << "ID TYPE\t\t" << "ELEMENT TYPE\t\t"
+			<< "LT INDEX\t" << "LITERAL VALUE" << std::endl;
 
 		for (int i = 0; i < it->size_; i++)
 		{
-			*log.stream << it->table_[i].id_ << '\t';
-			*log.stream << IT::getIdDataName(it->table_[i].idDataType_) << '\t';
-			*log.stream << it->table_[i].idType_ << std::endl;
+			*log.stream << i << "\t" << std::setw(8) << it->table_[i].id_ << "\t\t"
+				<< IT::getDataName(it->table_[i].idDataType_) << "\t\t" << it->table_[i].idType_
+				<< "\t\t";
+			if (it->table_[i].elementType_ == IT::ELEMENTTYPE::ID)
+				*log.stream << "identificator";
+			else if (it->table_[i].elementType_ == IT::ELEMENTTYPE::LITERAL)
+				*log.stream << "literal\t";
+				
+			*log.stream << "\t\t" << it->table_[i].idxFirstLE_ << "\t\t";
+
+ 			if (it->table_[i].elementType_ == IT::ELEMENTTYPE::LITERAL)
+ 			{
+ 				if (it->table_[i].idDataType_ == IT::IDDATATYPE::NUM)
+ 					*log.stream << it->table_[i].value_.intValue_;
+ 
+ 				else if (it->table_[i].idDataType_ == IT::IDDATATYPE::LINE)
+ 					*log.stream << it->table_[i].value_.vstr_.str_;
+ 			}
+ 			else *log.stream << "-NaL-";
+
+			*log.stream << std::endl;
 		};
 
-		*log.stream << "---Identificator table end---" << std::endl;
-		delete temp;
+		*log.stream << "---Identificator table end---";
 	};
 
 	void close(LOG& log)

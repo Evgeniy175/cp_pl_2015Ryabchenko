@@ -18,14 +18,14 @@
 #define LEX_LEFTHESIS	'('			// лексема для  (
 #define LEX_RIGHTHESIS	')'			// лексема для  )
 #define LEX_SQBRACEOPEN '['			// лексема для  [
-#define LEX_SQBRACECLOSE ']'			// лексема для  ]
+#define LEX_SQBRACECLOSE ']'		// лексема для  ]
 #define LEX_EQUALLY		'='			// лексема для	=
 #define LEX_ACTIONS		'v'			// лексема для  действий
 #define LEX_NEWLINE		'@'			// лексема для	@ (новая строка)
 #define LEX_CONDITION	'c'			// лексема для	условия
+#define LEX_EXTERN		'e'			// лексема для	extern
 #define LEX_ID			'i'			// лексема для  идентификатора
-#define LEX_LITERAL_STR	'l'			// лексема для  литерала (строка)
-#define LEX_LITERAL_NUM	'l'			// лексема для  литерала (число)
+#define LEX_LITERAL		'l'			// лексема для	литералов (общая)
 
 namespace LT				// таблица лексем
 {

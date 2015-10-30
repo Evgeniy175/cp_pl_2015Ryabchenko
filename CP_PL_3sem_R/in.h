@@ -18,7 +18,7 @@
 	/*0-15*/    IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::I, IN::S, IN::D, IN::D, IN::D, IN::D, IN::D, \
 	IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, \
 	/*32-47*/   IN::B, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::A, IN::S, \
-	IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::S, IN::S, IN::A, IN::S, IN::A, IN::A, \
+	IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::S, IN::S, IN::S, IN::S, IN::S, IN::A, \
 	/*64-79*/   IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, \
 	IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::S, IN::A, IN::S, IN::A, IN::A, \
 	/*96-111*/  IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, \
