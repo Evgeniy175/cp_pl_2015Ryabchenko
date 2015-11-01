@@ -3,8 +3,7 @@
 #include "errors.h"
 #include <vector>
 
-#define TI_ID_MAXSIZE		12				// максимальное кол-во символов в идентификаторе
-#define TI_ID_FULL_MAXSIZE	16				// максимальный размер идентификатора+имени фции
+#define TI_ID_MAXSIZE		12				// максимальное число символов в имени переменной
 #define TI_MAXSIZE		4096				// максимальное кол-во строк в таблице идентификаторов
 #define TI_INT_DEFAULT	0x00000000			// значение по умолчанию для integer
 #define TI_STR_DEFAULT	0x00				// значение по умолчанию для string
@@ -16,86 +15,87 @@
 
 #define TI_TYPES_SIZE	5				// размер массива типов
 #define TI_TYPES { "num", "line", "wash", "bool", "nil" }
-#define TI_ID_TYPES	{ IT::IDDATATYPE::NUM, IT::IDDATATYPE::LINE, IT::IDDATATYPE::WASH, IT::IDDATATYPE::BOOL, IT::IDDATATYPE::NIL }
+#define TI_ID_TYPES	{ IT::DATATYPE::NUM, IT::DATATYPE::LINE, IT::DATATYPE::WASH, IT::DATATYPE::BOOL, IT::DATATYPE::NIL }
 
 #define TI_STRUCT_TYPES_SIZE	5		// размер массива типов для структуры
 #define TI_STRUCT_NAMES { "type", "load", "temperature", "time", "rpm" }
-#define TI_STRUCT_ID_TYPES { IT::IDDATATYPE::LINE, IT::IDDATATYPE::NUM, IT::IDDATATYPE::NUM, IT::IDDATATYPE::NUM, IT::IDDATATYPE::NUM, }
+#define TI_STRUCT_ID_TYPES { IT::DATATYPE::LINE, IT::DATATYPE::NUM, IT::DATATYPE::NUM, IT::DATATYPE::NUM, IT::DATATYPE::NUM, }
 
-namespace IT		// таблица идентификаторов
+namespace IT		// дополнительная таблица
 {
-	enum IDDATATYPE	// типы данных идентификаторов
-	{
-		NOTDEFINED = 0,	// uknown
-		NUM	 = 1,		// integer
-		LINE = 2,		// string
-		WASH = 3,		// wash
-		BOOL = 4,		// bool
-		NIL  = 5		// аналог void в C++
+	enum TYPE{			// типы
+		U = 0,				// unknown
+		V = 1,				// переменная
+		F = 2,				// фция
+		P = 3,				// параметр
+		L = 4,				// литерал
+		E = 5,				// extern function
+		S = 6				// элемент структуры
 	};
 
-	enum IDTYPE		// типы идентификаторов
-	{
-		U = 0,			// unknown
-		V = 1,			// переменная
-		F = 2,			// фция
-		P = 3,			// параметр
-		L = 4,			// литерал
-		E = 5,			// extern function
-		S = 6			// элемент структуры
-	};
-
-	enum ELEMENTTYPE
-	{
-		UNKNOWN = 0,	// unknown
-		ID = 1,			// идентификатор
-		LITERAL = 2,	// литерал
-		ACTION = 3		// арифметическое действие
+	enum DATATYPE{		// типы данных
+		NOTDEFINED = 0,		// unknown
+		NUM  = 1,			// integer
+		LINE = 2,			// string
+		WASH = 3,			// wash
+		BOOL = 4,			// bool
+		NIL  = 5			// аналог void в C++
 	};
 
 	struct IdDataType			// типы данных идентификаторов
 	{
 		std::vector<char*>		name_;			// для обычных типов
 		std::vector<char*>		structName_;	// для структуры
-		std::vector<IDDATATYPE> type_;			// для обычных типов
-		std::vector<IDDATATYPE>	structType_;	// для структуры
-		
+		std::vector<DATATYPE>	type_;			// для обычных типов
+		std::vector<DATATYPE>	structType_;	// для структуры
+
 		IdDataType();
 	};
 
-	struct Entry					// строка таблицы идентификаторов
+	class Element					// строка дополнительной таблицы
 	{
-		int			idxFirstLE_;					// индекс первой строки в таблице лексем
-		char		id_[TI_ID_FULL_MAXSIZE];		// имя (автоматически усекается до ID_MAXSIZE)
-		IDTYPE		idType_;						// тип идентификатора
-		IDDATATYPE	idDataType_;					// тип данных
-		ELEMENTTYPE elementType_;					// тип элемента
+	public:
+		Element();
 
-		union
-		{
-			int intValue_;							// значение integer
+		int			getIdx();
+		int			getIntVal();
+		char*		getName();
+		char*		getFuncName();
+		char*		getStrVal();
+		TYPE		getType();
+		DATATYPE	getDataType();
 
-			struct
-			{
-				int len_;							// количество символов в string
-				char str_[TI_STR_MAXSIZE];			// символы string
-			} vstr_;								// значение string
-		} value_;									// значение идентификатора
+		void		setIdx(int value);
+		void		setIntVal(int value);
+		void		setName(char* name);
+		void		setFuncName(char* name);
+		void		setStrVal(char* value);
+		void		setType(TYPE type);
+		void		setDataType(DATATYPE dataType);
 
-		Entry();
+	private:
+		int			ltIndex_;					// индекс первой строки в таблице лексем
+		char		name_[TI_ID_MAXSIZE];		// имя (автоматически усекается до ID_MAXSIZE)
+		char		funcName_[TI_ID_MAXSIZE];
+		TYPE		type_;						// тип идентификатора
+		DATATYPE	dataType_;					// тип данных
+		struct{
+			int intValue_;
+			char strValue_[TI_ARR_MAXSIZE];
+		} value_;
 	};
 
 	struct IdTable					// экземпляр таблицы идентификаторов
 	{
 		int maxSize_;								// ёмкость таблицы идентификаторов < TI_MAXSIZE
 		int size_;									// текущий размер таблицы идентификаторов < maxsize
-		Entry* table_;								// массив строк таблицы идентификаторов
+		Element* table_;							// массив строк таблицы идентификаторов
 
 		IdTable();
 		IdTable(int size);
 
-		bool isIncluded(char* line);				// был ли добавлен идентификатор ранее
-		int getIndex(char* line);
+		bool isIncluded(char* line, char* funcName);				// был ли добавлен идентификатор ранее
+		int getIndex(char* name, char* funcName);
 	};
 
 	IdTable* create(				// создать таблицу идентификаторов
@@ -104,10 +104,10 @@ namespace IT		// таблица идентификаторов
 
 	void addElement(				// добавить строку в таблицу идентификаторов
 		IdTable* idTable,							// экземпляр таблицы идентификаторов
-		Entry entry									// строка таблицы идентификаторов
+		Element elem									// строка таблицы идентификаторов
 		);
 
-	Entry getEntry(					// получить строку таблицы идентификаторов
+	Element getEntry(					// получить строку таблицы идентификаторов
 		IdTable& idTable,							// экземпляр таблицы идентификаторов
 		int n										// номер получаемой строки
 		);
@@ -122,31 +122,33 @@ namespace IT		// таблица идентификаторов
 	bool isSimilar(					// идентичные ли цепочки
 		char* firstLine,
 		char* secondLine
-		);		
+		);
 
-	IDDATATYPE getDataType(			// возвращает тип данных идентификатора
+	DATATYPE getDataType(			// возвращает тип данных идентификатора
 		LT::LexTable* lexTable,						// таблица лексем
 		char** arrOfLines,							// массив цепочек
 		int i										// номер текущей цепочки
 		);
 
-	IDTYPE getType(					// возвращает тип идентификатора
+	TYPE getType(					// возвращает тип идентификатора
 		LT::LexTable* lexTable						// таблица лексем
 		);
 
-	char* getDataName(IT::IDDATATYPE type);
-	
+	char* getDataName(IT::DATATYPE type);
+
 	void setEntry(					// заполнение элемента для идентификатора
-		IT::Entry& entry,							// элемент для заполнения
+		IT::Element& elem,							// элемент для заполнения
 		LT::LexTable* lexTable,						// таблица лексем
+		char* funcName,
 		char** arrOfLines,							// массив цепочек
-		int& chainNumber,							// номер текущей цепочки
-		IDTYPE idType = IDTYPE::U,					// тип
+		int& i,										// номер текущей цепочки
+		TYPE idType = TYPE::U,						// тип
 		int literalCounter = -1						// счетчик литералов
 		);
 
 	void setValue(
-		IT::Entry& entry,							// элемент
+		IT::Element& elem,							// элемент
+		char lexeme,
 		char* line = NULL_STR
 		);
 
@@ -154,8 +156,9 @@ namespace IT		// таблица идентификаторов
 		char* dest,									// destination
 		char* prefix								// prefix
 		);
-	
+
 	void createFuncName(char* funcName, char* line);
-	void reset(IT::Entry& entry);
+	void reset(IT::Element& elem);
 	bool isFunction(char* first, char* second);
+	char* createStrVal(char* line);
 };

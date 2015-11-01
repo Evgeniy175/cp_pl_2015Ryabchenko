@@ -71,41 +71,41 @@ namespace FST
 		this->numberOfStates_ = numberOfStates;
 		this->possibleStates_ = new short[numberOfStates];
 
-		for (int i = 0; i < numberOfStates; i++)	this->nodes_[i] = *(temp + i);
+		for (int i = 0; i < numberOfStates; i++)
+			this->nodes_[i] = *(temp + i);
 	}
 
-	FST FST::createFst(int i, char* line)
+	void FST::createFst()
 	{
-		FST rc;
-
-		switch (i)
+		for (int i = 0; i < NUMBER_OF_GRAPHS; i++)
 		{
-		case 0:		rc = *(new FST(line, GRAPH_TYPE));					break;
-		case 1:		rc = *(new FST(line, GRAPH_NEW_LINE));				break;
-		case 2:		rc = *(new FST(line, GRAPH_COLON));					break;
-		case 3:		rc = *(new FST(line, GRAPH_SEMICOLON));				break;
-		case 4:		rc = *(new FST(line, GRAPH_COMMA));					break;
-		case 5:		rc = *(new FST(line, GRAPH_EQUALLY));			break;
-		case 6:		rc = *(new FST(line, GRAPH_LEFTBRACE));			break;
-		case 7:		rc = *(new FST(line, GRAPH_RIGHTBRACE));			break;
-		case 8:		rc = *(new FST(line, GRAPH_LEFTHESIS));		break;
-		case 9:		rc = *(new FST(line, GRAPH_RIGHTHESIS));		break;
-		case 10:	rc = *(new FST(line, GRAPH_SQBRACE_OPEN));		break;
-		case 11:	rc = *(new FST(line, GRAPH_SQBRACE_CLOSE));		break;
-		case 12:	rc = *(new FST(line, GRAPH_ACTIONS));				break;
-		case 13:	rc = *(new FST(line, GRAPH_CONDITION));				break;
-		case 14:	rc = *(new FST(line, GRAPH_EXTERN));				break;
-		case 15:	rc = *(new FST(line, GRAPH_FUNCTION));				break;
-		case 16:	rc = *(new FST(line, GRAPH_PRINT));					break;
-		case 17:	rc = *(new FST(line, GRAPH_RETURN));				break;
-		case 18:	rc = *(new FST(line, GRAPH_BEGIN));					break;
-		case 19:	rc = *(new FST(line, GRAPH_ID));					break;
-		case 20:	rc = *(new FST(line, GRAPH_LITERAL_STRING));		break;
-		case 21:	rc = *(new FST(line, GRAPH_LITERAL_NUMBER));		break;
-		default:	break;
+			switch (i)
+			{
+			case 0:		this[i] = *(new FST(NULL_STR, GRAPH_TYPE));					break;
+			case 1:		this[i] = *(new FST(NULL_STR, GRAPH_NEW_LINE));				break;
+			case 2:		this[i] = *(new FST(NULL_STR, GRAPH_COLON));				break;
+			case 3:		this[i] = *(new FST(NULL_STR, GRAPH_SEMICOLON));			break;
+			case 4:		this[i] = *(new FST(NULL_STR, GRAPH_COMMA));				break;
+			case 5:		this[i] = *(new FST(NULL_STR, GRAPH_EQUALLY));				break;
+			case 6:		this[i] = *(new FST(NULL_STR, GRAPH_LEFTBRACE));			break;
+			case 7:		this[i] = *(new FST(NULL_STR, GRAPH_RIGHTBRACE));			break;
+			case 8:		this[i] = *(new FST(NULL_STR, GRAPH_LEFTHESIS));			break;
+			case 9:		this[i] = *(new FST(NULL_STR, GRAPH_RIGHTHESIS));			break;
+			case 10:	this[i] = *(new FST(NULL_STR, GRAPH_SQBRACE_OPEN));			break;
+			case 11:	this[i] = *(new FST(NULL_STR, GRAPH_SQBRACE_CLOSE));		break;
+			case 12:	this[i] = *(new FST(NULL_STR, GRAPH_ACTIONS));				break;
+			case 13:	this[i] = *(new FST(NULL_STR, GRAPH_CONDITION));			break;
+			case 14:	this[i] = *(new FST(NULL_STR, GRAPH_EXTERN));				break;
+			case 15:	this[i] = *(new FST(NULL_STR, GRAPH_FUNCTION));				break;
+			case 16:	this[i] = *(new FST(NULL_STR, GRAPH_PRINT));				break;
+			case 17:	this[i] = *(new FST(NULL_STR, GRAPH_RETURN));				break;
+			case 18:	this[i] = *(new FST(NULL_STR, GRAPH_BEGIN));				break;
+			case 19:	this[i] = *(new FST(NULL_STR, GRAPH_ID));					break;
+			case 20:	this[i] = *(new FST(NULL_STR, GRAPH_LITERAL_STRING));		break;
+			case 21:	this[i] = *(new FST(NULL_STR, GRAPH_LITERAL_NUMBER));		break;
+			default:	break;
+			};
 		};
-
-		return rc;
 	};
 
 	void FST::setString(char* str)
@@ -113,25 +113,26 @@ namespace FST
 		this->string_ = str;
 	};
 
-	bool FST::execute(FST& fst)
+	bool FST::execute()
 	{
 		int i, j;
-		short* rstates2 = new short[fst.numberOfStates_];
+		short* posStates2 = new short[this->numberOfStates_];
 
-		memset(fst.possibleStates_, -1, sizeof(short)*(fst.numberOfStates_ + 1));
-		memset(rstates2, -1, sizeof(short)*(fst.numberOfStates_ + 1));
+		memset(this->possibleStates_, -1, sizeof(short)*(this->numberOfStates_ + 1));
+		memset(posStates2, -1, sizeof(short)*(this->numberOfStates_ + 1));
 
-		for (fst.possibleStates_[0] = 0, fst.position_ = 0; fst.position_ < (int)(strlen(fst.string_)); fst.position_++)
+		for (this->possibleStates_[0] = 0, this->position_ = 0;
+			this->position_ < (int)(strlen(this->string_)); this->position_++)
 		{
-			for (i = 0; i < fst.numberOfStates_; i++)
-				if (fst.possibleStates_[i] == fst.position_)
-					for (j = 0; j < fst.nodes_[i].getNumberOfRel(); j++)
-						if (fst.nodes_[i].getRelation(j).getSymbol() == fst.string_[fst.position_])
-							rstates2[fst.nodes_[i].getRelation(j).getNextNode()] = fst.position_ + 1;
+			for (i = 0; i < this->numberOfStates_; i++)
+			if (this->possibleStates_[i] == this->position_)
+			for (j = 0; j < this->nodes_[i].getNumberOfRel(); j++)
+			if (this->nodes_[i].getRelation(j).getSymbol() == this->string_[position_])
+				posStates2[this->nodes_[i].getRelation(j).getNextNode()] = this->position_ + 1;
 
-			std::swap(fst.possibleStates_, rstates2);
+			std::swap(this->possibleStates_, posStates2);
 		};
 
-		return (fst.possibleStates_[fst.numberOfStates_] == (int)(strlen(fst.string_)));
+		return (this->possibleStates_[this->numberOfStates_] == (int)(strlen(this->string_)));
 	};
 };

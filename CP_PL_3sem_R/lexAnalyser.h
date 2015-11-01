@@ -4,19 +4,19 @@
 #include "in.h"
 #include "fst.h"
 #include "lexTable.h"
-#include "idTable.h"
+#include "auxTable.h"
 #include "errors.h"
 
 namespace LA
 {
-	struct lexAnalyser
+	struct LexAnalyser
 	{
 		LT::LexTable* lexTable;
-		IT::IdTable* itTable;
+		IT::IdTable*  auxTable;
 
-		lexAnalyser(LT::LexTable* lt, IT::IdTable* it);
+		LexAnalyser(LT::LexTable* lT, IT::IdTable* aT);
 	};
 
-	lexAnalyser create(Log::LOG log, In::IN in);
-	void deleteLa(lexAnalyser la);
+	LexAnalyser create(Log::LOG log, In::IN in);
+	void deleteLa(LexAnalyser la);
 };

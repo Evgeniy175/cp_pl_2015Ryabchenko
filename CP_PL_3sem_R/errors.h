@@ -3,7 +3,7 @@
 #include <iostream>
 
 #define ERROR_THROW(id) Error::getError(id);
-#define ERROR_THROW_FULL(id, str, lineNumber, position) Error::getError(id, str, lineNumber, position);
+#define ERROR_THROW_LINE(id, str, lineNumber, position) Error::getError(id, str, lineNumber, position);
 #define ERROR_THROW_IN(id, l, c) Error::getErrorIn(id, l, c);
 #define ERROR_ENTRY(id, m) {id, m, {-1, -1}}
 #define ERROR_MAXSIZE_MESSAGE 200

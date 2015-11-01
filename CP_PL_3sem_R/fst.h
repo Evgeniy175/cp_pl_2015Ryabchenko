@@ -38,9 +38,8 @@ namespace FST
 		FST();
 		FST(char* str, short numberOfStates, NODE node, ...);
 
-		FST createFst(int i, char* line);
-		bool execute(FST& fst);
-
+		void createFst();
+		bool execute();
 		void setString(char* str);
 
 	private:

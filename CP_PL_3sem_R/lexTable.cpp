@@ -3,7 +3,7 @@
 
 namespace LT
 {
-	Entry::Entry()
+	Element::Element()
 	{
 
 	}
@@ -20,7 +20,7 @@ namespace LT
 		if (maxSize < LT_MAXSIZE) this->maxSize_ = maxSize;
 		else throw ERROR_THROW(200);
 
-		this->table_ = new Entry[this->maxSize_];
+		this->table_ = new Element[this->maxSize_];
 	}
 
 	LexTable* create(int size)
@@ -28,20 +28,65 @@ namespace LT
 		return new LexTable(size);
 	};
 
+	char Element::getLex()
+	{
+		return this->lexeme_;
+	};
+
+	int	Element::getIdx()
+	{
+		return this->itIndex_;
+	};
+
+	int Element::getLineNumber()
+	{
+		return this->lineNumber_;
+	};
+
+	void Element::setLex(char lexeme)
+	{
+		this->lexeme_ = lexeme;
+	};
+
+	void Element::setIdx(int itIndex)
+	{
+		this->itIndex_ = itIndex;
+	};
+
+	void Element::setLineNumber(int lineNumber)
+	{
+		this->lineNumber_ = lineNumber;
+	};
+
+	void LexTable::setMaxSize(int maxSize)
+	{
+		this->maxSize_ = maxSize;
+	};
+
+	int LexTable::getSize()
+	{
+		return this->size_;
+	};
+
+	Element* LexTable::getTable()
+	{
+		return this->table_;
+	};
+
 	void del(LexTable* lexTable)
 	{
-		delete[] lexTable->table_;
+		delete[] lexTable->getTable();
 		delete lexTable;
 	};
 
-	void addElement(LexTable* lexTable, Entry entry)
+	void LexTable::addElem(Element elem)
 	{
-		lexTable->table_[lexTable->size_++] = entry;
+		this->table_[this->size_++] = elem;
 	};
 
-	Entry getEntry(LexTable& lexTable, int number)
+	Element* LexTable::getElem(int i)
 	{
-		return lexTable.table_[number];
+		return (table_ + i);
 	};
 
 	char getLexem(int switchCount)
@@ -78,12 +123,12 @@ namespace LT
 		return rc;
 	};
 
-	void setEntry(LT::Entry& entry, int& i, int& lineNumber, int itIndex)
+	void Element::setElem(int& i, int& lineNumber, int itIndex)
 	{
-		entry.lexema_ = LT::getLexem(i);
-		entry.lineNumber_ = lineNumber;
+		this->lexeme_ = getLexem(i);
+		this->lineNumber_ = lineNumber;
 
-		if (entry.lexema_ == LEX_ID || entry.lexema_ == LEX_LITERAL) entry.TI_Index_ = itIndex;
-		else entry.TI_Index_ = LT_TI_NULL_IDX;
+		if (this->lexeme_ == LEX_ID || this->lexeme_ == LEX_LITERAL) this->itIndex_ = itIndex;
+		else this->itIndex_ = LT_TI_NULL_IDX;
 	};
 };

@@ -129,7 +129,7 @@ namespace In
 
 				case IN::D:
 					rc.setChar(currChainPosition, tempChar);
-					errorVar = ERROR_THROW_FULL(103, NULL, rc.getLinesCounter(), positionCounter);
+					errorVar = ERROR_THROW_LINE(103, NULL, rc.getLinesCounter(), positionCounter);
 					Log::writeError(log, errorVar);
 					positionCounter++;
 					break;

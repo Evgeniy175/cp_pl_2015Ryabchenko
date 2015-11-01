@@ -3,7 +3,6 @@
 #include "errors.h"
 #include "in.h"
 #include "lexAnalyser.h"
-#include "idTable.h"
 #include "parm.h"
 #include "time.h"
 #include <iomanip>
@@ -12,6 +11,8 @@
 #include <cwchar>
 
 #define SIZE_CHAR_ARRAY 256
+
+namespace LA{ struct LexAnalyser; };
 
 namespace Log
 {
@@ -29,7 +30,7 @@ namespace Log
 	void writeParm(LOG& log, Parm::PARM& parm);					// запись путей исходных файлов
 	void writeIn(LOG& log, In::IN in);							// запись информации о входном файле
 	void writeError(LOG& log, Error::ERROR& error);				// запись ошибки
-	void writeLt(LOG& log, LT::LexTable* lt);					// запись лексической таблицы
-	void writeIt(LOG& log, IT::IdTable* it);
+	void writeLt(LOG& log, LA::LexAnalyser& la);					// запись лексической таблицы
+	void writeIt(LOG& log, LA::LexAnalyser& la);
 	void close(LOG& log);										// закрытие потока
 };

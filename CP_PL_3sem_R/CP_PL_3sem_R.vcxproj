@@ -83,7 +83,7 @@
     <ClInclude Include="errors.h" />
     <ClInclude Include="fst.h" />
     <ClInclude Include="graphs.h" />
-    <ClInclude Include="idTable.h" />
+    <ClInclude Include="auxTable.h" />
     <ClInclude Include="in.h" />
     <ClInclude Include="lexAnalyser.h" />
     <ClInclude Include="lexTable.h" />
@@ -96,7 +96,7 @@
     <ClCompile Include="cp_pl_3sem_R.cpp" />
     <ClCompile Include="errors.cpp" />
     <ClCompile Include="fst.cpp" />
-    <ClCompile Include="idTable.cpp" />
+    <ClCompile Include="auxTable.cpp" />
     <ClCompile Include="in.cpp" />
     <ClCompile Include="lexAnalyser.cpp" />
     <ClCompile Include="lexTable.cpp" />
