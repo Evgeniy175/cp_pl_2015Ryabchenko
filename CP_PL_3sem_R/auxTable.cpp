@@ -110,9 +110,6 @@ namespace IT
 		this->setStrVal(AUX_STR_DEFAULT);
 	};
 
-
-
-
 	AuxTable::AuxTable() { }
 
 	AuxTable::AuxTable(int maxSize){
@@ -136,8 +133,7 @@ namespace IT
 		this->table_[this->size_++] = elem;
 	};
 
-	IdDataType::IdDataType()
-	{
+	IdDataType::IdDataType(){
 		char* firstTempName[] = TI_TYPES;
 		char* secondTempName[] = TI_STRUCT_NAMES;
 		DATATYPE firstTempType[TI_TYPES_SIZE] = TI_ID_TYPES;
@@ -261,8 +257,7 @@ namespace IT
 		strncat(dest, temp, AUX_NAME_MAXSIZE - strlen(prefix) - 1);
 	};
 
-	bool isFunction(char* first, char* second)
-	{
+	bool isFunction(char* first, char* second){
 		for (int i = 0; i < static_cast<int> (strlen(first))
 			&& i < static_cast<int> (strlen(second)); i++){
 			if (first[i] != second[i]) return false;
