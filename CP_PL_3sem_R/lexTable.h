@@ -2,7 +2,6 @@
 
 #include "errors.h"
 
-#define LEXEMA_FIXSIZE		1			// фиксировнный размер лексемы
 #define LT_MAXSIZE			4096		// максимальное кол-во строк в таблице лексем
 #define LT_TI_NULL_IDX		0xffffffff	// нет эл-та таблицы идентификаторов
 #define LEX_TYPE			't'			// лексема для  type
@@ -36,10 +35,9 @@ namespace LT				// таблица лексем
 		char getLex();
 		int	 getIdx();
 		int  getLineNumber();
-		void setLex(char lexeme);
-		void setLineNumber(int lineNumber);
+
 		void setIdx(int tiIndex);
-		void setElem(int& i, int& lineNumber, int itIndex);
+		void setElem(int& i, int& lineNumber);
 
 	private:
 		char lexeme_;						// лексема
@@ -52,27 +50,19 @@ namespace LT				// таблица лексем
 	public:
 		LexTable();
 		LexTable(int size);
-		void setMaxSize(int maxSize);
+
 		void addElem(Element elem);
+
 		int getSize();
-		Element* getTable();
 		Element* getElem(int i);
 
+		~LexTable();
 	private:
 		int maxSize_;					// емкость таблицы лексем < LT_MAXSIZE
 		int size_;						// текущий размер таблицы лексем < maxsize
-		Element* table_;					// массив строк таблицы лексем
+		Element* table_;				// массив строк таблицы лексем
+		//char lexArr[NUMBER_OF_GRAPHS];
 	};
 
-	LexTable* create(	// создать таблицу лексем
-		int size						// емкость таблицы лексем < LT_MAXSIZE
-		);
-
-	char getLexem(			// возвращает лексему для текущей разобранной цепочки
-		int switchCount					// итый номер итерации цикла для свича
-		);
-
-	void del(				// удалить таблицу лексем(освободить память)
-		LexTable* lexTable				// таблица лексем
-		);
+	char getLex(int switchCount);			// возвращает лексему для текущей разобранной цепочки
 };

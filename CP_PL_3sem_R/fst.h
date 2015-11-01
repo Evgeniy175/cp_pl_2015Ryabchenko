@@ -9,27 +9,28 @@ namespace FST
 	{
 	public:
 		RELATION(char symbol = 0x00, short nextNode = NULL);
-		char getSymbol();
-		short getNextNode();
+
+		char	getSymbol();
+		short	getNextNode();
 
 	private:
-		char symbol_;
-		short nextNode_;
+		char	symbol_;
+		short	nextNode_;
 	};
 
 	class NODE
 	{
 	public:
 		NODE();
-		NODE::NODE(short firstRelation, short secondRelation, char* str);
 		NODE(short numOfRel, RELATION relation, ...);
+		NODE(short firstRelation, short secondRelation, char* str);
 
-		short getNumberOfRel();
-		RELATION getRelation(int i);
+		short		getNumberOfRel();
+		RELATION	getRelation(int i);
 
 	private:
-		short numOfRel_;
-		RELATION* relations_;
+		short		numOfRel_;
+		RELATION*	relations_;
 	};
 
 	class FST
@@ -38,15 +39,16 @@ namespace FST
 		FST();
 		FST(char* str, short numberOfStates, NODE node, ...);
 
-		void createFst();
-		bool execute();
 		void setString(char* str);
 
+		void createFst();
+		bool execute();
+
 	private:
-		char* string_;
-		short position_;
-		short numberOfStates_;
-		NODE* nodes_;
-		short* possibleStates_;
+		char*	string_;
+		short	position_;
+		short	numberOfStates_;
+		NODE*	nodes_;
+		short*	possibleStates_;
 	};
 };

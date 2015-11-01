@@ -78,19 +78,19 @@ namespace Log
 		*log.stream << std::endl << std::endl;
 	};
 
-	void writeLt(LOG& log, LA::LexAnalyser& la){
+	void writeLt(LOG& log, LA::LexAnalyser* la){
 		int currentLineNumber = 0;
 
 		*log.stream << std::endl << std::endl << "---Lex table start---" << std::endl
-			<< "Size: " << la.lexTable->getSize() << std::endl << std::endl
+			<< "Size: " << la->getLT()->getSize() << std::endl << std::endl
 			<< "NUMBER\t\t" << "LEXEMA\t\t" << "LINE\t\t" << "TI INDEX" << std::endl;
 
-		for (int i = 0; i < la.lexTable->getSize(); i++){
-			*log.stream << i << "\t\t" << la.lexTable->getElem(i)->getLex()
-				<< "\t\t" << la.lexTable->getElem(i)->getLineNumber() << "\t\t";
+		for (int i = 0; i < la->getLT()->getSize(); i++){
+			*log.stream << i << "\t\t" << la->getLT()->getElem(i)->getLex()
+				<< "\t\t" << la->getLT()->getElem(i)->getLineNumber() << "\t\t";
 
-			if (la.lexTable->getElem(i)->getIdx() >= NULL) 
-				*log.stream << la.lexTable->getElem(i)->getIdx() << std::endl;
+			if (la->getLT()->getElem(i)->getIdx() >= NULL)
+				*log.stream << la->getLT()->getElem(i)->getIdx() << std::endl;
 
 			else *log.stream << "no_matches" << std::endl;
 		};
@@ -98,31 +98,31 @@ namespace Log
 		*log.stream << "---Lex table end---" << std::endl;
 	};
 
-	void writeIt(LOG& log, LA::LexAnalyser& la){
+	void writeIt(LOG& log, LA::LexAnalyser* la){
 		char lexeme;
 
 		*log.stream << std::endl << std::endl << "---Identificator table start---" 
 			<< std::endl << "Help: NaL - Not a Literal\t" << std::endl << "Size: "
-			<< la.auxTable->size_ << std::endl << std::endl << "NUMBER\t"
-			<< std::setw(TI_ID_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" << "TYPE\t"
+			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
+			<< std::setw(AUX_NAME_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" << "TYPE\t"
 			<< "LT INDEX\t" << "VALUE" << std::endl;
 
-		for (int i = 0; i < la.auxTable->size_; i++){
-			lexeme = la.lexTable->getElem(la.auxTable->table_[i].getIdx() - 1)->getLex();
+		for (int i = 0; i < la->getAT()->getSize(); i++){
+			lexeme = la->getLT()->getElem(la->getAT()->getElem(i)->getIdx() - 1)->getLex();
 
 			*log.stream << i << '\t' 
-				<< std::setw(TI_ID_MAXSIZE) << la.auxTable->table_[i].getName()
-				<< "\t\t" << std::setw(TI_ID_MAXSIZE) << la.auxTable->table_[i].getFuncName()
-				<< "\t\t" << IT::getDataName(la.auxTable->table_[i].getDataType())
-				<< "\t\t" << la.auxTable->table_[i].getType()
-				<< '\t' << la.auxTable->table_[i].getIdx() << "\t\t";
+				<< std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getName()
+				<< "\t\t" << std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getFuncName()
+				<< "\t\t" << IT::getDataName(la->getAT()->getElem(i)->getDataType())
+				<< "\t\t" << la->getAT()->getElem(i)->getType()
+				<< '\t' << la->getAT()->getElem(i)->getIdx() << "\t\t";
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
-				if (la.auxTable->table_[i].getDataType() == IT::DATATYPE::NUM)
-					*log.stream << la.auxTable->table_[i].getIntVal();
+				if (la->getAT()->getElem(i)->getDataType() == IT::DATATYPE::NUM)
+					*log.stream << la->getAT()->getElem(i)->getIntVal();
  
-				else if (la.auxTable->table_[i].getDataType() == IT::DATATYPE::LINE)
-					*log.stream << la.auxTable->table_[i].getStrVal();
+				else if (la->getAT()->getElem(i)->getDataType() == IT::DATATYPE::LINE)
+					*log.stream << la->getAT()->getElem(i)->getStrVal();
  			}
  			else *log.stream << "-NaL-";
 

@@ -3,21 +3,27 @@
 
 namespace LA
 {
-	LexAnalyser::LexAnalyser(LT::LexTable* lT, IT::IdTable* aT){
-		this->lexTable = lT;
-		this->auxTable = aT;
+	LexAnalyser::LexAnalyser(int size){
+		this->lexTable = new LT::LexTable(size);
+		this->auxTable = new IT::AuxTable(size);
 	}
 
+	LT::LexTable* LexAnalyser::getLT(){
+		return this->lexTable;
+	};
 
-	LexAnalyser create(Log::LOG log, In::IN in){
-		LexAnalyser rc(LT::create(in.getNumOfChains()), IT::create(in.getNumOfChains()));
+	IT::AuxTable* LexAnalyser::getAT(){
+		return this->auxTable;
+	};
+
+	void LexAnalyser::create(Log::LOG log, In::IN in){
 		LT::Element elemLt;								// lexTable element
 		IT::Element elemAt;								// auxTable element
 		FST::FST* fst = new FST::FST[NUMBER_OF_GRAPHS];	// конечный автомат
 		bool isCorrect = false;							// распознана ли строка
 		int  lineNumber = 0;							// счётчик строк
 		int	 literalCounter = 0;						// счетчик литералов
-		char funcName[TI_ID_MAXSIZE + 1];				// имя функции
+		char funcName[AUX_NAME_MAXSIZE + 1];			// имя функции
 
 		fst->createFst();								// формирование массива fst
 
@@ -33,10 +39,10 @@ namespace LA
 
 				if (isCorrect = fst[i].execute()){
 					//Log::writeLine(log, "  Цепочка ", in.getLine(chainNumber), "\t\tраспознана", "");
-					elemLt.setElem(i, lineNumber, TI_NULLIDX);
-					rc.lexTable->addElem(elemLt);
+					elemLt.setElem(i, lineNumber);
+					this->getLT()->addElem(elemLt);
 
-					switch (LT::getLexem(i)){
+					switch (LT::getLex(i)){
 					case LEX_BEGIN:
 						strncpy_s(funcName, in.getLine(chainNumber), 
 								  static_cast<int> (strlen(in.getLine(chainNumber))));
@@ -45,28 +51,28 @@ namespace LA
 					case LEX_NEWLINE:	lineNumber++; break;
 
 					case LEX_ID:
-						if (IT::getType(rc.lexTable) == IT::TYPE::F)
+						if (IT::getType(this->getLT()) == IT::TYPE::F)
 							strncpy_s(funcName, in.getLine(chainNumber), strlen(in.getLine(chainNumber)));
 
-						if (!rc.auxTable->isIncluded(in.getLine(chainNumber), funcName)){
-								IT::setEntry(elemAt, rc.lexTable, funcName, in.getArr(), chainNumber);
-								IT::addElement(rc.auxTable, elemAt);
+						if (!this->getAT()->isIncluded(in.getLine(chainNumber), funcName)){
+							 elemAt.setElem(this->getLT(), funcName, in.getArr(), chainNumber);
+								 this->getAT()->addElem(elemAt);
 								//if (elemAt.idType_ == IT::TYPE::U)
 									//throw ERROR_THROW_LINE(203, in.getLine(chainNumber), lineNumber, -1);
 						};
-						rc.lexTable->getElem(chainNumber)->setIdx(rc.auxTable->getIndex(in.getLine(chainNumber), funcName));
+						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getIdx(in.getLine(chainNumber), funcName));
 						break;
 
 					case  LEX_LITERAL:
-						IT::setEntry(elemAt, rc.lexTable, funcName, in.getArr(), chainNumber, IT::TYPE::L, literalCounter++);
-						IT::addElement(rc.auxTable, elemAt);
-						rc.lexTable->getElem(chainNumber)->setIdx(rc.auxTable->size_ - 1);
+						elemAt.setElem(this->getLT(), funcName, in.getArr(), chainNumber, IT::TYPE::L, literalCounter++);
+						this->getAT()->addElem(elemAt);
+						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getSize() - 1);
 						break;
 
 					default: break;
 					};
 					
-					IT::reset(elemAt);
+					elemAt.reset();
 				};
 			};
 
@@ -76,12 +82,11 @@ namespace LA
 			};
 		};
 		Log::writeLine(log, "---Конец работы КА---", "");
-		return rc;
 	};
 
 
-	void deleteLa(LexAnalyser la){
-		LT::del(la.lexTable);
-		IT::del(la.auxTable);
+	LexAnalyser::~LexAnalyser(){
+		delete this->lexTable;
+		delete this->auxTable;
 	};
 };

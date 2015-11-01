@@ -3,29 +3,31 @@
 
 namespace FST
 {
-	RELATION::RELATION(char symbol, short nextNode)
-	{
+	RELATION::RELATION(char symbol, short nextNode){
 		this->symbol_ = symbol;
 		this->nextNode_ = nextNode;
 	}
 
-	char RELATION::getSymbol()
-	{
+	char RELATION::getSymbol(){
 		return this->symbol_;
 	};
 
-	short RELATION::getNextNode()
-	{
+	short RELATION::getNextNode(){
 		return this->nextNode_;
 	};
 
-	NODE::NODE()
-	{
+	NODE::NODE() { }
 
+	NODE::NODE(short numOfRel, RELATION relation, ...){
+		RELATION* temp = &relation;
+
+		this->relations_ = new RELATION[numOfRel];
+		this->numOfRel_ = numOfRel;
+
+		for (int i = 0; i < numOfRel; i++)	this->relations_[i] = *(temp + i);
 	}
 
-	NODE::NODE(short firstRelation, short secondRelation, char* str)
-	{
+	NODE::NODE(short firstRelation, short secondRelation, char* str){
 		this->relations_ = new RELATION[strlen(str)];
 		this->numOfRel_ = (strlen(str)) * 2;
 
@@ -36,34 +38,18 @@ namespace FST
 		};
 	}
 
-	NODE::NODE(short numOfRel, RELATION relation, ...)
-	{
-		RELATION* temp = &relation;
-
-		this->relations_ = new RELATION[numOfRel];
-		this->numOfRel_ = numOfRel;
-
-		for (int i = 0; i < numOfRel; i++)	this->relations_[i] = *(temp + i);
-	}
-
-	short NODE::getNumberOfRel()
-	{
+	short NODE::getNumberOfRel(){
 		return this->numOfRel_;
 	};
 
 
-	RELATION NODE::getRelation(int i)
-	{
+	RELATION NODE::getRelation(int i){
 		return this->relations_[i];
 	};
 
-	FST::FST()
-	{
+	FST::FST() { }
 
-	}
-
-	FST::FST(char* str, short numberOfStates, NODE node, ...)
-	{
+	FST::FST(char* str, short numberOfStates, NODE node, ...){
 		this->nodes_ = new NODE[numberOfStates];
 		NODE* temp = &node;
 
@@ -75,12 +61,13 @@ namespace FST
 			this->nodes_[i] = *(temp + i);
 	}
 
-	void FST::createFst()
-	{
-		for (int i = 0; i < NUMBER_OF_GRAPHS; i++)
-		{
-			switch (i)
-			{
+	void FST::setString(char* str){
+		this->string_ = str;
+	};
+
+	void FST::createFst(){
+		for (int i = 0; i < NUMBER_OF_GRAPHS; i++){
+			switch (i){
 			case 0:		this[i] = *(new FST(NULL_STR, GRAPH_TYPE));					break;
 			case 1:		this[i] = *(new FST(NULL_STR, GRAPH_NEW_LINE));				break;
 			case 2:		this[i] = *(new FST(NULL_STR, GRAPH_COLON));				break;
@@ -108,13 +95,7 @@ namespace FST
 		};
 	};
 
-	void FST::setString(char* str)
-	{
-		this->string_ = str;
-	};
-
-	bool FST::execute()
-	{
+	bool FST::execute(){
 		int i, j;
 		short* posStates2 = new short[this->numberOfStates_];
 
@@ -122,15 +103,15 @@ namespace FST
 		memset(posStates2, -1, sizeof(short)*(this->numberOfStates_ + 1));
 
 		for (this->possibleStates_[0] = 0, this->position_ = 0;
-			this->position_ < (int)(strlen(this->string_)); this->position_++)
-		{
-			for (i = 0; i < this->numberOfStates_; i++)
-			if (this->possibleStates_[i] == this->position_)
-			for (j = 0; j < this->nodes_[i].getNumberOfRel(); j++)
-			if (this->nodes_[i].getRelation(j).getSymbol() == this->string_[position_])
-				posStates2[this->nodes_[i].getRelation(j).getNextNode()] = this->position_ + 1;
+			 this->position_ < static_cast<int> (strlen(string_)); this->position_++){
+				
+				for (i = 0; i < numberOfStates_; i++)
+					if (this->possibleStates_[i] == this->position_)
+						for (j = 0; j < nodes_[i].getNumberOfRel(); j++)
+							if (nodes_[i].getRelation(j).getSymbol() == string_[position_])
+								posStates2[nodes_[i].getRelation(j).getNextNode()] = position_ + 1;
 
-			std::swap(this->possibleStates_, posStates2);
+				std::swap(this->possibleStates_, posStates2);
 		};
 
 		return (this->possibleStates_[this->numberOfStates_] == (int)(strlen(this->string_)));

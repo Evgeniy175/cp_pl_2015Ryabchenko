@@ -9,14 +9,22 @@
 
 namespace LA
 {
-	struct LexAnalyser
+	class LexAnalyser
 	{
-		LT::LexTable* lexTable;
-		IT::IdTable*  auxTable;
+	public:
+		LexAnalyser(int size);
+		
+		LT::LexTable* getLT();
+		IT::AuxTable* getAT();
 
-		LexAnalyser(LT::LexTable* lT, IT::IdTable* aT);
+		void create(Log::LOG log, In::IN in);
+
+		~LexAnalyser();
+
+	private:
+		LT::LexTable* lexTable;
+		IT::AuxTable* auxTable;
 	};
 
-	LexAnalyser create(Log::LOG log, In::IN in);
-	void deleteLa(LexAnalyser la);
+	
 };

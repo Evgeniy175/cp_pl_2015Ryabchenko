@@ -3,18 +3,35 @@
 
 namespace LT
 {
-	Element::Element()
-	{
+	Element::Element() { } 
 
+	char Element::getLex(){
+		return this->lexeme_;
+	};
+
+	int	Element::getIdx(){
+		return this->itIndex_;
+	};
+
+	int Element::getLineNumber(){
+		return this->lineNumber_;
+	};
+
+	void Element::setIdx(int itIndex){
+		this->itIndex_ = itIndex;
+	};
+
+	void Element::setElem(int& i, int& lineNumber){
+		this->lexeme_ = LT::getLex(i);
+		this->lineNumber_ = lineNumber;
+		this->itIndex_ = LT_TI_NULL_IDX;
+	};
+
+	LexTable::LexTable(){
+		this->size_ = NULL;
 	}
 
-	LexTable::LexTable()
-	{
-
-	}
-
-	LexTable::LexTable(int maxSize)
-	{
+	LexTable::LexTable(int maxSize){
 		this->size_ = NULL;
 
 		if (maxSize < LT_MAXSIZE) this->maxSize_ = maxSize;
@@ -23,74 +40,23 @@ namespace LT
 		this->table_ = new Element[this->maxSize_];
 	}
 
-	LexTable* create(int size)
-	{
-		return new LexTable(size);
-	};
-
-	char Element::getLex()
-	{
-		return this->lexeme_;
-	};
-
-	int	Element::getIdx()
-	{
-		return this->itIndex_;
-	};
-
-	int Element::getLineNumber()
-	{
-		return this->lineNumber_;
-	};
-
-	void Element::setLex(char lexeme)
-	{
-		this->lexeme_ = lexeme;
-	};
-
-	void Element::setIdx(int itIndex)
-	{
-		this->itIndex_ = itIndex;
-	};
-
-	void Element::setLineNumber(int lineNumber)
-	{
-		this->lineNumber_ = lineNumber;
-	};
-
-	void LexTable::setMaxSize(int maxSize)
-	{
-		this->maxSize_ = maxSize;
-	};
-
-	int LexTable::getSize()
-	{
+	int LexTable::getSize(){
 		return this->size_;
 	};
 
-	Element* LexTable::getTable()
-	{
-		return this->table_;
-	};
-
-	void del(LexTable* lexTable)
-	{
-		delete[] lexTable->getTable();
-		delete lexTable;
-	};
-
-	void LexTable::addElem(Element elem)
-	{
-		this->table_[this->size_++] = elem;
-	};
-
-	Element* LexTable::getElem(int i)
-	{
+	Element* LexTable::getElem(int i){
 		return (table_ + i);
 	};
 
-	char getLexem(int switchCount)
-	{
+	void LexTable::addElem(Element elem){
+		this->table_[this->size_++] = elem;
+	};
+	
+	LexTable::~LexTable(){
+		delete[] this->table_;
+	};
+
+	char getLex(int switchCount){
 		char rc;
 
 		switch (switchCount)
@@ -115,20 +81,11 @@ namespace LT
 		case 17:	rc = LEX_RETURN;				break;
 		case 18:	rc = LEX_BEGIN;					break;
 		case 19:	rc = LEX_ID;					break;
-		case 20:	rc = LEX_LITERAL;			break;
-		case 21:	rc = LEX_LITERAL;			break;
+		case 20:	rc = LEX_LITERAL;				break;
+		case 21:	rc = LEX_LITERAL;				break;
 		default:	break;
 		};
 
 		return rc;
-	};
-
-	void Element::setElem(int& i, int& lineNumber, int itIndex)
-	{
-		this->lexeme_ = getLexem(i);
-		this->lineNumber_ = lineNumber;
-
-		if (this->lexeme_ == LEX_ID || this->lexeme_ == LEX_LITERAL) this->itIndex_ = itIndex;
-		else this->itIndex_ = LT_TI_NULL_IDX;
 	};
 };
