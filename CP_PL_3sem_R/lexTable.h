@@ -27,9 +27,9 @@
 #define LEX_ID				'i'			// лексема для  идентификатора
 #define LEX_LITERAL			'l'			// лексема для	литералов (общая)
 
-namespace AUX{ enum TYPE; enum DATATYPE; class Table; };
+namespace AT{ enum TYPE; enum DATATYPE; class Table; };
 
-namespace LEX				// таблица лексем
+namespace LT				// таблица лексем
 {
 	class Element			// строка таблицы лексем
 	{
@@ -54,11 +54,11 @@ namespace LEX				// таблица лексем
 		Table();
 		Table(int size);
 
-		void addElem(Element elem);
+		void		addElem(Element elem);
 
-		int getSize();
-		Element* getElem(int i);
-		AUX::TYPE getType();	// возвращает тип идентификатора
+		int			getSize();
+		Element*	getElem(int i);
+		AT::TYPE	getType();	// возвращает тип идентификатора
 
 		~Table();
 	private:

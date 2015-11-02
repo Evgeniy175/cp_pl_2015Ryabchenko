@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "auxTable.h"
 
-namespace AUX
+namespace AT
 {	
 	Element::Element(){
 		this->dataType_ = DATATYPE::UNKNOWN;
 		this->type_ = TYPE::U;
-		setIntVal(AUX_NUM_DEFAULT);
-		setStrVal(AUX_LINE_DEFAULT);
+		setIntVal(AT_NUM_DEFAULT);
+		setStrVal(AT_LINE_DEFAULT);
 	}
 
 	int	Element::getIdx(){
@@ -59,7 +59,7 @@ namespace AUX
 			strcpy(this->value_.strValue_, value);
 
 		else
-			memset(this->value_.strValue_, AUX_ARR_MAXSIZE, 'M');
+			memset(this->value_.strValue_, AT_ARR_MAXSIZE, 'M');
 	};
 
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
@@ -72,7 +72,7 @@ namespace AUX
 
 		if (lexeme == LEX_LITERAL) {
 			_itoa(literalCounter++, this->name_, 10);
-			addPrefix(this->name_, AUX_LITERAL_PREFIX);
+			addPrefix(this->name_, AT_LITERAL_PREFIX);
 			setValue(lexeme, arrOfLines[i]);
 		}
 		else if (lexeme == LEX_ID) {
@@ -83,45 +83,45 @@ namespace AUX
 
 	void Element::setValue(char lexeme, char* line){
 		if (lexeme == LEX_LITERAL) {
-			if (this->dataType_ == AUX::DATATYPE::NUM)
+			if (this->dataType_ == AT::DATATYPE::NUM)
 				this->setIntVal(std::atoi(line));
 
-			else if (this->dataType_ == AUX::DATATYPE::LINE){
+			else if (this->dataType_ == AT::DATATYPE::LINE){
 				line = createStrVal(line);
 				this->setStrVal(line);
 			};
 		}
 		else if (lexeme == LEX_ID){
-			if (this->dataType_ == AUX::DATATYPE::NUM)
-				this->setIntVal(AUX_NUM_DEFAULT);
+			if (this->dataType_ == AT::DATATYPE::NUM)
+				this->setIntVal(AT_NUM_DEFAULT);
 
-			else if (this->dataType_ == AUX::DATATYPE::LINE) {
-				this->setStrVal(AUX_LINE_DEFAULT);
+			else if (this->dataType_ == AT::DATATYPE::LINE) {
+				this->setStrVal(AT_LINE_DEFAULT);
 			};
 		};
 	};
 
 	void Element::reset(){
-		memset(this->name_, -52, AUX_NAME_MAXSIZE);
-		this->dataType_ = AUX::DATATYPE::UNKNOWN;
-		this->type_ = AUX::TYPE::U;
-		this->ltIndex_ = AUX_NULLIDX;
-		this->setIntVal(AUX_NUM_DEFAULT);
-		this->setStrVal(AUX_LINE_DEFAULT);
+		memset(this->name_, -52, AT_NAME_MAXSIZE);
+		this->dataType_ = AT::DATATYPE::UNKNOWN;
+		this->type_ = AT::TYPE::U;
+		this->ltIndex_ = AT_NULLIDX;
+		this->setIntVal(AT_NUM_DEFAULT);
+		this->setStrVal(AT_LINE_DEFAULT);
 	};
 
 	DataStruct::DataStruct(){
-		char* firstTempName[] = AUX_DATA_NAMES;
-		char* secondTempName[] = AUX_DATASTRUCT_NAMES;
-		DATATYPE firstTempType[AUX_DATA_SIZE] = AUX_DATA_TYPES;
-		DATATYPE secondTempType[AUX_DATA_SIZE] = AUX_DATASTRUCT_TYPES;
+		char* firstTempName[] = AT_DATA_NAMES;
+		char* secondTempName[] = AT_DATASTRUCT_NAMES;
+		DATATYPE firstTempType[AT_DATA_SIZE] = AT_DATA_TYPES;
+		DATATYPE secondTempType[AT_DATA_SIZE] = AT_DATASTRUCT_TYPES;
 
-		for (int i = 0; i < AUX_DATA_SIZE; i++){			// заполнение векторов для встроенных типов
+		for (int i = 0; i < AT_DATA_SIZE; i++){			// заполнение векторов для встроенных типов
 			this->name_.push_back(firstTempName[i]);
 			this->type_.push_back(firstTempType[i]);
 		};
 
-		for (int i = 0; i < AUX_DATASTRUCT_SIZE; i++){	// заполнение векторов для структурированного типа
+		for (int i = 0; i < AT_DATASTRUCT_SIZE; i++){	// заполнение векторов для структурированного типа
 			this->structName_.push_back(secondTempName[i]);
 			this->structType_.push_back(secondTempType[i]);
 		};
@@ -151,7 +151,7 @@ namespace AUX
 		this->dataStruct_ = new DataStruct();
 		this->size_ = NULL;
 
-		if (maxSize < AUX_MAXSIZE) this->maxSize_ = maxSize;
+		if (maxSize < AT_MAXSIZE) this->maxSize_ = maxSize;
 		else throw ERROR_THROW(201);
 
 		this->table_ = new Element[maxSize];
@@ -206,10 +206,10 @@ namespace AUX
 	};
 
 	void addPrefix(char* dest, char* prefix){
-		char temp[AUX_ARR_MAXSIZE];
+		char temp[AT_ARR_MAXSIZE];
 		strcpy(temp, dest);
-		strncpy(dest, prefix, AUX_NAME_MAXSIZE - 1);
-		strncat(dest, temp, AUX_NAME_MAXSIZE - strlen(prefix) - 1);
+		strncpy(dest, prefix, AT_NAME_MAXSIZE - 1);
+		strncat(dest, temp, AT_NAME_MAXSIZE - strlen(prefix) - 1);
 	};
 
 	bool isFunction(char* first, char* second){

@@ -9,8 +9,8 @@
 
 namespace LOG{ class Log; };
 namespace In { class IN; };
-namespace LEX{ class Table; };
-namespace AUX{ enum TYPE; enum DATATYPE; class Table; };
+namespace LT{ class Table; };
+namespace AT{ enum TYPE; enum DATATYPE; class Table; };
 
 namespace LA{
 
@@ -18,16 +18,16 @@ namespace LA{
 	public:
 		LexAnalyser(int size, LOG::Log* log, In::IN in);
 		
-		LEX::Table* getLT();
-		AUX::Table* getAT();
+		LT::Table* getLT();
+		AT::Table* getAT();
 
-		char* getDataName(AUX::DATATYPE type);
-		AUX::DATATYPE getDataType(char** arrOfLines, int chainNumber);
+		char* getDataName(AT::DATATYPE type);
+		AT::DATATYPE getDataType(char** arrOfLines, int chainNumber);
 
 		~LexAnalyser();
 
 	private:
-		LEX::Table* lexTable;
-		AUX::Table* auxTable;
+		LT::Table* lexTable;
+		AT::Table* auxTable;
 	};
 };

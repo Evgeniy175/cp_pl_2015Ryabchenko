@@ -120,24 +120,24 @@ namespace LOG
 		*(this->getStream()) << std::endl << std::endl << "---Identificator table start---"
 			<< std::endl << "Help: NaL - Not a Literal\t" << std::endl << "Size: "
 			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
-			<< std::setw(AUX_NAME_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" << "TYPE\t"
+			<< std::setw(AT_NAME_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" << "TYPE\t"
 			<< "LT INDEX\t" << "VALUE" << std::endl;
 
 		for (int i = 0; i < la->getAT()->getSize(); i++){
 			lexeme = la->getLT()->getElem(la->getAT()->getElem(i)->getIdx() - 1)->getLex();
 
 			*(this->getStream()) << i << '\t'
-				<< std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getName()
-				<< "\t\t" << std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getFuncName()
+				<< std::setw(AT_NAME_MAXSIZE) << la->getAT()->getElem(i)->getName()
+				<< "\t\t" << std::setw(AT_NAME_MAXSIZE) << la->getAT()->getElem(i)->getFuncName()
 				<< "\t\t" << la->getDataName(la->getAT()->getElem(i)->getDataType())
 				<< "\t\t" << la->getAT()->getElem(i)->getType()
 				<< '\t' << la->getAT()->getElem(i)->getIdx() << "\t\t";
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
-				if (la->getAT()->getElem(i)->getDataType() == AUX::DATATYPE::NUM)
+				if (la->getAT()->getElem(i)->getDataType() == AT::DATATYPE::NUM)
 					*(this->getStream()) << la->getAT()->getElem(i)->getIntVal();
  
-				else if (la->getAT()->getElem(i)->getDataType() == AUX::DATATYPE::LINE)
+				else if (la->getAT()->getElem(i)->getDataType() == AT::DATATYPE::LINE)
 					*(this->getStream()) << la->getAT()->getElem(i)->getStrVal();
  			}
  			else 

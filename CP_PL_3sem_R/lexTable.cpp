@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "lexTable.h"
 
-namespace LEX
+namespace LT
 {
 	Element::Element() { } 
 
@@ -22,7 +22,7 @@ namespace LEX
 	};
 
 	void Element::setElem(int& i, int& lineNumber){
-		this->lexeme_ = LEX::getLex(i);
+		this->lexeme_ = LT::getLex(i);
 		this->lineNumber_ = lineNumber;
 		this->itIndex_ = LT_TI_NULL_IDX;
 	};
@@ -48,19 +48,19 @@ namespace LEX
 		return (table_ + i);
 	};
 
-	AUX::TYPE Table::getType(){
-		AUX::TYPE rc = AUX::TYPE::U;
+	AT::TYPE Table::getType(){
+		AT::TYPE rc = AT::TYPE::U;
 
 		if (this->getElem(this->getSize() - 3)->getLex() == LEX_FUNCTION)
-			rc = this->getElem(this->getSize() - 4)->getLex() == LEX_EXTERN ? AUX::TYPE::E : AUX::TYPE::F;
+			rc = this->getElem(this->getSize() - 4)->getLex() == LEX_EXTERN ? AT::TYPE::E : AT::TYPE::F;
 
 		else {
 			switch (this->getElem(this->getSize() - 2)->getLex())
 			{
-			case LEX_COMMA: case LEX_SQBRACEOPEN: rc = AUX::TYPE::P; break;
-			case LEX_TYPE: rc = AUX::TYPE::V; break;
-			case LEX_COLON: rc = AUX::TYPE::S; break;
-			case LEX_RETURN: case LEX_EQUALLY: rc = AUX::TYPE::L; break;
+			case LEX_COMMA: case LEX_SQBRACEOPEN: rc = AT::TYPE::P; break;
+			case LEX_TYPE: rc = AT::TYPE::V; break;
+			case LEX_COLON: rc = AT::TYPE::S; break;
+			case LEX_RETURN: case LEX_EQUALLY: rc = AT::TYPE::L; break;
 			default: break;
 			};
 		}

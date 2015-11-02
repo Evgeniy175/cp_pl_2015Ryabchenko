@@ -5,26 +5,26 @@
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 0 как дефолтное значение инт
 
-#define AUX_NAME_MAXSIZE	12					// максимальное число символов в имени переменной
-#define AUX_MAXSIZE			4096				// максимальное кол-во строк в таблице идентификаторов
-#define AUX_NUM_DEFAULT		0x00000000			// значение по умолчанию для num
-#define AUX_LINE_DEFAULT	0x00				// значение по умолчанию для line
-#define AUX_NULLIDX			0xffffffff			// нет эл-та таблицы идентификаторов
-#define AUX_LINE_MAXSIZE	255					// 
-#define AUX_ARR_MAXSIZE		256					//
-#define AUX_LITERAL_PREFIX	"L"
+#define AT_NAME_MAXSIZE	12					// максимальное число символов в имени переменной
+#define AT_MAXSIZE			4096				// максимальное кол-во строк в таблице идентификаторов
+#define AT_NUM_DEFAULT		0x00000000			// значение по умолчанию для num
+#define AT_LINE_DEFAULT	0x00				// значение по умолчанию для line
+#define AT_NULLIDX			0xffffffff			// нет эл-та таблицы идентификаторов
+#define AT_LINE_MAXSIZE	255					// 
+#define AT_ARR_MAXSIZE		256					//
+#define AT_LITERAL_PREFIX	"L"
 
-#define AUX_DATA_SIZE	5				// размер массива типов
-#define AUX_DATA_NAMES { "num", "line", "wash", "bool", "nil" }
-#define AUX_DATA_TYPES	{ AUX::DATATYPE::NUM, AUX::DATATYPE::LINE, AUX::DATATYPE::WASH, AUX::DATATYPE::BOOL, AUX::DATATYPE::NIL }
+#define AT_DATA_SIZE	5				// размер массива типов
+#define AT_DATA_NAMES { "num", "line", "wash", "bool", "nil" }
+#define AT_DATA_TYPES	{ AT::DATATYPE::NUM, AT::DATATYPE::LINE, AT::DATATYPE::WASH, AT::DATATYPE::BOOL, AT::DATATYPE::NIL }
 
-#define AUX_DATASTRUCT_SIZE	5			// размер массива типов для структуры
-#define AUX_DATASTRUCT_NAMES { "type", "load", "temperature", "time", "rpm" }
-#define AUX_DATASTRUCT_TYPES { AUX::DATATYPE::LINE, AUX::DATATYPE::NUM, AUX::DATATYPE::NUM, AUX::DATATYPE::NUM, AUX::DATATYPE::NUM }
+#define AT_DATASTRUCT_SIZE	5			// размер массива типов для структуры
+#define AT_DATASTRUCT_NAMES { "type", "load", "temperature", "time", "rpm" }
+#define AT_DATASTRUCT_TYPES { AT::DATATYPE::LINE, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM }
 
 namespace LA { class LexAnalyser; };
 
-namespace AUX{		// дополнительная таблица
+namespace AT{		// дополнительная таблица
 
 	enum TYPE{			// типы
 		U = 0,				// unknown
@@ -92,13 +92,13 @@ namespace AUX{		// дополнительная таблица
 
 	private:
 		int			ltIndex_;					// индекс первой строки в таблице лексем
-		char		name_[AUX_NAME_MAXSIZE];		// имя (автоматически усекается до ID_MAXSIZE)
-		char		funcName_[AUX_NAME_MAXSIZE];
+		char		name_[AT_NAME_MAXSIZE];		// имя (автоматически усекается до ID_MAXSIZE)
+		char		funcName_[AT_NAME_MAXSIZE];
 		TYPE		type_;						// тип идентификатора
 		DATATYPE	dataType_;					// тип данных
 		struct{
 			int		intValue_;
-			char	strValue_[AUX_ARR_MAXSIZE];
+			char	strValue_[AT_ARR_MAXSIZE];
 		} value_;
 	};
 

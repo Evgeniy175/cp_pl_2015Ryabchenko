@@ -92,10 +92,10 @@ namespace In{
 		if (file.good()){
 			log->writeLine("---Начало проверки допустимости символов---", "");
 
-			rc.setArr(new char*[IN_MAX_LINE_NUMBER]);			// выделение памяти под кол-во строк IN_MAX_LINE_NUMBER
+			rc.setArr(new char*[IN_MAX_LINE_NUMBER]);	// выделение памяти под кол-во строк IN_MAX_LINE_NUMBER
 			rc.setLine(new char[IN_MAX_LEN_TEXT]);		// выделение памяти для нулевой строки, IN_MAX_LEN_TEXT символов
 
-			if (!file.eof) tempChar = file.get();
+			if (!file.eof()) tempChar = file.get();
 
 			while (!file.eof())	{
 				switch (rc.getCode(tempChar)){
