@@ -113,15 +113,15 @@ namespace Log
 			*log.stream << i << '\t' 
 				<< std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getName()
 				<< "\t\t" << std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getFuncName()
-				<< "\t\t" << IT::getDataName(la->getAT()->getElem(i)->getDataType())
+				<< "\t\t" << la->getDataName(la->getAT()->getElem(i)->getDataType())
 				<< "\t\t" << la->getAT()->getElem(i)->getType()
 				<< '\t' << la->getAT()->getElem(i)->getIdx() << "\t\t";
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
-				if (la->getAT()->getElem(i)->getDataType() == IT::DATATYPE::NUM)
+				if (la->getAT()->getElem(i)->getDataType() == AUX::DATATYPE::NUM)
 					*log.stream << la->getAT()->getElem(i)->getIntVal();
  
-				else if (la->getAT()->getElem(i)->getDataType() == IT::DATATYPE::LINE)
+				else if (la->getAT()->getElem(i)->getDataType() == AUX::DATATYPE::LINE)
 					*log.stream << la->getAT()->getElem(i)->getStrVal();
  			}
  			else *log.stream << "-NaL-";

@@ -36,13 +36,11 @@
 
 namespace Log{ struct LOG; };
 
-namespace In
-{
-	class IN
-	{
+namespace In{
+
+	class IN{
 	public:
-		enum
-		{
+		enum{
 			A = 1024,		// ALLOWED,		допустимые
 			D = 2048,		// DISALLOWED,	запрещенные
 			I = 4096,		// IGNORE,		игнорируемые

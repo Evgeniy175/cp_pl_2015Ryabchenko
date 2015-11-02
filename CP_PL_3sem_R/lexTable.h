@@ -1,6 +1,7 @@
 #pragma once
 
 #include "errors.h"
+#include "auxTable.h"
 
 #define LT_MAXSIZE			4096		// максимальное кол-во строк в таблице лексем
 #define LT_TI_NULL_IDX		0xffffffff	// нет эл-та таблицы идентификаторов
@@ -26,7 +27,9 @@
 #define LEX_ID				'i'			// лексема дл€  идентификатора
 #define LEX_LITERAL			'l'			// лексема дл€	литералов (обща€)
 
-namespace LT				// таблица лексем
+namespace AUX{ enum TYPE; enum DATATYPE; class Table; };
+
+namespace LEX				// таблица лексем
 {
 	class Element			// строка таблицы лексем
 	{
@@ -45,18 +48,19 @@ namespace LT				// таблица лексем
 		int	 itIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
 	};
 
-	class LexTable			// экземпл€р таблицы лексем
+	class Table			// экземпл€р таблицы лексем
 	{
 	public:
-		LexTable();
-		LexTable(int size);
+		Table();
+		Table(int size);
 
 		void addElem(Element elem);
 
 		int getSize();
 		Element* getElem(int i);
+		AUX::TYPE getType();	// возвращает тип идентификатора
 
-		~LexTable();
+		~Table();
 	private:
 		int maxSize_;					// емкость таблицы лексем < LT_MAXSIZE
 		int size_;						// текущий размер таблицы лексем < maxsize

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "lexTable.h"
 
-namespace LT
+namespace LEX
 {
 	Element::Element() { } 
 
@@ -22,16 +22,16 @@ namespace LT
 	};
 
 	void Element::setElem(int& i, int& lineNumber){
-		this->lexeme_ = LT::getLex(i);
+		this->lexeme_ = LEX::getLex(i);
 		this->lineNumber_ = lineNumber;
 		this->itIndex_ = LT_TI_NULL_IDX;
 	};
 
-	LexTable::LexTable(){
+	Table::Table(){
 		this->size_ = NULL;
 	}
 
-	LexTable::LexTable(int maxSize){
+	Table::Table(int maxSize){
 		this->size_ = NULL;
 
 		if (maxSize < LT_MAXSIZE) this->maxSize_ = maxSize;
@@ -40,19 +40,39 @@ namespace LT
 		this->table_ = new Element[this->maxSize_];
 	}
 
-	int LexTable::getSize(){
+	int Table::getSize(){
 		return this->size_;
 	};
 
-	Element* LexTable::getElem(int i){
+	Element* Table::getElem(int i){
 		return (table_ + i);
 	};
 
-	void LexTable::addElem(Element elem){
+	AUX::TYPE Table::getType(){
+		AUX::TYPE rc = AUX::TYPE::U;
+
+		if (this->getElem(this->getSize() - 3)->getLex() == LEX_FUNCTION)
+			rc = this->getElem(this->getSize() - 4)->getLex() == LEX_EXTERN ? AUX::TYPE::E : AUX::TYPE::F;
+
+		else {
+			switch (this->getElem(this->getSize() - 2)->getLex())
+			{
+			case LEX_COMMA: case LEX_SQBRACEOPEN: rc = AUX::TYPE::P; break;
+			case LEX_TYPE: rc = AUX::TYPE::V; break;
+			case LEX_COLON: rc = AUX::TYPE::S; break;
+			case LEX_RETURN: case LEX_EQUALLY: rc = AUX::TYPE::L; break;
+			default: break;
+			};
+		}
+
+		return rc;
+	};
+
+	void Table::addElem(Element elem){
 		this->table_[this->size_++] = elem;
 	};
 	
-	LexTable::~LexTable(){
+	Table::~Table(){
 		delete[] this->table_;
 	};
 

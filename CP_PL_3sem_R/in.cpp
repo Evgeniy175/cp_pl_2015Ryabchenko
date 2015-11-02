@@ -2,100 +2,81 @@
 #include "in.h"
 #include "log.h"
 
-namespace In
-{
-	IN::IN()
-	{
+namespace In{
+	IN::IN(){
 		this->size_ = NULL;
 		this->lines_ = NULL;
 		this->ignor_ = NULL;
 		this->numberOfChains_ = NULL;
 	};
 
-	char** IN::getArr()
-	{
+	char** IN::getArr(){
 		return this->arrOfLines_;
 	};
 
-	char* IN::getLine(int i)
-	{
+	char* IN::getLine(int i){
 		return this->arrOfLines_[i];
 	};
 
-	int IN::getNumOfChains()
-	{
+	int IN::getNumOfChains(){
 		return this->numberOfChains_;
 	};
 
-	int IN::getLinesCounter()
-	{
+	int IN::getLinesCounter(){
 		return this->lines_;
 	};
 
-	int IN::getSizeCounter()
-	{
+	int IN::getSizeCounter(){
 		return this->size_;
 	};
 
-	int IN::getIgnorCounter()
-	{
+	int IN::getIgnorCounter(){
 		return this->ignor_;
 	};
 
-	int IN::getCode(char symbol)
-	{
+	int IN::getCode(char symbol){
 		return this->code_[unsigned char(symbol)];
 	};
 
-	void IN::setCode(int* code)
-	{
+	void IN::setCode(int* code){
 		this->code_ = code;
 	};
 
-	void IN::setArr(char** arrOfLines)
-	{
+	void IN::setArr(char** arrOfLines){
 		this->arrOfLines_ = arrOfLines;
 	};
 
-	void IN::setLine(char* line)
-	{
+	void IN::setLine(char* line){
 		this->arrOfLines_[this->numberOfChains_] = line;
 	};
 
-	void IN::setChar(int& currPos, char symbol)
-	{
+	void IN::setChar(int& currPos, char symbol){
 		this->arrOfLines_[this->numberOfChains_][currPos++] = symbol;
 	};
 
-	void IN::setLineEnd(int& currChainPosition)
-	{
+	void IN::setLineEnd(int& currChainPosition){
 		this->arrOfLines_[this->numberOfChains_++][currChainPosition] = NULL_STR;
 		this->arrOfLines_[this->numberOfChains_] = new char[IN_MAX_LEN_TEXT];
 		currChainPosition = 0;
 	};
 
-	void IN::increaseIgnor()
-	{
+	void IN::increaseIgnor(){
 		this->ignor_++;
 	};
 
-	void IN::increaseLines()
-	{
+	void IN::increaseLines(){
 		this->lines_++;
 	};
 
-	void IN::increaseSize()
-	{
+	void IN::increaseSize(){
 		this->size_++;
 	};
 
-	void IN::setText(char symbol)
-	{
+	void IN::setText(char symbol){
 		this->text_[this->size_] = symbol;
 	};
 
-	IN getIn(Log::LOG log, wchar_t* infile)
-	{
+	IN getIn(Log::LOG log, wchar_t* infile){
 		IN rc;
 		std::ifstream file(infile);
 		Error::ERROR errorVar;
@@ -108,8 +89,7 @@ namespace In
 
 		rc.setCode(clearedValue);
 
-		if (file.good())
-		{
+		if (file.good()){
 			Log::writeLine(log, "---Начало проверки допустимости символов---", "");
 
 			rc.setArr(new char*[IN_MAX_LINE_NUMBER]);			// выделение памяти под кол-во строк IN_MAX_LINE_NUMBER
@@ -117,10 +97,8 @@ namespace In
 
 			tempChar = file.get();
 
-			while (!file.eof())
-			{
-				switch (rc.getCode(tempChar))
-				{
+			while (!file.eof())	{
+				switch (rc.getCode(tempChar)){
 				case IN::A:
 					rc.setChar(currChainPosition, tempChar);
 					positionCounter++;
@@ -142,14 +120,12 @@ namespace In
 
 
 				case IN::S:
-					if (currChainPosition != NULL)
-					{
+					if (currChainPosition != NULL){
 						rc.setLineEnd(currChainPosition);
 						positionCounter = 0;
 					};
 
-					if (tempChar == IN_CODE_ENDL)
-					{
+					if (tempChar == IN_CODE_ENDL){
 						rc.setChar(currChainPosition, LEX_NEWLINE);
 						rc.increaseLines();
 					}
@@ -162,8 +138,7 @@ namespace In
 
 
 				case IN::B:
-					if (rc.getCode(previousChar) == IN::A)
-					{
+					if (rc.getCode(previousChar) == IN::A){
 						rc.setLineEnd(currChainPosition);
 						positionCounter = 0;
 					};
@@ -201,13 +176,11 @@ namespace In
 		return rc;
 	};
 
-	void IN::createLine(char firstSymbol, std::ifstream& file, int& positionCounter)
-	{
+	void IN::createLine(char firstSymbol, std::ifstream& file, int& positionCounter){
 		char tempChar = firstSymbol;
 		int i = 0;
 
-		for (; static_cast<unsigned char>(tempChar) != 0x92; i++)
-		{
+		for (; static_cast<unsigned char>(tempChar) != 0x92; i++){
 			this->arrOfLines_[this->numberOfChains_][i] = tempChar;
 			this->text_[this->size_++] = tempChar;
 			tempChar = file.get();

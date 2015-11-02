@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "auxTable.h"
 
-namespace IT
+namespace AUX
 {	
 	Element::Element(){
 		this->dataType_ = DATATYPE::UNKNOWN;
 		this->type_ = TYPE::U;
-		setIntVal(AUX_INT_DEFAULT);
-		setStrVal(AUX_STR_DEFAULT);
+		setIntVal(AUX_NUM_DEFAULT);
+		setStrVal(AUX_LINE_DEFAULT);
 	}
 
 	int	Element::getIdx(){
@@ -62,12 +62,12 @@ namespace IT
 			memset(this->value_.strValue_, AUX_ARR_MAXSIZE, 'M');
 	};
 
-	void Element::setElem(LT::LexTable* lt, char* funcName,
+	void Element::setElem(LA::LexAnalyser* la, char* funcName,
 		char** arrOfLines, int& i, TYPE idType, int literalCounter){
-		char lexeme = lt->getElem(lt->getSize() - 1)->getLex();
-		this->ltIndex_ = lt->getSize();
-		this->dataType_ = IT::getDataType(lt, arrOfLines, i);
-		this->type_ = IT::getType(lt);
+		char lexeme = la->getLT()->getElem(la->getLT()->getSize() - 1)->getLex();
+		this->ltIndex_ = la->getLT()->getSize();
+		this->dataType_ = la->getDataType(arrOfLines, i);
+		this->type_ = la->getLT()->getType();
 		this->setFuncName(funcName);
 
 		if (lexeme == LEX_LITERAL) {
@@ -83,36 +83,72 @@ namespace IT
 
 	void Element::setValue(char lexeme, char* line){
 		if (lexeme == LEX_LITERAL) {
-			if (this->dataType_ == IT::DATATYPE::NUM)
+			if (this->dataType_ == AUX::DATATYPE::NUM)
 				this->setIntVal(std::atoi(line));
 
-			else if (this->dataType_ == IT::DATATYPE::LINE){
+			else if (this->dataType_ == AUX::DATATYPE::LINE){
 				line = createStrVal(line);
 				this->setStrVal(line);
 			};
 		}
 		else if (lexeme == LEX_ID){
-			if (this->dataType_ == IT::DATATYPE::NUM)
-				this->setIntVal(AUX_INT_DEFAULT);
+			if (this->dataType_ == AUX::DATATYPE::NUM)
+				this->setIntVal(AUX_NUM_DEFAULT);
 
-			else if (this->dataType_ == IT::DATATYPE::LINE) {
-				this->setStrVal(AUX_STR_DEFAULT);
+			else if (this->dataType_ == AUX::DATATYPE::LINE) {
+				this->setStrVal(AUX_LINE_DEFAULT);
 			};
 		};
 	};
 
 	void Element::reset(){
 		memset(this->name_, -52, AUX_NAME_MAXSIZE);
-		this->dataType_ = IT::DATATYPE::UNKNOWN;
-		this->type_ = IT::TYPE::U;
+		this->dataType_ = AUX::DATATYPE::UNKNOWN;
+		this->type_ = AUX::TYPE::U;
 		this->ltIndex_ = AUX_NULLIDX;
-		this->setIntVal(AUX_INT_DEFAULT);
-		this->setStrVal(AUX_STR_DEFAULT);
+		this->setIntVal(AUX_NUM_DEFAULT);
+		this->setStrVal(AUX_LINE_DEFAULT);
 	};
 
-	AuxTable::AuxTable() { }
+	DataStruct::DataStruct(){
+		char* firstTempName[] = AUX_DATA_NAMES;
+		char* secondTempName[] = AUX_DATASTRUCT_NAMES;
+		DATATYPE firstTempType[AUX_DATA_SIZE] = AUX_DATA_TYPES;
+		DATATYPE secondTempType[AUX_DATA_SIZE] = AUX_DATASTRUCT_TYPES;
 
-	AuxTable::AuxTable(int maxSize){
+		for (int i = 0; i < AUX_DATA_SIZE; i++){			// заполнение векторов для встроенных типов
+			this->name_.push_back(firstTempName[i]);
+			this->type_.push_back(firstTempType[i]);
+		};
+
+		for (int i = 0; i < AUX_DATASTRUCT_SIZE; i++){	// заполнение векторов для структурированного типа
+			this->structName_.push_back(secondTempName[i]);
+			this->structType_.push_back(secondTempType[i]);
+		};
+	};
+
+	std::vector<char*>& DataStruct::getName(){
+		return this->name_;
+	};
+
+	std::vector<char*>& DataStruct::getStructName(){
+		return this->structName_;
+	};
+
+	std::vector<DATATYPE>& DataStruct::getType(){
+		return this->type_;
+	};
+
+	std::vector<DATATYPE>& DataStruct::getStructType(){
+		return this->structType_;
+	};
+
+	Table::Table(){
+		this->dataStruct_ = new DataStruct();
+	}
+
+	Table::Table(int maxSize){
+		this->dataStruct_ = new DataStruct();
 		this->size_ = NULL;
 
 		if (maxSize < AUX_MAXSIZE) this->maxSize_ = maxSize;
@@ -121,40 +157,23 @@ namespace IT
 		this->table_ = new Element[maxSize];
 	}
 
-	Element* AuxTable::getElem(int i){
+	Element* Table::getElem(int i){
 		return (table_ + i);
 	};
 
-	int AuxTable::getSize(){
+	int Table::getSize(){
 		return this->size_;
 	};
 
-	void AuxTable::addElem(Element elem){
+	DataStruct* Table::getDataStruct(){
+		return this->dataStruct_;
+	};
+
+	void Table::addElem(Element elem){
 		this->table_[this->size_++] = elem;
 	};
 
-	IdDataType::IdDataType(){
-		char* firstTempName[] = TI_TYPES;
-		char* secondTempName[] = TI_STRUCT_NAMES;
-		DATATYPE firstTempType[TI_TYPES_SIZE] = TI_ID_TYPES;
-		DATATYPE secondTempType[TI_TYPES_SIZE] = TI_STRUCT_ID_TYPES;
-
-		for (int i = 0; i < TI_TYPES_SIZE; i++){			// заполнение векторов для встроенных типов
-			name_.push_back(firstTempName[i]);
-			type_.push_back(firstTempType[i]);
-		};
-
-		for (int i = 0; i < TI_STRUCT_TYPES_SIZE; i++){	// заполнение векторов для структурированного типа
-			structName_.push_back(secondTempName[i]);
-			structType_.push_back(secondTempType[i]);
-		};
-	}
-
-	
-
-	
-
-	bool AuxTable::isIncluded(char* line, char* funcName){
+	bool Table::isIncluded(char* line, char* funcName){
 		if (this->size_ == NULL) return false;
 		else {
 			for (int i = 0; i < size_; i++){
@@ -167,7 +186,7 @@ namespace IT
 		return false;
 	};
 
-	int AuxTable::getIdx(char* name, char* funcName){
+	int Table::getIdx(char* name, char* funcName){
 		int rc = -1;
 
 		if (this->size_ == NULL)	return rc;
@@ -182,73 +201,9 @@ namespace IT
 		return rc;
 	};
 
-	AuxTable::~AuxTable(){
+	Table::~Table(){
 		delete[] this->table_;
 	};
-
-	DATATYPE getDataType(LT::LexTable* lt, char** arrOfLines, int i){
-		DATATYPE rc = DATATYPE::UNKNOWN;
-		IdDataType* temp = new IdDataType();
-		std::vector<char*>::iterator firstIt;
-		std::vector<DATATYPE>::iterator secondIt;
-
-		if (lt->getElem(lt->getSize() - 2)->getLex() == LEX_COLON){
-			for (	firstIt = temp->structName_.begin(), secondIt = temp->structType_.begin();
-					firstIt != temp->structName_.end(); firstIt++, secondIt++){
-						if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
-			};
-		}
-		else if (lt->getElem(lt->getSize() - 2)->getLex() == LEX_EQUALLY
-					|| lt->getElem(lt->getSize() - 2)->getLex() == LEX_COMMA
-					|| lt->getElem(lt->getSize() - 2)->getLex() == LEX_SQBRACEOPEN
-					|| lt->getElem(lt->getSize() - 2)->getLex() == LEX_RETURN) {
-							rc = arrOfLines[i][0] == '‘' ? DATATYPE::LINE : DATATYPE::NUM;
-		}
-		else {
-			for (firstIt = temp->name_.begin(), secondIt = temp->type_.begin();
-					firstIt != temp->name_.end(); firstIt++, secondIt++) {
-						if (strcmp(*firstIt, arrOfLines[i - 1]) == NULL) rc = *secondIt;
-			};
-		};
-
-		delete temp;
-		return rc;
-	};
-
-	char* getDataName(IT::DATATYPE type){
-		char* rc = "unknown";
-		IdDataType* temp = new IdDataType();
-		std::vector<char*>::iterator firstIt = temp->name_.begin();
-		std::vector<DATATYPE>::iterator secondIt = temp->type_.begin();
-
-		for (; secondIt != temp->type_.end(); firstIt++, secondIt++)
-			if (*secondIt == type) rc = *firstIt;
-
-		delete temp;
-		return rc;
-	};
-
-	TYPE getType(LT::LexTable* lt){
-		TYPE rc = IT::TYPE::U;
-
-		if (lt->getElem(lt->getSize() - 3)->getLex() == LEX_FUNCTION)
-			rc = lt->getElem(lt->getSize() - 4)->getLex() == LEX_EXTERN ? TYPE::E : TYPE::F;
-
-		else {
-			switch (lt->getElem(lt->getSize() - 2)->getLex())
-			{
-			case LEX_COMMA: case LEX_SQBRACEOPEN: rc = TYPE::P; break;
-			case LEX_TYPE: rc = TYPE::V; break;
-			case LEX_COLON: rc = TYPE::S; break;
-			case LEX_RETURN: case LEX_EQUALLY: rc = TYPE::L; break;
-			default: break;
-			};
-		}
-
-		return rc;
-	};
-
-	
 
 	void addPrefix(char* dest, char* prefix){
 		char temp[AUX_ARR_MAXSIZE];

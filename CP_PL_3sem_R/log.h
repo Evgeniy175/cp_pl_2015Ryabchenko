@@ -13,11 +13,10 @@
 #define SIZE_CHAR_ARRAY 256
 
 namespace LA{ class LexAnalyser; };
+namespace In{ class IN; };
 
-namespace Log
-{
-	struct LOG
-	{
+namespace Log{
+	struct LOG{
 		wchar_t logfile[PARM_MAX_SIZE];							// выходной файл
 		std::ofstream* stream;									// поток вывода
 	};

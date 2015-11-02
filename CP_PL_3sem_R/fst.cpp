@@ -19,12 +19,11 @@ namespace FST
 	NODE::NODE() { }
 
 	NODE::NODE(short numOfRel, RELATION relation, ...){
-		RELATION* temp = &relation;
-
 		this->relations_ = new RELATION[numOfRel];
 		this->numOfRel_ = numOfRel;
 
-		for (int i = 0; i < numOfRel; i++)	this->relations_[i] = *(temp + i);
+		for (int i = 0; i < numOfRel; i++)
+			this->relations_[i] = *(&relation + i);
 	}
 
 	NODE::NODE(short firstRelation, short secondRelation, char* str){
@@ -42,7 +41,6 @@ namespace FST
 		return this->numOfRel_;
 	};
 
-
 	RELATION NODE::getRelation(int i){
 		return this->relations_[i];
 	};
@@ -51,14 +49,13 @@ namespace FST
 
 	FST::FST(char* str, short numberOfStates, NODE node, ...){
 		this->nodes_ = new NODE[numberOfStates];
-		NODE* temp = &node;
 
 		this->string_ = str;
 		this->numberOfStates_ = numberOfStates;
 		this->possibleStates_ = new short[numberOfStates];
 
 		for (int i = 0; i < numberOfStates; i++)
-			this->nodes_[i] = *(temp + i);
+			this->nodes_[i] = *(&node + i);
 	}
 
 	void FST::setString(char* str){

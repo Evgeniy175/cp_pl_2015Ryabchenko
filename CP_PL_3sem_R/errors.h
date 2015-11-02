@@ -12,14 +12,13 @@
 #define ERROR_ENTRY_NODEF100(id) ERROR_ENTRY_NODEF10(id+0), ERROR_ENTRY_NODEF10(id+10), ERROR_ENTRY_NODEF10(id+20), ERROR_ENTRY_NODEF10(id+30), ERROR_ENTRY_NODEF10(id+40), ERROR_ENTRY_NODEF10(id+50), ERROR_ENTRY_NODEF10(id+60), ERROR_ENTRY_NODEF10(id+70), ERROR_ENTRY_NODEF10(id+80), ERROR_ENTRY_NODEF10(id+90)
 #define ERROR_MAX_ENTRY 1000
 
-namespace Error
-{
-	struct ERROR
-	{
+namespace Error{
+	struct ERROR{
+
 		int id;
 		char message[ERROR_MAXSIZE_MESSAGE];
-		struct IN
-		{
+
+		struct IN{
 			short line;
 			short col;
 		} inext;

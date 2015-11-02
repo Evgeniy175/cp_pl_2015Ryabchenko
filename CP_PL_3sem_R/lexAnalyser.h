@@ -7,24 +7,27 @@
 #include "auxTable.h"
 #include "errors.h"
 
-namespace LA
-{
-	class LexAnalyser
-	{
-	public:
-		LexAnalyser(int size);
-		
-		LT::LexTable* getLT();
-		IT::AuxTable* getAT();
+namespace Log{ struct LOG; };
+namespace In { class IN; };
+namespace LEX{ class Table; };
+namespace AUX{ enum TYPE; enum DATATYPE; class Table; };
 
-		void create(Log::LOG log, In::IN in);
+namespace LA{
+
+	class LexAnalyser{
+	public:
+		LexAnalyser(int size, Log::LOG log, In::IN in);
+		
+		LEX::Table* getLT();
+		AUX::Table* getAT();
+
+		char* getDataName(AUX::DATATYPE type);
+		AUX::DATATYPE getDataType(char** arrOfLines, int chainNumber);
 
 		~LexAnalyser();
 
 	private:
-		LT::LexTable* lexTable;
-		IT::AuxTable* auxTable;
+		LEX::Table* lexTable;
+		AUX::Table* auxTable;
 	};
-
-	
 };

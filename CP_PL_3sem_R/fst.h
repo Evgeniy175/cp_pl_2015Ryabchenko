@@ -5,8 +5,7 @@
 
 namespace FST
 {
-	class RELATION
-	{
+	class RELATION{
 	public:
 		RELATION(char symbol = 0x00, short nextNode = NULL);
 
@@ -18,8 +17,7 @@ namespace FST
 		short	nextNode_;
 	};
 
-	class NODE
-	{
+	class NODE{
 	public:
 		NODE();
 		NODE(short numOfRel, RELATION relation, ...);
@@ -33,8 +31,7 @@ namespace FST
 		RELATION*	relations_;
 	};
 
-	class FST
-	{
+	class FST{
 	public:
 		FST();
 		FST(char* str, short numberOfStates, NODE node, ...);

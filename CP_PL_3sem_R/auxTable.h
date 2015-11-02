@@ -1,27 +1,31 @@
 #pragma once
-#include "lexTable.h"
+#include "lexAnalyser.h"
 #include "errors.h"
 #include <vector>
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 0 как дефолтное значение инт
+
 #define AUX_NAME_MAXSIZE	12					// максимальное число символов в имени переменной
 #define AUX_MAXSIZE			4096				// максимальное кол-во строк в таблице идентификаторов
-#define AUX_INT_DEFAULT		0x00000000			// значение по умолчанию дл€ integer
-#define AUX_STR_DEFAULT		0x00				// значение по умолчанию дл€ string
+#define AUX_NUM_DEFAULT		0x00000000			// значение по умолчанию дл€ num
+#define AUX_LINE_DEFAULT	0x00				// значение по умолчанию дл€ line
 #define AUX_NULLIDX			0xffffffff			// нет эл-та таблицы идентификаторов
-#define AUX_STR_MAXSIZE		255					// 
+#define AUX_LINE_MAXSIZE	255					// 
 #define AUX_ARR_MAXSIZE		256					//
 #define AUX_LITERAL_PREFIX	"L"
 
-#define TI_TYPES_SIZE	5				// размер массива типов
-#define TI_TYPES { "num", "line", "wash", "bool", "nil" }
-#define TI_ID_TYPES	{ IT::DATATYPE::NUM, IT::DATATYPE::LINE, IT::DATATYPE::WASH, IT::DATATYPE::BOOL, IT::DATATYPE::NIL }
+#define AUX_DATA_SIZE	5				// размер массива типов
+#define AUX_DATA_NAMES { "num", "line", "wash", "bool", "nil" }
+#define AUX_DATA_TYPES	{ AUX::DATATYPE::NUM, AUX::DATATYPE::LINE, AUX::DATATYPE::WASH, AUX::DATATYPE::BOOL, AUX::DATATYPE::NIL }
 
-#define TI_STRUCT_TYPES_SIZE	5		// размер массива типов дл€ структуры
-#define TI_STRUCT_NAMES { "type", "load", "temperature", "time", "rpm" }
-#define TI_STRUCT_ID_TYPES { IT::DATATYPE::LINE, IT::DATATYPE::NUM, IT::DATATYPE::NUM, IT::DATATYPE::NUM, IT::DATATYPE::NUM }
+#define AUX_DATASTRUCT_SIZE	5			// размер массива типов дл€ структуры
+#define AUX_DATASTRUCT_NAMES { "type", "load", "temperature", "time", "rpm" }
+#define AUX_DATASTRUCT_TYPES { AUX::DATATYPE::LINE, AUX::DATATYPE::NUM, AUX::DATATYPE::NUM, AUX::DATATYPE::NUM, AUX::DATATYPE::NUM }
 
-namespace IT		// дополнительна€ таблица
-{
+namespace LA { class LexAnalyser; };
+
+namespace AUX{		// дополнительна€ таблица
+
 	enum TYPE{			// типы
 		U = 0,				// unknown
 		V = 1,				// переменна€
@@ -41,18 +45,23 @@ namespace IT		// дополнительна€ таблица
 		NIL  = 5			// аналог void в C++
 	};
 
-	struct	IdDataType		// типы данных идентификаторов
-	{
+	class DataStruct{		// типы данных идентификаторов
+	public:
+		DataStruct();
+
+		std::vector<char*>&		getName();
+		std::vector<char*>&		getStructName();
+		std::vector<DATATYPE>&	getType();
+		std::vector<DATATYPE>&	getStructType();
+
+	private:
 		std::vector<char*>		name_;			// дл€ обычных типов
 		std::vector<char*>		structName_;	// дл€ структуры
 		std::vector<DATATYPE>	type_;			// дл€ обычных типов
 		std::vector<DATATYPE>	structType_;	// дл€ структуры
-
-		IdDataType();
 	};
 
-	class Element					// строка дополнительной таблицы
-	{
+	class Element{					// строка дополнительной таблицы
 	public:
 		Element();
 
@@ -73,7 +82,7 @@ namespace IT		// дополнительна€ таблица
 		void		setStrVal(char* value);
 		void		setValue(char lexeme, char* line = NULL_STR);
 		void		setElem(						// заполнение элемента дл€ идентификатора
-						LT::LexTable*	lexTable,				// таблица лексем
+						LA::LexAnalyser* la,				// таблица лексем
 						char*			funcName,				// им€ функции
 						char**			arrOfLines,				// массив цепочек
 						int&			i,						// номер текущей цепочки
@@ -93,33 +102,31 @@ namespace IT		// дополнительна€ таблица
 		} value_;
 	};
 
-	class AuxTable					// экземпл€р таблицы идентификаторов
-	{
+	class Table{					// экземпл€р таблицы идентификаторов
 	public:
-		AuxTable();
-		AuxTable(int size);
+		Table();
+		Table(int size);
 
 		Element*	getElem(int i);
 		int			getSize();
+		DataStruct*	getDataStruct();
 
 		void		addElem(Element elem);
 
 		bool		isIncluded(char* line, char* funcName);
 		int			getIdx(char* name, char* funcName);			// get index [i] in table_ for current name&funcName
 
-		~AuxTable();
+		~Table();
+
 	private:
 		int maxSize_;								// максимальный размер таблицы идентификаторов < TI_MAXSIZE
 		int size_;									// текущий размер таблицы идентификаторов < maxsize
 		Element* table_;							// массив строк таблицы идентификаторов
+		DataStruct*	dataStruct_;
 	};
 
 
 
-	DATATYPE getDataType(LT::LexTable* lt, char** arrOfLines, int chainNumber);
-
-	TYPE getType(LT::LexTable* lexTable);	// возвращает тип идентификатора
-	char* getDataName(IT::DATATYPE type);
 	void addPrefix(char* dest, char* prefix);
 	void createFuncName(char* funcName, char* line);
 	bool isFunction(char* first, char* second);
