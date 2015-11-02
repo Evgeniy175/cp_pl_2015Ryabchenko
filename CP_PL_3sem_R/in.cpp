@@ -76,7 +76,7 @@ namespace In{
 		this->text_[this->size_] = symbol;
 	};
 
-	IN getIn(Log::LOG log, wchar_t* infile){
+	IN getIn(LOG::Log* log, wchar_t* infile){
 		IN rc;
 		std::ifstream file(infile);
 		Error::ERROR errorVar;
@@ -90,12 +90,12 @@ namespace In{
 		rc.setCode(clearedValue);
 
 		if (file.good()){
-			Log::writeLine(log, "---Начало проверки допустимости символов---", "");
+			log->writeLine("---Начало проверки допустимости символов---", "");
 
 			rc.setArr(new char*[IN_MAX_LINE_NUMBER]);			// выделение памяти под кол-во строк IN_MAX_LINE_NUMBER
 			rc.setLine(new char[IN_MAX_LEN_TEXT]);		// выделение памяти для нулевой строки, IN_MAX_LEN_TEXT символов
 
-			tempChar = file.get();
+			if (!file.eof) tempChar = file.get();
 
 			while (!file.eof())	{
 				switch (rc.getCode(tempChar)){
@@ -104,54 +104,46 @@ namespace In{
 					positionCounter++;
 					break;
 
-
 				case IN::D:
 					rc.setChar(currChainPosition, tempChar);
 					errorVar = ERROR_THROW_LINE(103, NULL, rc.getLinesCounter(), positionCounter);
-					Log::writeError(log, errorVar);
+					log->writeError(errorVar);
 					positionCounter++;
 					break;
-
 
 				case IN::I:
 					positionCounter++;
 					rc.increaseIgnor();
 					break;
 
-
 				case IN::S:
 					if (currChainPosition != NULL){
 						rc.setLineEnd(currChainPosition);
 						positionCounter = 0;
 					};
-
 					if (tempChar == IN_CODE_ENDL){
 						rc.setChar(currChainPosition, LEX_NEWLINE);
 						rc.increaseLines();
 					}
-					else	rc.setChar(currChainPosition, tempChar);
-
+					else{
+						rc.setChar(currChainPosition, tempChar);
+					};
 					rc.setLineEnd(currChainPosition);
 					positionCounter = 0;
-
 					break;
-
 
 				case IN::B:
 					if (rc.getCode(previousChar) == IN::A){
 						rc.setLineEnd(currChainPosition);
 						positionCounter = 0;
 					};
-
 					break;
-
 
 				case IN::Q:
 					rc.createLine(tempChar, file, positionCounter);
 					positionCounter = 0;
 					currChainPosition = 0;
 					break;
-
 
 				default:
 					rc.setChar(currChainPosition, tempChar);
@@ -166,13 +158,13 @@ namespace In{
 				tempChar = file.get();
 			};
 
-			Log::writeLine(log, "---Конец проверки допустимости символов---", "");
+			log->writeLine("---Конец проверки допустимости символов---", "");
 		}
-		else throw ERROR_THROW(102);
-
+		else
+			throw ERROR_THROW(102);
+		
 		rc.setText(NULL_STR);
 		file.close();
-
 		return rc;
 	};
 
@@ -185,7 +177,6 @@ namespace In{
 			this->text_[this->size_++] = tempChar;
 			tempChar = file.get();
 		};
-
 		this->arrOfLines_[this->numberOfChains_][i++] = tempChar;
 		this->text_[this->size_++] = tempChar;
 		setLineEnd(i);

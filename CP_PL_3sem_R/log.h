@@ -15,21 +15,31 @@
 namespace LA{ class LexAnalyser; };
 namespace In{ class IN; };
 
-namespace Log{
-	struct LOG{
-		wchar_t logfile[PARM_MAX_SIZE];							// выходной файл
-		std::ofstream* stream;									// поток вывода
-	};
+namespace LOG{
+	class Log{
+	public:
+		Log();
 
-	static const LOG INITLOG = { L"", NULL };
-	LOG getlog(wchar_t logfile[]);								// создание потока
-	void writeLine(LOG& log, char* c, ...);						// записать строку в файл(для char*)
-	void writeLine(LOG& log, wchar_t* c, ...);					// записать строку в файл(для wchar_t*)
-	void writeLog(LOG& log);									// записать шапку log-файла в файл
-	void writeParm(LOG& log, Parm::PARM& parm);					// запись путей исходных файлов
-	void writeIn(LOG& log, In::IN in);							// запись информации о входном файле
-	void writeError(LOG& log, Error::ERROR& error);				// запись ошибки
-	void writeLt(LOG& log, LA::LexAnalyser* la);					// запись лексической таблицы
-	void writeIt(LOG& log, LA::LexAnalyser* la);
-	void close(LOG& log);										// закрытие потока
+		wchar_t*		getLogFile();						// 
+		std::ofstream*	getStream();						// 
+		void			getlog(wchar_t logfile[]);			// создание потока
+
+		void setLogFile(wchar_t* logFile);					//
+		void setStream(std::ofstream* stream);				// 
+
+		void writeLine(char* c, ...);						// записать строку в файл(для char*)
+		void writeLine(wchar_t* c, ...);					// записать строку в файл(для wchar_t*)
+		void writeLog();									// записать шапку log-файла в файл
+		void writeParm(Parm::PARM& parm);					// запись путей исходных файлов
+		void writeIn(In::IN in);							// запись информации о входном файле
+		void writeError(Error::ERROR& error);				// запись ошибки
+		void writeLt(LA::LexAnalyser* la);					// вывод таблицы лексем
+		void writeAt(LA::LexAnalyser* la);					// вывод дополнительной таблицы
+
+		void close();										// завершить поток
+
+	private:
+		wchar_t logFile_[PARM_MAX_SIZE];					// выходной файл
+		std::ofstream* stream_;								// поток вывода
+	};
 };

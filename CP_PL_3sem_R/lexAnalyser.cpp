@@ -3,7 +3,7 @@
 
 namespace LA
 {
-	LexAnalyser::LexAnalyser(int size, Log::LOG log, In::IN in){
+	LexAnalyser::LexAnalyser(int size, LOG::Log* log, In::IN in){
 		this->lexTable = new LEX::Table(size);
 		this->auxTable = new AUX::Table(size);
 		LEX::Element elemLt;								// lexTable element
@@ -16,18 +16,17 @@ namespace LA
 
 		fst->createFst();								// формирование массива fst
 
-		Log::writeLine(log, "---Начало работы КА---", "");
+		log->writeLine("---Начало работы КА---", "");
 
 		for (int chainNumber = 0; chainNumber < in.getNumOfChains(); chainNumber++){
 
 			isCorrect = false;
 
 			for (int i = 0; !isCorrect && i < NUMBER_OF_GRAPHS; i++){
-
 				fst[i].setString(in.getLine(chainNumber));
 
 				if (isCorrect = fst[i].execute()){
-					//Log::writeLine(log, "  Цепочка ", in.getLine(chainNumber), "\t\tраспознана", "");
+					//log->writeLine(log, "  Цепочка ", in.getLine(chainNumber), "\t\tраспознана", "");
 					elemLt.setElem(i, lineNumber);
 					this->getLT()->addElem(elemLt);
 
@@ -72,10 +71,10 @@ namespace LA
 
 			if (!isCorrect){	// если не распознана
 				Error::ERROR errorVar = ERROR_THROW_LINE(202, in.getLine(chainNumber), lineNumber, -1);
-				Log::writeError(log, errorVar);
+				log->writeError(errorVar);
 			};
 		};
-		Log::writeLine(log, "---Конец работы КА---", "");
+		log->writeLine("---Конец работы КА---", "");
 	};
 
 	LEX::Table* LexAnalyser::getLT(){
@@ -91,26 +90,29 @@ namespace LA
 		std::vector<char*>::iterator firstIt;
 		std::vector<AUX::DATATYPE>::iterator secondIt;
 
-		if (this->getLT()->getElem(this->getLT()->getSize() - 2)->getLex() == LEX_COLON){
+		switch (this->getLT()->getElem(this->getLT()->getSize() - 2)->getLex())
+		{
+		case LEX_COLON:
 			for (firstIt = this->getAT()->getDataStruct()->getStructName().begin(),
 				secondIt = this->getAT()->getDataStruct()->getStructType().begin();
-				firstIt != this->getAT()->getDataStruct()->getStructName().end(); firstIt++, secondIt++){
-				if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
+				firstIt != this->getAT()->getDataStruct()->getStructName().end();
+				firstIt++, secondIt++){
+					if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
 			};
-		}
-		else if (this->getLT()->getElem(this->getLT()->getSize() - 2)->getLex() == LEX_EQUALLY
-			|| this->getLT()->getElem(this->getLT()->getSize() - 2)->getLex() == LEX_COMMA
-			|| this->getLT()->getElem(this->getLT()->getSize() - 2)->getLex() == LEX_SQBRACEOPEN
-			|| this->getLT()->getElem(this->getLT()->getSize() - 2)->getLex() == LEX_RETURN) {
-			rc = arrOfLines[i][0] == '‘' ? AUX::DATATYPE::LINE : AUX::DATATYPE::NUM;
-		}
-		else {
-			for (firstIt = this->getAT()->getDataStruct()->getName().begin(), 
+			break;
+
+		case LEX_EQUALLY: case LEX_COMMA: case LEX_SQBRACEOPEN: case LEX_RETURN:
+			rc = arrOfLines[i][0] == LEX_Q ? AUX::DATATYPE::LINE : AUX::DATATYPE::NUM;
+			break;
+
+		default:
+			for (firstIt = this->getAT()->getDataStruct()->getName().begin(),
 				secondIt = this->getAT()->getDataStruct()->getType().begin();
-				firstIt != this->getAT()->getDataStruct()->getName().end(); 
+				firstIt != this->getAT()->getDataStruct()->getName().end();
 				firstIt++, secondIt++){
 					if (strcmp(*firstIt, arrOfLines[i - 1]) == NULL) rc = *secondIt;
 			};
+			break;
 		};
 
 		return rc;

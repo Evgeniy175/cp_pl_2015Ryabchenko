@@ -34,7 +34,7 @@
 	IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, \
 }
 
-namespace Log{ struct LOG; };
+namespace LOG{ class Log; };
 
 namespace In{
 
@@ -82,6 +82,6 @@ namespace In{
 		char**	arrOfLines_;				// массив цепочек
 	};
 
-	IN getIn(Log::LOG log, wchar_t* infile);
+	IN		getIn(LOG::Log* log, wchar_t* infile);
 	char*	createLine(char firstSymbol, std::ifstream& file, char* text, int& textSize, int& positionCounter);	// для корректного считывания текста в кавычках
 };

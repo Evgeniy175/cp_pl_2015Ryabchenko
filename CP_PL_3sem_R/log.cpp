@@ -1,31 +1,46 @@
 #include "stdafx.h"
 #include "log.h"
 
-namespace Log
+namespace LOG
 {
-	LOG getlog(wchar_t logfile[]){
-		LOG rc;
-		rc.stream = new std::ofstream(logfile);
+	Log::Log() { }
 
-		if ((rc.stream)->good())
-			wcscpy_s(rc.logfile, logfile);
+	wchar_t* Log::getLogFile(){
+		return this->logFile_;
+	};
+
+	std::ofstream* Log::getStream(){
+		return this->stream_;
+	};
+
+	void Log::setLogFile(wchar_t* logFile){
+		wcscpy_s(this->logFile_, logFile);
+	};
+
+	void Log::setStream(std::ofstream* stream){
+		this->stream_ = stream;
+	};
+
+	void Log::getlog(wchar_t logFile[]){
+		this->setStream(new std::ofstream(logFile));
+
+		if ((this->getStream())->good())
+			this->setLogFile(logFile);
 
 		else
 			throw ERROR_THROW(104);
-
-		return rc;
 	};
 
-	void writeLine(LOG& log, char* c, ...){
+	void Log::writeLine(char* c, ...){
 		char **p = &c;
 
 		for (int i = 0; *(p + i)[0] != NULL_STR; i++)
-			*log.stream << *(p + i);
+			*(this->getStream()) << *(p + i);
 
-		*log.stream << std::endl;
+		*(this->getStream()) << std::endl;
 	};
 
-	void writeLine(LOG& log, wchar_t* c, ...){
+	void Log::writeLine(wchar_t* c, ...){
 		char temp[SIZE_CHAR_ARRAY];
 		char *p;
 		wchar_t **CyclePointer = &c;
@@ -33,75 +48,76 @@ namespace Log
 		for (int i = 0; *(CyclePointer + i)[0] != NULL_STR; i++){
 			wcstombs_s(0, temp, *(CyclePointer + i), sizeof(temp));
 			p = temp;
-			*log.stream << p << ' ';
+			*(this->getStream()) << p << ' ';
 		};
 
-		*log.stream << std::endl;
+		*(this->getStream()) << std::endl;
 	};
 
-	void writeLog(LOG& log){
+	void Log::writeLog(){
 		time_t rawtime = time(NULL);
 		struct tm timeinfo;
 		char buf[SIZE_CHAR_ARRAY];
 		time(&rawtime);
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buf, sizeof(buf), "%d.%m.%Y  %H:%M:%S", &timeinfo);
-		*log.stream << "--- Протокол ---" << std::endl << "Дата:  " << buf << std::endl;
+		*(this->getStream()) << "--- Протокол ---" << std::endl << "Дата:  " << buf << std::endl;
 	};
 
-	void writeParm(LOG& log, Parm::PARM& parm){
-		*log.stream << std::endl << "---Параметры---" << std::endl << "-log: ";
-		writeLine(log, parm.log);
-		*log.stream << "-out: ";
-		writeLine(log, parm.out);
-		*log.stream << "-in: ";
-		writeLine(log, parm.in);
-		*log.stream << std::endl;
+	void Log::writeParm(Parm::PARM& parm){
+		*(this->getStream()) << std::endl << "---Параметры---" << std::endl << "-log: ";
+		writeLine(parm.log);
+		*(this->getStream()) << "-out: ";
+		writeLine(parm.out);
+		*(this->getStream()) << "-in: ";
+		writeLine(parm.in);
+		*(this->getStream()) << std::endl;
 	};
 
-	void writeIn(LOG& log, In::IN in){
-		*log.stream << std::endl << std::endl << "---Исходные данные---" << std::endl
+	void Log::writeIn(In::IN in){
+		*(this->getStream()) << std::endl << std::endl << "---Исходные данные---" << std::endl
 			<< "Количество символов: "	<< in.getSizeCounter()	<< std::endl
 			<< "Проигнорировано: "		<< in.getIgnorCounter()	<< std::endl 
 			<< "Количество строк: "		<< in.getLinesCounter()	<< std::endl;
 	};
 
-	void writeError(LOG& log, Error::ERROR& error){
-		*log.stream << std::endl << "Ошибка " << error.id << ": " << error.message;
+	void Log::writeError(Error::ERROR& error){
+		*(this->getStream()) << std::endl << "Ошибка " << error.id << ": " << error.message;
 
 		if (error.inext.line != -1)
-			*log.stream << " строка " << error.inext.line;
+			*(this->getStream()) << " строка " << error.inext.line;
 
 		if (error.inext.col != -1)
-			*log.stream << ", позиция " << error.inext.col;
+			*(this->getStream()) << ", позиция " << error.inext.col;
 
-		*log.stream << std::endl << std::endl;
+		*(this->getStream()) << std::endl << std::endl;
 	};
 
-	void writeLt(LOG& log, LA::LexAnalyser* la){
+	void Log::writeLt(LA::LexAnalyser* la){
 		int currentLineNumber = 0;
 
-		*log.stream << std::endl << std::endl << "---Lex table start---" << std::endl
+		*(this->getStream()) << std::endl << std::endl << "---Lex table start---" << std::endl
 			<< "Size: " << la->getLT()->getSize() << std::endl << std::endl
 			<< "NUMBER\t\t" << "LEXEMA\t\t" << "LINE\t\t" << "TI INDEX" << std::endl;
 
 		for (int i = 0; i < la->getLT()->getSize(); i++){
-			*log.stream << i << "\t\t" << la->getLT()->getElem(i)->getLex()
+			*(this->getStream()) << i << "\t\t" << la->getLT()->getElem(i)->getLex()
 				<< "\t\t" << la->getLT()->getElem(i)->getLineNumber() << "\t\t";
 
 			if (la->getLT()->getElem(i)->getIdx() >= NULL)
-				*log.stream << la->getLT()->getElem(i)->getIdx() << std::endl;
+				*(this->getStream()) << la->getLT()->getElem(i)->getIdx() << std::endl;
 
-			else *log.stream << "no_matches" << std::endl;
+			else 
+				*(this->getStream()) << "no_matches" << std::endl;
 		};
 
-		*log.stream << "---Lex table end---" << std::endl;
+		*(this->getStream()) << "---Lex table end---" << std::endl;
 	};
 
-	void writeIt(LOG& log, LA::LexAnalyser* la){
+	void Log::writeAt(LA::LexAnalyser* la){
 		char lexeme;
 
-		*log.stream << std::endl << std::endl << "---Identificator table start---" 
+		*(this->getStream()) << std::endl << std::endl << "---Identificator table start---"
 			<< std::endl << "Help: NaL - Not a Literal\t" << std::endl << "Size: "
 			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
 			<< std::setw(AUX_NAME_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" << "TYPE\t"
@@ -110,7 +126,7 @@ namespace Log
 		for (int i = 0; i < la->getAT()->getSize(); i++){
 			lexeme = la->getLT()->getElem(la->getAT()->getElem(i)->getIdx() - 1)->getLex();
 
-			*log.stream << i << '\t' 
+			*(this->getStream()) << i << '\t'
 				<< std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getName()
 				<< "\t\t" << std::setw(AUX_NAME_MAXSIZE) << la->getAT()->getElem(i)->getFuncName()
 				<< "\t\t" << la->getDataName(la->getAT()->getElem(i)->getDataType())
@@ -119,20 +135,21 @@ namespace Log
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
 				if (la->getAT()->getElem(i)->getDataType() == AUX::DATATYPE::NUM)
-					*log.stream << la->getAT()->getElem(i)->getIntVal();
+					*(this->getStream()) << la->getAT()->getElem(i)->getIntVal();
  
 				else if (la->getAT()->getElem(i)->getDataType() == AUX::DATATYPE::LINE)
-					*log.stream << la->getAT()->getElem(i)->getStrVal();
+					*(this->getStream()) << la->getAT()->getElem(i)->getStrVal();
  			}
- 			else *log.stream << "-NaL-";
+ 			else 
+				*(this->getStream()) << "-NaL-";
 
-			*log.stream << std::endl;
+			*(this->getStream()) << std::endl;
 		};
 
-		*log.stream << "---Identificator table end---";
+		*(this->getStream()) << "---Identificator table end---";
 	};
 
-	void close(LOG& log){
-		log.stream->close();
+	void Log::close(){
+		this->getStream()->close();
 	};
 };

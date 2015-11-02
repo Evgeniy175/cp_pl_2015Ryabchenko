@@ -7,7 +7,7 @@
 #include "auxTable.h"
 #include "errors.h"
 
-namespace Log{ struct LOG; };
+namespace LOG{ class Log; };
 namespace In { class IN; };
 namespace LEX{ class Table; };
 namespace AUX{ enum TYPE; enum DATATYPE; class Table; };
@@ -16,7 +16,7 @@ namespace LA{
 
 	class LexAnalyser{
 	public:
-		LexAnalyser(int size, Log::LOG log, In::IN in);
+		LexAnalyser(int size, LOG::Log* log, In::IN in);
 		
 		LEX::Table* getLT();
 		AUX::Table* getAT();
