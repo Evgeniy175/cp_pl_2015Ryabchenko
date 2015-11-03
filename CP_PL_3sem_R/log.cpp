@@ -21,7 +21,7 @@ namespace LOG
 		this->stream_ = stream;
 	};
 
-	void Log::getlog(wchar_t logFile[]){
+	void Log::getLog(wchar_t logFile[]){
 		this->setStream(new std::ofstream(logFile));
 
 		if ((this->getStream())->good())
@@ -64,31 +64,33 @@ namespace LOG
 		*(this->getStream()) << "--- Протокол ---" << std::endl << "Дата:  " << buf << std::endl;
 	};
 
-	void Log::writeParm(Parm::PARM& parm){
+	void Log::writeCP(CP::Compiler* cp){
 		*(this->getStream()) << std::endl << "---Параметры---" << std::endl << "-log: ";
-		writeLine(parm.log);
+		writeLine(cp->getLogName());
 		*(this->getStream()) << "-out: ";
-		writeLine(parm.out);
+		writeLine(cp->getOutName());
 		*(this->getStream()) << "-in: ";
-		writeLine(parm.in);
+		writeLine(cp->getInName());
 		*(this->getStream()) << std::endl;
 	};
 
-	void Log::writeIn(In::IN in){
+	void Log::writeIn(IN::In* in){
 		*(this->getStream()) << std::endl << std::endl << "---Исходные данные---" << std::endl
-			<< "Количество символов: "	<< in.getSizeCounter()	<< std::endl
-			<< "Проигнорировано: "		<< in.getIgnorCounter()	<< std::endl 
-			<< "Количество строк: "		<< in.getLinesCounter()	<< std::endl;
+			<< "Количество символов: "	<< in->getSizeCounter()	 << std::endl
+			<< "Проигнорировано: "		<< in->getIgnorCounter() << std::endl 
+			<< "Количество строк: "		<< in->getLinesCounter() << std::endl;
 	};
 
-	void Log::writeError(Error::ERROR& error){
-		*(this->getStream()) << std::endl << "Ошибка " << error.id << ": " << error.message;
+	void Log::writeError(ERROR::Error* error){
+		*(this->getStream()) << std::endl << "Ошибка " << error->getId() << ": " 
+			<< error->getMessage();
 
-		if (error.inext.line != -1)
-			*(this->getStream()) << " строка " << error.inext.line;
+		if (error->getPosition()->getLine() != -1)
+			*(this->getStream()) << " строка " << error->getPosition()->getLine();
 
-		if (error.inext.col != -1)
-			*(this->getStream()) << ", позиция " << error.inext.col;
+		if (error->getPosition()->getLinePosition() != -1)
+			*(this->getStream()) << ", позиция "
+				<< error->getPosition()->getLinePosition();
 
 		*(this->getStream()) << std::endl << std::endl;
 	};
@@ -96,8 +98,8 @@ namespace LOG
 	void Log::writeLt(LA::LexAnalyser* la){
 		int currentLineNumber = 0;
 
-		*(this->getStream()) << std::endl << std::endl << "---Lex table start---" << std::endl
-			<< "Size: " << la->getLT()->getSize() << std::endl << std::endl
+		*(this->getStream()) << std::endl << std::endl << "---Lex table start---"
+			<< std::endl << "Size: " << la->getLT()->getSize() << std::endl << std::endl
 			<< "NUMBER\t\t" << "LEXEMA\t\t" << "LINE\t\t" << "TI INDEX" << std::endl;
 
 		for (int i = 0; i < la->getLT()->getSize(); i++){
@@ -120,8 +122,8 @@ namespace LOG
 		*(this->getStream()) << std::endl << std::endl << "---Identificator table start---"
 			<< std::endl << "Help: NaL - Not a Literal\t" << std::endl << "Size: "
 			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
-			<< std::setw(AT_NAME_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" << "TYPE\t"
-			<< "LT INDEX\t" << "VALUE" << std::endl;
+			<< std::setw(AT_NAME_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" 
+			<< "TYPE\t"	<< "LT INDEX\t" << "VALUE" << std::endl;
 
 		for (int i = 0; i < la->getAT()->getSize(); i++){
 			lexeme = la->getLT()->getElem(la->getAT()->getElem(i)->getIdx() - 1)->getLex();

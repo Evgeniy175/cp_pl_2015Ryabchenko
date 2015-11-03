@@ -79,6 +79,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="compiler.h" />
     <ClInclude Include="cp_pl_3sem_R.h" />
     <ClInclude Include="errors.h" />
     <ClInclude Include="fst.h" />
@@ -88,11 +89,11 @@
     <ClInclude Include="lexAnalyser.h" />
     <ClInclude Include="lexTable.h" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="parm.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="compiler.cpp" />
     <ClCompile Include="cp_pl_3sem_R.cpp" />
     <ClCompile Include="errors.cpp" />
     <ClCompile Include="fst.cpp" />
@@ -101,7 +102,6 @@
     <ClCompile Include="lexAnalyser.cpp" />
     <ClCompile Include="lexTable.cpp" />
     <ClCompile Include="log.cpp" />
-    <ClCompile Include="parm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

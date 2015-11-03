@@ -47,17 +47,17 @@ namespace AT
 	};
 
 	void Element::setName(char* name){
-		strncpy_s(this->name_, name, static_cast<int> (strlen(name)));
+		strncpy_s(this->name_, name, strlen(name));
 	};
 
 	void Element::setFuncName(char* name){
-		strncpy_s(this->funcName_, name, static_cast<int> (strlen(name)));
+		strncpy_s(this->funcName_, name, strlen(name));
 	};
 	
 	void Element::setStrVal(char* value){
 		if (value != NULL)
 			strcpy(this->value_.strValue_, value);
-
+		
 		else
 			memset(this->value_.strValue_, AT_ARR_MAXSIZE, 'M');
 	};
@@ -83,18 +83,18 @@ namespace AT
 
 	void Element::setValue(char lexeme, char* line){
 		if (lexeme == LEX_LITERAL) {
-			if (this->dataType_ == AT::DATATYPE::NUM)
+			if (this->dataType_ == AT::DATATYPE::NUM){
 				this->setIntVal(std::atoi(line));
-
+			}
 			else if (this->dataType_ == AT::DATATYPE::LINE){
 				line = createStrVal(line);
 				this->setStrVal(line);
 			};
 		}
 		else if (lexeme == LEX_ID){
-			if (this->dataType_ == AT::DATATYPE::NUM)
+			if (this->dataType_ == AT::DATATYPE::NUM){
 				this->setIntVal(AT_NUM_DEFAULT);
-
+			}
 			else if (this->dataType_ == AT::DATATYPE::LINE) {
 				this->setStrVal(AT_LINE_DEFAULT);
 			};
@@ -151,8 +151,11 @@ namespace AT
 		this->dataStruct_ = new DataStruct();
 		this->size_ = NULL;
 
-		if (maxSize < AT_MAXSIZE) this->maxSize_ = maxSize;
-		else throw ERROR_THROW(201);
+		if (maxSize < AT_MAXSIZE)
+			this->maxSize_ = maxSize;
+
+		else
+			throw ERROR_THROW(201);
 
 		this->table_ = new Element[maxSize];
 	}
@@ -169,7 +172,7 @@ namespace AT
 		return this->dataStruct_;
 	};
 
-	void Table::addElem(Element elem){
+	void Table::addElem(Element& elem){
 		this->table_[this->size_++] = elem;
 	};
 
@@ -179,7 +182,7 @@ namespace AT
 			for (int i = 0; i < size_; i++){
 				if (strcmp(this->table_[i].getName(), line) == NULL
 					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL){
-					return true;
+						return true;
 				};
 			};
 		};
@@ -194,7 +197,7 @@ namespace AT
 			for (int i = 0; i < this->size_; i++) {
 				if (strcmp(this->table_[i].getName(), name) == NULL
 					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL) {
-					return i;
+						return i;
 				};
 			};
 		};
@@ -212,17 +215,9 @@ namespace AT
 		strncat(dest, temp, AT_NAME_MAXSIZE - strlen(prefix) - 1);
 	};
 
-	bool isFunction(char* first, char* second){
-		for (int i = 0; i < static_cast<int> (strlen(first))
-			&& i < static_cast<int> (strlen(second)); i++){
-			if (first[i] != second[i]) return false;
-		};
-		return true;
-	};
-
 	char* createStrVal(char* line){
 		char* rc = new char;
-		strncpy(rc, line + 1, static_cast<int> (strlen(line)) - 2);
+		strncpy(rc, line + 1, (strlen(line) - 2));
 		rc[static_cast<int> (strlen(line)) - 2] = NULL_STR;
 		return rc;
 	};

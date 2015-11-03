@@ -8,36 +8,25 @@
 int _tmain(int argc, _TCHAR* argv[]){
 
 	unsigned int startTime, endTime, searchTime;
+	startTime = clock();
+
+	CP::Compiler* compiler = new CP::Compiler(argc, argv);
 
 	setlocale(LC_ALL, "Rus");
-	LOG::Log* log = new LOG::Log();
 
 	try{
-		startTime = clock();
-
-		Parm::PARM parm = Parm::getparm(argc, argv);
-		log->getlog(parm.log);
-		
-		log->writeLog();
-		log->writeParm(parm);
-		
-		In::IN in = In::getIn(log, parm.in); 
-		LA::LexAnalyser* la = new LA::LexAnalyser(in.getNumOfChains(), log, in);		
-
-		log->writeIn(in);
-		log->writeLt(la);
-		log->writeAt(la);
-		
-		log->close();
-
-		delete la;
-
-		endTime = clock();
+		compiler->getLog()->writeLog();
+		compiler->getLog()->writeCP(compiler);
+		compiler->getLog()->writeIn(compiler->getIn());
+		compiler->getLog()->writeLt(compiler->getLA());
+		compiler->getLog()->writeAt(compiler->getLA());
+		compiler->getLog()->close();
 	}
-	catch (Error::ERROR err){
-		log->writeError(err);
+	catch (ERROR::Error* err){
+		compiler->getLog()->writeError(err);
 	};
-	
+
+	endTime = clock();
 	searchTime = endTime - startTime;
 
 	return 0;

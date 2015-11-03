@@ -24,8 +24,7 @@
 
 namespace LA { class LexAnalyser; };
 
-namespace AT{		// дополнительна€ таблица
-
+namespace AT{		// дополнительна€ таблица (auxiliary table)
 	enum TYPE{			// типы
 		U = 0,				// unknown
 		V = 1,				// переменна€
@@ -45,7 +44,7 @@ namespace AT{		// дополнительна€ таблица
 		NIL  = 5			// аналог void в C++
 	};
 
-	class DataStruct{		// типы данных идентификаторов
+	class DataStruct{				// типы данных идентификаторов
 	public:
 		DataStruct();
 
@@ -70,7 +69,7 @@ namespace AT{		// дополнительна€ таблица
 		int			getIdx();				// get lexTable index
 		int			getIntVal();
 		char*		getName();
-		char*		getFuncName();			// get name of function
+		char*		getFuncName();
 		char*		getStrVal();
 		TYPE		getType();
 		DATATYPE	getDataType();
@@ -82,7 +81,7 @@ namespace AT{		// дополнительна€ таблица
 		void		setStrVal(char* value);
 		void		setValue(char lexeme, char* line = NULL_STR);
 		void		setElem(						// заполнение элемента дл€ идентификатора
-						LA::LexAnalyser* la,				// таблица лексем
+						LA::LexAnalyser* la,					// таблица лексем
 						char*			funcName,				// им€ функции
 						char**			arrOfLines,				// массив цепочек
 						int&			i,						// номер текущей цепочки
@@ -102,33 +101,29 @@ namespace AT{		// дополнительна€ таблица
 		} value_;
 	};
 
-	class Table{					// экземпл€р таблицы идентификаторов
+	class Table{					// экземпл€р таблицы
 	public:
-		Table();
-		Table(int size);
+		Table();												//
+		Table(int size);										//
 
-		Element*	getElem(int i);
-		int			getSize();
-		DataStruct*	getDataStruct();
+		Element*	getElem(int i);								//
+		int			getSize();									//
+		DataStruct*	getDataStruct();							//
 
-		void		addElem(Element elem);
+		void		addElem(Element& elem);						//
 
-		bool		isIncluded(char* line, char* funcName);
+		bool		isIncluded(char* line, char* funcName);		// проверка на включенность в таблицу
 		int			getIdx(char* name, char* funcName);			// get index [i] in table_ for current name&funcName
 
 		~Table();
 
 	private:
-		int maxSize_;								// максимальный размер таблицы идентификаторов < TI_MAXSIZE
-		int size_;									// текущий размер таблицы идентификаторов < maxsize
-		Element* table_;							// массив строк таблицы идентификаторов
-		DataStruct*	dataStruct_;
+		int			maxSize_;					// максимальный размер таблицы < TI_MAXSIZE
+		int			size_;						// текущий размер таблицы < maxsize
+		DataStruct*	dataStruct_;				// типы данных
+		Element*	table_;						// массив строк таблицы
 	};
 
-
-
-	void addPrefix(char* dest, char* prefix);
-	void createFuncName(char* funcName, char* line);
-	bool isFunction(char* first, char* second);
-	char* createStrVal(char* line);
+	void  addPrefix(char* dest, char* prefix);	// add prefix to line
+	char* createStrVal(char* line);				// 
 };

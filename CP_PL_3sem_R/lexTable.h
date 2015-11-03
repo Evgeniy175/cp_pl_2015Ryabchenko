@@ -29,10 +29,8 @@
 
 namespace AT{ enum TYPE; enum DATATYPE; class Table; };
 
-namespace LT				// таблица лексем
-{
-	class Element			// строка таблицы лексем
-	{
+namespace LT{				// таблица лексем
+	class Element{			// строка таблицы лексем
 	public:
 		Element();
 		char getLex();
@@ -48,13 +46,12 @@ namespace LT				// таблица лексем
 		int	 itIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
 	};
 
-	class Table			// экземпл€р таблицы лексем
-	{
+	class Table{			// экземпл€р таблицы лексем
 	public:
 		Table();
 		Table(int size);
 
-		void		addElem(Element elem);
+		void		addElem(Element& elem);
 
 		int			getSize();
 		Element*	getElem(int i);

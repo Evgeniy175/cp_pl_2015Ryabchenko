@@ -36,20 +36,20 @@
 
 namespace LOG{ class Log; };
 
-namespace In{
+namespace IN{
+	enum{
+		A = 1024,		// ALLOWED,		допустимые
+		D = 2048,		// DISALLOWED,	запрещенные
+		I = 4096,		// IGNORE,		игнорируемые
+		S = 8192,		// SEPARATOR,	сепаратор
+		B = 16384,		// SPACE,		пробел
+		Q = 32768		// QUOTE,		кавычка
+	};
 
-	class IN{
+	class In{
 	public:
-		enum{
-			A = 1024,		// ALLOWED,		допустимые
-			D = 2048,		// DISALLOWED,	запрещенные
-			I = 4096,		// IGNORE,		игнорируемые
-			S = 8192,		// SEPARATOR,	сепаратор
-			B = 16384,		// SPACE,		пробел
-			Q = 32768		// QUOTE,		кавычка
-		};
-
-		IN();
+		In();
+		In(LOG::Log* log, wchar_t* infile);
 
 		int getCode(char symbol);			// возвращает значение из таблицы допустимости символов для текущего символа строки
 		void createLine(char firstSymbol, std::ifstream& file, int& positionCounter);	// для корректного считывания текста в кавычках
@@ -82,6 +82,5 @@ namespace In{
 		char**	arrOfLines_;				// массив цепочек
 	};
 
-	IN		getIn(LOG::Log* log, wchar_t* infile);
 	char*	createLine(char firstSymbol, std::ifstream& file, char* text, int& textSize, int& positionCounter);	// для корректного считывания текста в кавычках
 };

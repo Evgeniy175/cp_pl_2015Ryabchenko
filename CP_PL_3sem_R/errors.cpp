@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "errors.h"
 
-namespace Error
-{
-	ERROR errors[ERROR_MAX_ENTRY] =
-	{
+namespace ERROR{
+	Error* a = ERROR_ENTRY(0, "Недопустимый код ошибки");
+
+	Error* errors[ERROR_MAX_ENTRY] = {
 		ERROR_ENTRY(0, "Недопустимый код ошибки"),
 		ERROR_ENTRY(1, "Системный сбой"),
 		ERROR_ENTRY_NODEF(2), ERROR_ENTRY_NODEF(3), ERROR_ENTRY_NODEF(4), ERROR_ENTRY_NODEF(5), ERROR_ENTRY_NODEF(6), ERROR_ENTRY_NODEF(7), ERROR_ENTRY_NODEF(8), ERROR_ENTRY_NODEF(9),
@@ -23,32 +23,74 @@ namespace Error
 		ERROR_ENTRY_NODEF10(210), ERROR_ENTRY_NODEF10(220), ERROR_ENTRY_NODEF10(230), ERROR_ENTRY_NODEF10(240), ERROR_ENTRY_NODEF10(250), ERROR_ENTRY_NODEF10(260), ERROR_ENTRY_NODEF10(270), ERROR_ENTRY_NODEF10(280), ERROR_ENTRY_NODEF10(290),
 		ERROR_ENTRY_NODEF(300), ERROR_ENTRY_NODEF(301), ERROR_ENTRY_NODEF(302), ERROR_ENTRY_NODEF(303), ERROR_ENTRY_NODEF(304), ERROR_ENTRY_NODEF(305), ERROR_ENTRY_NODEF(306), ERROR_ENTRY_NODEF(307), ERROR_ENTRY_NODEF(308), ERROR_ENTRY_NODEF(309),
 		ERROR_ENTRY_NODEF10(310), ERROR_ENTRY_NODEF10(320), ERROR_ENTRY_NODEF10(330), ERROR_ENTRY_NODEF10(340), ERROR_ENTRY_NODEF10(350), ERROR_ENTRY_NODEF10(360), ERROR_ENTRY_NODEF10(370), ERROR_ENTRY_NODEF10(380), ERROR_ENTRY_NODEF10(390),
-
 	};
 
-	ERROR getError(int id, char* line, int lineNumber, int position)
-	{
-		ERROR rc = errors[0];
-		if (0 < id && id < ERROR_MAX_ENTRY)	rc = errors[id];
+	Position::Position(){
+		this->line_ = -1;
+		this->position_ = -1;
+	};
 
-		if (line != NULL_STR)	strcat_s(rc.message, line);
-		if (lineNumber >= 0)	rc.inext.line = lineNumber;
-		if (position >= 0)		rc.inext.col = lineNumber;
+	Position::Position(int line, int position){
+		this->line_ = line;
+		this->position_ = position;
+	};
+
+	short Position::getLine(){
+		return this->line_;
+	};
+
+	short Position::getLinePosition(){
+		return this->position_;
+	};
+
+	Error::Error(int id, char* message, ERROR::Position* position){
+		this->id_ = id;
+		strncpy_s(this->message_, message, ERROR_MESSAGE_MAXSIZE - 1);
+		this->position_ = position;
+	};
+
+	int Error::getId(){
+		return this->id_;
+	};
+
+	char* Error::getMessage(){
+		return this->message_;
+	};
+
+	Position* Error::getPosition(){
+		return this->position_;
+	};
+
+	void Error::setMessage(char* message){
+		strcpy_s(this->message_, message_);
+	};
+
+	void Error::setPosition(Position* position){
+		this->position_ = position;
+	};
+
+	Error* getError(int id, char* str, int line, int position){
+		Error* rc = errors[0];
+
+		if (0 < id && id < ERROR_MAX_ENTRY)
+			rc = errors[id];
+
+		if (line != NULL_STR)
+			rc->setMessage(str);
+
+		if (line >= NULL && position >= NULL)
+			rc->setPosition(new Position(line, position));
 
 		return rc;
 	};
 
-	ERROR getErrorIn(int id, int line = -1, int col = -1)
-	{
-		ERROR rc = getError(0);
+	Error* getErrorIn(int id, int line = -1, int col = -1){
+		Error* rc = getError(0);
 
-		if (0 < id && id < ERROR_MAX_ENTRY)
-		{
+		if (0 < id && id < ERROR_MAX_ENTRY){
 			rc = getError(id);
-			rc.inext.col = col;
-			rc.inext.line = line;
+			rc->setPosition(new ERROR::Position(line, col));
 		};
-
 		return rc;
 	};
 };

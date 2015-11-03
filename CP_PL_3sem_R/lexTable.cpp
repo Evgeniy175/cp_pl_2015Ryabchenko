@@ -37,7 +37,7 @@ namespace LT
 		if (maxSize < LT_MAXSIZE) this->maxSize_ = maxSize;
 		else throw ERROR_THROW(200);
 
-		this->table_ = new Element[this->maxSize_];
+		this->table_ = new Element[maxSize];
 	}
 
 	int Table::getSize(){
@@ -68,7 +68,7 @@ namespace LT
 		return rc;
 	};
 
-	void Table::addElem(Element elem){
+	void Table::addElem(Element& elem){
 		this->table_[this->size_++] = elem;
 	};
 	

@@ -8,15 +8,14 @@
 #include "errors.h"
 
 namespace LOG{ class Log; };
-namespace In { class IN; };
+namespace IN { class In; };
 namespace LT{ class Table; };
 namespace AT{ enum TYPE; enum DATATYPE; class Table; };
 
 namespace LA{
-
 	class LexAnalyser{
 	public:
-		LexAnalyser(int size, LOG::Log* log, In::IN in);
+		LexAnalyser(int size, LOG::Log* log, IN::In* in);
 		
 		LT::Table* getLT();
 		AT::Table* getAT();

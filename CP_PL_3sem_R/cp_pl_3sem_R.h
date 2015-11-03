@@ -1,7 +1,4 @@
 #pragma once
 
-#include "log.h"
-#include "lexAnalyser.h"
-#include "in.h"
-#include "parm.h"
+#include "compiler.h"
 #include <ctime>

@@ -3,8 +3,7 @@
 #include <iostream>
 #include "graphs.h"
 
-namespace FST
-{
+namespace FST{
 	class RELATION{
 	public:
 		RELATION(char symbol = 0x00, short nextNode = NULL);
