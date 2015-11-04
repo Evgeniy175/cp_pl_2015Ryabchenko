@@ -5,8 +5,8 @@
 
 #define LT_MAXSIZE			4096		// максимальное кол-во строк в таблице лексем
 #define LT_NULL_PARM		0xffffffff	// дефолтное значение параметра
-#define LT_TI_NULL_IDX		0xffffffff	// нет эл-та таблицы идентификаторов
-#define LT_TI_NULL_LINE		0xffffffff
+#define LT_AUX_NULL_IDX		0xffffffff	// нет эл-та таблицы идентификаторов
+#define LT_AUX_NULL_LINE		0xffffffff
 #define LT_NULL_LEX			'M'
 #define LEX_TYPE			't'			// лексема для  type
 #define LEX_FUNCTION		'f'			// лексема для  function
@@ -41,7 +41,7 @@ namespace LT{				// таблица лексем
 		int		getParmCount();
 		int		getLineNumber();
 
-		void	setIdx(int tiIndex);
+		void	setIdx(int auxIndex);
 		void	setParmCount(int value);
 		void	setElem(int& i, int& lineNumber);
 		void	setElem(const Element& elem);

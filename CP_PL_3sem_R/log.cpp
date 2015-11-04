@@ -140,7 +140,7 @@ namespace LOG
 			<< "TYPE\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
 
 		for (int i = 0; i < la->getAT()->getSize(); i++){
-			lexeme = la->getLT()->getElem(la->getAT()->getElem(i)->getIdx() - 1)->getLex();
+			lexeme = la->getLT()->getElem(la->getAT()->getElem(i)->getIdx())->getLex();
 
 			*(this->getStream()) << i << '\t'
 				<< std::setw(AT_NAME_MAXSIZE) << la->getAT()->getElem(i)->getName()

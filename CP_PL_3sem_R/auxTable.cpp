@@ -6,6 +6,7 @@ namespace AT
 	Element::Element(){
 		this->dataType_ = DATATYPE::UNKNOWN;
 		this->type_ = TYPE::U;
+		this->isChanged = false;
 		setIntVal(AT_NUM_DEFAULT);
 		setStrVal(AT_LINE_DEFAULT);
 	}
@@ -18,8 +19,8 @@ namespace AT
 		return this->value_.intValue_;
 	};
 
-	char Element::getAction(){
-		return this->action_;
+	char Element::getOperation(){
+		return this->operation_;
 	};
 
 	char* Element::getName(){
@@ -43,7 +44,13 @@ namespace AT
 	};
 
 	void Element::setIdx(int value){
-		this->ltIndex_ = value;
+		if (this->ltIndex_ == AT_NULLIDX){
+			this->ltIndex_ = value;
+		} 
+		else if (this->isChanged == false){
+			this->isChanged = true;
+			this->ltIndex_ = value;
+		};
 	};
 
 	void Element::setIntVal(int value){
@@ -69,7 +76,7 @@ namespace AT
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
 		char** arrOfLines, int& i, int counter){
 		char lexeme = la->getLT()->getElem(la->getLT()->getSize() - 1)->getLex();
-		this->ltIndex_ = la->getLT()->getSize();
+		this->ltIndex_ = la->getLT()->getSize() - 1;
 		this->dataType_ = la->getDataType(arrOfLines, i);
 		this->type_ = la->getLT()->getType();
 		this->setFuncName(funcName);
@@ -87,7 +94,7 @@ namespace AT
 			_itoa(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_OPERATION_PREFIX);
 			setValue(lexeme, arrOfLines[i]);
-			this->action_ = arrOfLines[i][0];
+			this->operation_ = arrOfLines[i][0];
 		};
 	};
 
@@ -118,7 +125,7 @@ namespace AT
 		this->ltIndex_ = AT_NULLIDX;
 		this->setIntVal(AT_NUM_DEFAULT);
 		this->setStrVal(AT_LINE_DEFAULT);
-		this->action_ = 'M';
+		this->operation_ = 'M';
 	};
 
 	DataStruct::DataStruct(){
@@ -222,7 +229,7 @@ namespace AT
 		else {
 			for (int i = 0; i < this->size_; i++) {
 				if (strcmp(this->table_[i].getName(), name) == NULL
-					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL) {
+					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL){
 						return i;
 				};
 			};

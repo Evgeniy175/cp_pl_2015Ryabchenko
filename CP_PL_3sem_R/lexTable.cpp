@@ -5,8 +5,8 @@ namespace LT
 {
 	Element::Element(){
 		this->lexeme_ = LT_NULL_LEX;
-		this->lineNumber_ = LT_TI_NULL_LINE;
-		this->auxIndex_ = LT_TI_NULL_IDX;
+		this->lineNumber_ = LT_AUX_NULL_LINE;
+		this->auxIndex_ = LT_AUX_NULL_IDX;
 		this->parameterCounter = LT_NULL_PARM;
 	} 
 
@@ -26,21 +26,21 @@ namespace LT
 		return this->lineNumber_;
 	};
 
-	void Element::setIdx(int itIndex){
-		this->auxIndex_ = itIndex;
+	void Element::setIdx(int auxIndex){
+		this->auxIndex_ = auxIndex;
 	};
 
 	void Element::setElem(){
 		this->lexeme_ = LT_NULL_LEX;
-		this->lineNumber_ = LT_TI_NULL_LINE;
-		this->auxIndex_ = LT_TI_NULL_IDX;
+		this->lineNumber_ = LT_AUX_NULL_LINE;
+		this->auxIndex_ = LT_AUX_NULL_IDX;
 		this->parameterCounter = LT_NULL_PARM;
 	};
 
 	void Element::setElem(int& i, int& lineNumber){
 		this->lexeme_ = LT::getLex(i);
 		this->lineNumber_ = lineNumber;
-		this->auxIndex_ = LT_TI_NULL_IDX;
+		this->auxIndex_ = LT_AUX_NULL_IDX;
 		this->parameterCounter = LT_NULL_PARM;
 	};
 

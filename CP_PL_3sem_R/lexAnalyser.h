@@ -21,7 +21,7 @@ namespace LA{
 		AT::Table*		getAT();
 		AT::DATATYPE	getDataType(char** arrOfLines, int chainNumber);
 		char*			getDataName(AT::DATATYPE dataType);
-		
+
 		~LexAnalyser();
 
 	private:
