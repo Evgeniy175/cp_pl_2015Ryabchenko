@@ -18,6 +18,10 @@ namespace AT
 		return this->value_.intValue_;
 	};
 
+	char Element::getAction(){
+		return this->action_;
+	};
+
 	char* Element::getName(){
 		return this->name_;
 	};
@@ -63,7 +67,7 @@ namespace AT
 	};
 
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
-		char** arrOfLines, int& i, TYPE idType, int literalCounter){
+		char** arrOfLines, int& i, int counter){
 		char lexeme = la->getLT()->getElem(la->getLT()->getSize() - 1)->getLex();
 		this->ltIndex_ = la->getLT()->getSize();
 		this->dataType_ = la->getDataType(arrOfLines, i);
@@ -71,13 +75,19 @@ namespace AT
 		this->setFuncName(funcName);
 
 		if (lexeme == LEX_LITERAL) {
-			_itoa(literalCounter++, this->name_, 10);
+			_itoa(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_LITERAL_PREFIX);
 			setValue(lexeme, arrOfLines[i]);
 		}
 		else if (lexeme == LEX_ID) {
 			this->setName(arrOfLines[i]);
 			setValue(lexeme);
+		}
+		else if (lexeme == LEX_OPERATION){
+			_itoa(counter++, this->name_, 10);
+			addPrefix(this->name_, AT_OPERATION_PREFIX);
+			setValue(lexeme, arrOfLines[i]);
+			this->action_ = arrOfLines[i][0];
 		};
 	};
 
@@ -108,22 +118,29 @@ namespace AT
 		this->ltIndex_ = AT_NULLIDX;
 		this->setIntVal(AT_NUM_DEFAULT);
 		this->setStrVal(AT_LINE_DEFAULT);
+		this->action_ = 'M';
 	};
 
 	DataStruct::DataStruct(){
-		char* firstTempName[] = AT_DATA_NAMES;
-		char* secondTempName[] = AT_DATASTRUCT_NAMES;
-		DATATYPE firstTempType[AT_DATA_SIZE] = AT_DATA_TYPES;
-		DATATYPE secondTempType[AT_DATA_SIZE] = AT_DATASTRUCT_TYPES;
+		int i;
+		char* nameTemp[] = AT_DATA_NAMES;
+		char* structNameTemp[] = AT_DATASTRUCT_NAMES;
+		char* funcNameTemp[] = AT_STL_FUNCTIONS;
+		DATATYPE typeTemp[AT_DATA_SIZE] = AT_DATA_TYPES;
+		DATATYPE structTypeTemp[AT_DATASTRUCT_SIZE] = AT_DATASTRUCT_TYPES;
+		DATATYPE funcTypeTemp[AT_STL_FUNCSIZE] = AT_STL_FUNCTYPES;
 
-		for (int i = 0; i < AT_DATA_SIZE; i++){			// заполнение векторов для встроенных типов
-			this->name_.push_back(firstTempName[i]);
-			this->type_.push_back(firstTempType[i]);
+		for (i = 0; i < AT_DATA_SIZE; i++){			// заполнение векторов для встроенных типов
+			this->name_.push_back(nameTemp[i]);
+			this->type_.push_back(typeTemp[i]);
 		};
-
-		for (int i = 0; i < AT_DATASTRUCT_SIZE; i++){	// заполнение векторов для структурированного типа
-			this->structName_.push_back(secondTempName[i]);
-			this->structType_.push_back(secondTempType[i]);
+		for (i = 0; i < AT_DATASTRUCT_SIZE; i++){	// заполнение векторов для структурированного типа
+			this->structName_.push_back(structNameTemp[i]);
+			this->structType_.push_back(structTypeTemp[i]);
+		};
+		for (i = 0; i < AT_STL_FUNCSIZE; i++){
+			this->funcName_.push_back(funcNameTemp[i]);
+			this->funcType_.push_back(funcTypeTemp[i]);
 		};
 	};
 
@@ -135,12 +152,20 @@ namespace AT
 		return this->structName_;
 	};
 
+	std::vector<char*>& DataStruct::getFuncName(){
+		return this->funcName_;
+	};
+
 	std::vector<DATATYPE>& DataStruct::getType(){
 		return this->type_;
 	};
 
 	std::vector<DATATYPE>& DataStruct::getStructType(){
 		return this->structType_;
+	};
+
+	std::vector<DATATYPE>&	DataStruct::getFuncType(){
+		return this->funcType_;
 	};
 
 	Table::Table(){
@@ -176,12 +201,13 @@ namespace AT
 		this->table_[this->size_++] = elem;
 	};
 
-	bool Table::isIncluded(char* line, char* funcName){
+	bool Table::isIncluded(char* name, char* funcName){
 		if (this->size_ == NULL) return false;
 		else {
 			for (int i = 0; i < size_; i++){
-				if (strcmp(this->table_[i].getName(), line) == NULL
-					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL){
+				if ((strcmp(this->table_[i].getName(), name) == NULL
+					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL)
+					|| (strcmp(this->table_[i].getFuncName(), name) == NULL)){
 						return true;
 				};
 			};

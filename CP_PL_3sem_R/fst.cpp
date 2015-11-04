@@ -77,7 +77,7 @@ namespace FST
 			case 9:		this[i] = *(new FST(NULL_STR, GRAPH_RIGHTHESIS));			break;
 			case 10:	this[i] = *(new FST(NULL_STR, GRAPH_SQBRACE_OPEN));			break;
 			case 11:	this[i] = *(new FST(NULL_STR, GRAPH_SQBRACE_CLOSE));		break;
-			case 12:	this[i] = *(new FST(NULL_STR, GRAPH_ACTIONS));				break;
+			case 12:	this[i] = *(new FST(NULL_STR, GRAPH_OPERATIONS));				break;
 			case 13:	this[i] = *(new FST(NULL_STR, GRAPH_CONDITION));			break;
 			case 14:	this[i] = *(new FST(NULL_STR, GRAPH_EXTERN));				break;
 			case 15:	this[i] = *(new FST(NULL_STR, GRAPH_FUNCTION));				break;

@@ -95,7 +95,7 @@
 	/* 0 */ NODE(1, RELATION(']', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_ACTIONS 1, \
+#define GRAPH_OPERATIONS 1, \
 	/* 0 */ NODE(4, RELATION('+', 1), RELATION('-', 1), RELATION('*', 1), RELATION('/', 1)), \
 	/* 1 */ NODE()
 

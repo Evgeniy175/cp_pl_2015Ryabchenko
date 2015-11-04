@@ -100,17 +100,31 @@ namespace LOG
 
 		*(this->getStream()) << std::endl << std::endl << "---Lex table start---"
 			<< std::endl << "Size: " << la->getLT()->getSize() << std::endl << std::endl
-			<< "NUMBER\t\t" << "LEXEMA\t\t" << "LINE\t\t" << "TI INDEX" << std::endl;
+			<< "NUMBER\t\t" << "LEXEMA\t\t" << "LINE\t\t" << "AUX_INDEX\t\t"
+			<< "PARAMERER_COUNTER"<< std::endl;
 
 		for (int i = 0; i < la->getLT()->getSize(); i++){
-			*(this->getStream()) << i << "\t\t" << la->getLT()->getElem(i)->getLex()
-				<< "\t\t" << la->getLT()->getElem(i)->getLineNumber() << "\t\t";
+			*(this->getStream()) << i << "\t\t";
+			
+			if (la->getLT()->getElem(i)->getLex() != LT_NULL_LEX)
+				*(this->getStream()) << la->getLT()->getElem(i)->getLex() << "\t\t";
+			else
+				*(this->getStream()) << "null\t\t";
+
+			if (la->getLT()->getElem(i)->getLineNumber() >= NULL)
+				*(this->getStream()) << la->getLT()->getElem(i)->getLineNumber() << "\t\t";
+			else
+				*(this->getStream()) << "null\t\t";
 
 			if (la->getLT()->getElem(i)->getIdx() >= NULL)
-				*(this->getStream()) << la->getLT()->getElem(i)->getIdx() << std::endl;
+				*(this->getStream()) << la->getLT()->getElem(i)->getIdx() << "\t\t\t";
+			else
+				*(this->getStream()) << "null\t\t\t";
 
-			else 
-				*(this->getStream()) << "no_matches" << std::endl;
+			if (la->getLT()->getElem(i)->getParmCount() > NULL)
+				*(this->getStream()) << la->getLT()->getElem(i)->getParmCount() << std::endl;
+			else
+				*(this->getStream()) << "null" << std::endl;
 		};
 
 		*(this->getStream()) << "---Lex table end---" << std::endl;
@@ -122,8 +136,8 @@ namespace LOG
 		*(this->getStream()) << std::endl << std::endl << "---Identificator table start---"
 			<< std::endl << "Help: NaL - Not a Literal\t" << std::endl << "Size: "
 			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
-			<< std::setw(AT_NAME_MAXSIZE) << "NAME\t\t" << "FUNC NAME\t\t" << "DATA TYPE\t" 
-			<< "TYPE\t"	<< "LT INDEX\t" << "VALUE" << std::endl;
+			<< std::setw(AT_NAME_MAXSIZE) << "NAME\t\t" << "FUNC_NAME\t\t" << "DATA_TYPE\t" 
+			<< "TYPE\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
 
 		for (int i = 0; i < la->getAT()->getSize(); i++){
 			lexeme = la->getLT()->getElem(la->getAT()->getElem(i)->getIdx() - 1)->getLex();
@@ -142,7 +156,7 @@ namespace LOG
 				else if (la->getAT()->getElem(i)->getDataType() == AT::DATATYPE::LINE)
 					*(this->getStream()) << la->getAT()->getElem(i)->getStrVal();
  			}
- 			else 
+ 			else
 				*(this->getStream()) << "-NaL-";
 
 			*(this->getStream()) << std::endl;

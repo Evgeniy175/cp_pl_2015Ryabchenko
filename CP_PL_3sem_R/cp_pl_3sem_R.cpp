@@ -20,6 +20,13 @@ int _tmain(int argc, _TCHAR* argv[]){
 		compiler->getLog()->writeIn(compiler->getIn());
 		compiler->getLog()->writeLt(compiler->getLA());
 		compiler->getLog()->writeAt(compiler->getLA());
+		compiler->getLog();
+
+		compiler->polishNotation();
+
+		compiler->getLog()->writeLt(compiler->getLA());
+		compiler->getLog()->writeAt(compiler->getLA());
+
 		compiler->getLog()->close();
 	}
 	catch (ERROR::Error* err){

@@ -10,8 +10,9 @@ namespace LA{
 		FST::FST* fst = new FST::FST[NUMBER_OF_GRAPHS];	// конечный автомат
 		bool isCorrect = false;							// распознана ли строка
 		int  lineNumber = 0;							// счЄтчик строк
-		int	 literalCounter = 0;						// счетчик литералов
-		char funcName[AT_NAME_MAXSIZE + 1];			// им€ функции
+		int	 literalCounter = 0;						// счЄтчик литералов
+		int  operationCounter = 0;						// счЄтчик операций
+		char funcName[AT_NAME_MAXSIZE + 1];				// им€ функции
 
 		fst->createFst();								// формирование массива fst
 
@@ -38,36 +39,36 @@ namespace LA{
 					case LEX_NEWLINE:	lineNumber++; break;
 
 					case LEX_ID:
-						if (this->getLT()->getType() == AT::TYPE::F)
+						if (this->getLT()->getType() == AT::TYPE::F){
 							strncpy_s(funcName, in->getLine(chainNumber), strlen(in->getLine(chainNumber)));
-
+							this->getAT()->getDataStruct()->getFuncName().push_back(in->getLine(chainNumber));
+							this->getAT()->getDataStruct()->getFuncType().push_back(this->getDataType(in->getArr(), chainNumber));
+						}
 						if (!this->getAT()->isIncluded(in->getLine(chainNumber), funcName)){
-							 elemAt.setElem(this, funcName, in->getArr(), chainNumber);
-								 this->getAT()->addElem(elemAt);
-								//if (elemAt.idType_ == AT::TYPE::U)
-									//throw ERROR_THROW_LINE(203, in->getLine(chainNumber), lineNumber, -1);
+							elemAt.setElem(this, funcName, in->getArr(), chainNumber);
+							this->getAT()->addElem(elemAt);
+							if (elemAt.getType() == AT::TYPE::U)
+								throw ERROR_THROW_FULL(203, in->getLine(chainNumber), lineNumber, -1);
 						};
 						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getIdx(in->getLine(chainNumber), funcName));
 						break;
 
 					case LEX_LITERAL:
-						elemAt.setElem(this, funcName, in->getArr(), chainNumber, AT::TYPE::L, literalCounter++);
+						elemAt.setElem(this, funcName, in->getArr(), chainNumber, literalCounter++);
 						this->getAT()->addElem(elemAt);
 						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getSize() - 1);
 						break;
 
-					case LEX_ACTIONS:
-						elemAt.setElem(this, funcName, in->getArr(), chainNumber);
+					case LEX_OPERATION:
+						elemAt.setElem(this, funcName, in->getArr(), chainNumber, operationCounter);
 						this->getAT()->addElem(elemAt);
 						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getSize() - 1);
 
 					default: break;
 					};
-					
 					elemAt.reset();
 				};
 			};
-
 			if (!isCorrect){	// если не распознана
 				ERROR::Error* err = ERROR_THROW_FULL(202, in->getLine(chainNumber), lineNumber, -1);
 				log->writeError(err);
@@ -104,7 +105,7 @@ namespace LA{
 			rc = arrOfLines[i][0] == 'С' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
 			break;
 
-		default:
+		case LEX_TYPE:
 			for (firstIt = this->getAT()->getDataStruct()->getName().begin(),
 				secondIt = this->getAT()->getDataStruct()->getType().begin();
 				firstIt != this->getAT()->getDataStruct()->getName().end();
@@ -112,12 +113,20 @@ namespace LA{
 					if (strcmp(*firstIt, arrOfLines[i - 1]) == NULL) rc = *secondIt;
 			};
 			break;
-		};
 
+		default:
+			for (firstIt = this->getAT()->getDataStruct()->getFuncName().begin(),
+				secondIt = this->getAT()->getDataStruct()->getFuncType().begin();
+				firstIt != this->getAT()->getDataStruct()->getFuncName().end();
+				firstIt++, secondIt++){
+					if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
+			};
+			break;
+		};
 		return rc;
 	};
 
-	char* LexAnalyser::getDataName(AT::DATATYPE type){
+	char* LexAnalyser::getDataName(AT::DATATYPE dataType){
 		char* rc = "unknown";
 		std::vector<char*>::iterator firstIt;
 		std::vector<AT::DATATYPE>::iterator secondIt;
@@ -126,8 +135,8 @@ namespace LA{
 			secondIt = this->getAT()->getDataStruct()->getType().begin();
 			secondIt != this->getAT()->getDataStruct()->getType().end();
 			firstIt++, secondIt++){
-				if (*secondIt == type) rc = *firstIt;
-		}
+				if (*secondIt == dataType) rc = *firstIt;
+		};
 		return rc;
 	};
 

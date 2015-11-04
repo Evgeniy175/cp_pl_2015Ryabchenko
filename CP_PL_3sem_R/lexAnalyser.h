@@ -17,12 +17,11 @@ namespace LA{
 	public:
 		LexAnalyser(int size, LOG::Log* log, IN::In* in);
 		
-		LT::Table* getLT();
-		AT::Table* getAT();
-
-		char* getDataName(AT::DATATYPE type);
-		AT::DATATYPE getDataType(char** arrOfLines, int chainNumber);
-
+		LT::Table*		getLT();
+		AT::Table*		getAT();
+		AT::DATATYPE	getDataType(char** arrOfLines, int chainNumber);
+		char*			getDataName(AT::DATATYPE dataType);
+		
 		~LexAnalyser();
 
 	private:

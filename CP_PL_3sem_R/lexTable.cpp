@@ -3,14 +3,23 @@
 
 namespace LT
 {
-	Element::Element() { } 
+	Element::Element(){
+		this->lexeme_ = LT_NULL_LEX;
+		this->lineNumber_ = LT_TI_NULL_LINE;
+		this->auxIndex_ = LT_TI_NULL_IDX;
+		this->parameterCounter = LT_NULL_PARM;
+	} 
 
 	char Element::getLex(){
 		return this->lexeme_;
 	};
 
 	int	Element::getIdx(){
-		return this->itIndex_;
+		return this->auxIndex_;
+	};
+
+	int Element::getParmCount(){
+		return this->parameterCounter;
 	};
 
 	int Element::getLineNumber(){
@@ -18,13 +27,28 @@ namespace LT
 	};
 
 	void Element::setIdx(int itIndex){
-		this->itIndex_ = itIndex;
+		this->auxIndex_ = itIndex;
+	};
+
+	void Element::setElem(){
+		this->lexeme_ = LT_NULL_LEX;
+		this->lineNumber_ = LT_TI_NULL_LINE;
+		this->auxIndex_ = LT_TI_NULL_IDX;
+		this->parameterCounter = LT_NULL_PARM;
 	};
 
 	void Element::setElem(int& i, int& lineNumber){
 		this->lexeme_ = LT::getLex(i);
 		this->lineNumber_ = lineNumber;
-		this->itIndex_ = LT_TI_NULL_IDX;
+		this->auxIndex_ = LT_TI_NULL_IDX;
+		this->parameterCounter = LT_NULL_PARM;
+	};
+
+	void Element::setElem(const Element& elem){
+		this->lexeme_ = elem.lexeme_;
+		this->lineNumber_ = elem.lineNumber_;
+		this->auxIndex_ = elem.auxIndex_;
+		this->parameterCounter = elem.parameterCounter;
 	};
 
 	Table::Table(){
@@ -51,10 +75,13 @@ namespace LT
 	AT::TYPE Table::getType(){
 		AT::TYPE rc = AT::TYPE::U;
 
-		if (this->getElem(this->getSize() - 3)->getLex() == LEX_FUNCTION)
+		if (this->getElem(this->getSize() - 3)->getLex() == LEX_FUNCTION){
 			rc = this->getElem(this->getSize() - 4)->getLex() == LEX_EXTERN ? AT::TYPE::E : AT::TYPE::F;
-
-		else {
+		}
+		else if (this->getElem(this->getSize() - 1)->getLex() == LEX_OPERATION){
+			rc = AT::TYPE::O;
+		}
+		else{
 			switch (this->getElem(this->getSize() - 2)->getLex())
 			{
 			case LEX_COMMA: case LEX_SQBRACEOPEN: rc = AT::TYPE::P; break;
@@ -63,13 +90,16 @@ namespace LT
 			case LEX_RETURN: case LEX_EQUALLY: rc = AT::TYPE::L; break;
 			default: break;
 			};
-		}
-
+		};
 		return rc;
 	};
 
 	void Table::addElem(Element& elem){
 		this->table_[this->size_++] = elem;
+	};
+
+	void Element::setParmCount(int value){
+		this->parameterCounter = value;
 	};
 	
 	Table::~Table(){
@@ -78,7 +108,6 @@ namespace LT
 
 	char getLex(int switchCount){
 		char rc;
-
 		switch (switchCount)
 		{
 		case 0:		rc = LEX_TYPE;					break;
@@ -93,7 +122,7 @@ namespace LT
 		case 9:		rc = LEX_RIGHTHESIS;			break;
 		case 10:	rc = LEX_SQBRACEOPEN;			break;
 		case 11:	rc = LEX_SQBRACECLOSE;			break;
-		case 12:	rc = LEX_ACTIONS;				break;
+		case 12:	rc = LEX_OPERATION;				break;
 		case 13:	rc = LEX_CONDITION;				break;
 		case 14:	rc = LEX_EXTERN;				break;
 		case 15:	rc = LEX_FUNCTION;				break;
@@ -105,7 +134,6 @@ namespace LT
 		case 21:	rc = LEX_LITERAL;				break;
 		default:	break;
 		};
-
 		return rc;
 	};
 };

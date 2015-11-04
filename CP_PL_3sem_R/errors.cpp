@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "errors.h"
 
+// переменная вне фции
+
 namespace ERROR{
 	Error* a = ERROR_ENTRY(0, "Недопустимый код ошибки");
 

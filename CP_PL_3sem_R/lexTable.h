@@ -4,7 +4,10 @@
 #include "auxTable.h"
 
 #define LT_MAXSIZE			4096		// максимальное кол-во строк в таблице лексем
+#define LT_NULL_PARM		0xffffffff	// дефолтное значение параметра
 #define LT_TI_NULL_IDX		0xffffffff	// нет эл-та таблицы идентификаторов
+#define LT_TI_NULL_LINE		0xffffffff
+#define LT_NULL_LEX			'M'
 #define LEX_TYPE			't'			// лексема для  type
 #define LEX_FUNCTION		'f'			// лексема для  function
 #define LEX_RETURN			'r'			// лексема для  return
@@ -20,7 +23,7 @@
 #define LEX_SQBRACEOPEN		'['			// лексема для  [
 #define LEX_SQBRACECLOSE	']'			// лексема для  ]
 #define LEX_EQUALLY			'='			// лексема для	=
-#define LEX_ACTIONS			'v'			// лексема для  действий
+#define LEX_OPERATION		'v'			// лексема для  действий
 #define LEX_NEWLINE			'@'			// лексема для	@ (новая строка)
 #define LEX_CONDITION		'c'			// лексема для	условия
 #define LEX_EXTERN			'e'			// лексема для	extern
@@ -33,17 +36,22 @@ namespace LT{				// таблица лексем
 	class Element{			// строка таблицы лексем
 	public:
 		Element();
-		char getLex();
-		int	 getIdx();
-		int  getLineNumber();
+		char	getLex();
+		int		getIdx();
+		int		getParmCount();
+		int		getLineNumber();
 
-		void setIdx(int tiIndex);
-		void setElem(int& i, int& lineNumber);
+		void	setIdx(int tiIndex);
+		void	setParmCount(int value);
+		void	setElem(int& i, int& lineNumber);
+		void	setElem(const Element& elem);
+		void	setElem();
 
 	private:
 		char lexeme_;						// лексема
 		int	 lineNumber_;					// номер строки в исх коде
-		int	 itIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
+		int	 auxIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
+		int	 parameterCounter;
 	};
 
 	class Table{			// экземпляр таблицы лексем

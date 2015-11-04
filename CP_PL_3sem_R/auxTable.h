@@ -13,6 +13,18 @@
 #define AT_LINE_MAXSIZE	255					// 
 #define AT_ARR_MAXSIZE		256					//
 #define AT_LITERAL_PREFIX	"L"
+#define AT_OPERATION_PREFIX	"O"
+
+#define AT_STL_FUNCSIZE	11
+#define AT_STL_FUNCTIONS {	"start", "get_type", "get_load",		\
+							"get_temp", "get_time", "get_rpm", "set_type",	\
+							"set_load", "set_temp", "set_time", "set_rpm"}
+#define AT_STL_FUNCTYPES {	AT::DATATYPE::BOOL,\
+							AT::DATATYPE::LINE, AT::DATATYPE::NUM,\
+							AT::DATATYPE::NUM, AT::DATATYPE::NUM,\
+							AT::DATATYPE::NUM,  AT::DATATYPE::NIL,\
+							AT::DATATYPE::NIL, AT::DATATYPE::NIL,\
+							AT::DATATYPE::NIL, AT::DATATYPE::NIL}
 
 #define AT_DATA_SIZE	5				// размер массива типов
 #define AT_DATA_NAMES { "num", "line", "wash", "bool", "nil" }
@@ -32,7 +44,8 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 		P = 3,				// параметр
 		L = 4,				// литерал
 		E = 5,				// extern function
-		S = 6				// элемент структуры
+		S = 6,				// элемент структуры
+		O = 7				// действия
 	};
 
 	enum DATATYPE{		// типы данных
@@ -50,14 +63,18 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 
 		std::vector<char*>&		getName();
 		std::vector<char*>&		getStructName();
+		std::vector<char*>&		getFuncName();
 		std::vector<DATATYPE>&	getType();
 		std::vector<DATATYPE>&	getStructType();
+		std::vector<DATATYPE>&	getFuncType();
 
 	private:
 		std::vector<char*>		name_;			// для обычных типов
 		std::vector<char*>		structName_;	// для структуры
+		std::vector<char*>		funcName_;
 		std::vector<DATATYPE>	type_;			// для обычных типов
 		std::vector<DATATYPE>	structType_;	// для структуры
+		std::vector<DATATYPE>	funcType_;
 	};
 
 	class Element{					// строка дополнительной таблицы
@@ -68,6 +85,7 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 
 		int			getIdx();				// get lexTable index
 		int			getIntVal();
+		char		getAction();
 		char*		getName();
 		char*		getFuncName();
 		char*		getStrVal();
@@ -85,14 +103,14 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 						char*			funcName,				// имя функции
 						char**			arrOfLines,				// массив цепочек
 						int&			i,						// номер текущей цепочки
-						TYPE			idType = TYPE::U,		// тип
-						int				literalCounter = -1		// счетчик литералов
+						int				counter = -1			// счетчик
 					);
 
 	private:
 		int			ltIndex_;					// индекс первой строки в таблице лексем
 		char		name_[AT_NAME_MAXSIZE];		// имя (автоматически усекается до ID_MAXSIZE)
 		char		funcName_[AT_NAME_MAXSIZE];
+		char		action_;
 		TYPE		type_;						// тип идентификатора
 		DATATYPE	dataType_;					// тип данных
 		struct{
@@ -112,7 +130,7 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 
 		void		addElem(Element& elem);						//
 
-		bool		isIncluded(char* line, char* funcName);		// проверка на включенность в таблицу
+		bool		isIncluded(char* name, char* funcName);		// проверка на включенность в таблицу
 		int			getIdx(char* name, char* funcName);			// get index [i] in table_ for current name&funcName
 
 		~Table();
