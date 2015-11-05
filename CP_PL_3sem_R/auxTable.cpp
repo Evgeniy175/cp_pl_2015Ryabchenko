@@ -72,10 +72,10 @@ namespace AT
 
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
 		char** arrOfLines, int& i, int counter){
-		char lexeme = la->getLT()->getElem(la->getLT()->getSize() - 1)->getLex();
-		this->ltIndex_ = la->getLT()->getSize() - 1;
+		char lexeme = la->getElemLT(la->getLTsize() - 1)->getLex();
+		this->ltIndex_ = la->getLTsize() - 1;
 		this->dataType_ = la->getDataType(arrOfLines, i);
-		this->type_ = la->getLT()->getType();
+		this->type_ = la->getElemType();
 		this->setFuncName(funcName);
 
 		if (lexeme == LEX_LITERAL) {
@@ -127,7 +127,7 @@ namespace AT
 		this->setOperationVal(AT_NULL_OPERATION);
 	};
 
-	DataStruct::DataStruct(){
+	DataInfo::DataInfo(){
 		int i;
 		char* nameTemp[] = AT_DATA_NAMES;
 		char* structNameTemp[] = AT_DATASTRUCT_NAMES;
@@ -150,36 +150,36 @@ namespace AT
 		};
 	};
 
-	std::vector<char*>& DataStruct::getName(){
+	std::vector<char*>& DataInfo::getName(){
 		return this->name_;
 	};
 
-	std::vector<char*>& DataStruct::getStructName(){
+	std::vector<char*>& DataInfo::getStructName(){
 		return this->structName_;
 	};
 
-	std::vector<char*>& DataStruct::getFuncName(){
+	std::vector<char*>& DataInfo::getFuncName(){
 		return this->funcName_;
 	};
 
-	std::vector<DATATYPE>& DataStruct::getType(){
+	std::vector<DATATYPE>& DataInfo::getType(){
 		return this->type_;
 	};
 
-	std::vector<DATATYPE>& DataStruct::getStructType(){
+	std::vector<DATATYPE>& DataInfo::getStructType(){
 		return this->structType_;
 	};
 
-	std::vector<DATATYPE>&	DataStruct::getFuncType(){
+	std::vector<DATATYPE>&	DataInfo::getFuncType(){
 		return this->funcType_;
 	};
 
 	Table::Table(){
-		this->dataStruct_ = new DataStruct();
+		this->dataInfo_ = new DataInfo();
 	}
 
 	Table::Table(int maxSize){
-		this->dataStruct_ = new DataStruct();
+		this->dataInfo_ = new DataInfo();
 		this->size_ = NULL;
 
 		if (maxSize < AT_MAXSIZE)
@@ -199,8 +199,8 @@ namespace AT
 		return this->size_;
 	};
 
-	DataStruct* Table::getDataStruct(){
-		return this->dataStruct_;
+	DataInfo* Table::getDataInfo(){
+		return this->dataInfo_;
 	};
 
 	void Table::addElem(Element& elem){
@@ -226,7 +226,7 @@ namespace AT
 
 		if (this->size_ == NULL)	return rc;
 		else {
-			for (int i = 0; i < this->size_; i++) {
+			for (int i = 0; i < this->size_; i++){
 				if (strcmp(this->table_[i].getName(), name) == NULL
 					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL){
 						return i;

@@ -33,27 +33,27 @@ namespace LA{
 	};
 
 	std::vector<char*>&	LexAnalyser::getName(){
-		return this->getAT()->getDataStruct()->getName();
+		return this->getAT()->getDataInfo()->getName();
 	};
 
 	std::vector<char*>&	LexAnalyser::getStructName(){
-		return this->getAT()->getDataStruct()->getStructName();
+		return this->getAT()->getDataInfo()->getStructName();
 	};
 
 	std::vector<char*>&	LexAnalyser::getFuncName(){
-		return this->getAT()->getDataStruct()->getFuncName();
+		return this->getAT()->getDataInfo()->getFuncName();
 	};
 
 	std::vector<AT::DATATYPE>& LexAnalyser::getType(){
-		return this->getAT()->getDataStruct()->getType();
+		return this->getAT()->getDataInfo()->getType();
 	};
 
 	std::vector<AT::DATATYPE>& LexAnalyser::getStructType(){
-		return this->getAT()->getDataStruct()->getStructType();
+		return this->getAT()->getDataInfo()->getStructType();
 	};
 
 	std::vector<AT::DATATYPE>& LexAnalyser::getFuncType(){
-		return this->getAT()->getDataStruct()->getFuncType();
+		return this->getAT()->getDataInfo()->getFuncType();
 	};
 
 	void LexAnalyser::addElemLT(LT::Element& elem){

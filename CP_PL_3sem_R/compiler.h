@@ -27,22 +27,22 @@ namespace CP{
 		wchar_t*			getInName();
 		wchar_t*			getOutName();
 		wchar_t*			getLogName();
-		LA::LexAnalyser*	getLA();					// get LexAnalyser
+		LA::LexAnalyser*	getLA();						// get LexAnalyser
 		IN::In*				getIn();
 		LOG::Log*			getLog();
-		int					getLTsize();				// return lexTable size
-		LT::Element*		getElemLT(int i);			// return lexTable element(i)
-		int					getATsize();				// return auxTable size
-		AT::Element*		getElemAT(int i);			// return auxTable element(i)
+		int					getLTsize();					// return lexTable size
+		LT::Element*		getElemLT(int i);				// return lexTable element(i)
+		int					getATsize();					// return auxTable size
+		AT::Element*		getElemAT(int i);				// return auxTable element(i)
 
-		void writeLine(char* c, ...);
-		void writeLine(wchar_t* c, ...);
-		void writeLog();
-		void writeCP();
+		void writeLine(char* line, ...);					// write char* line
+		void writeLine(wchar_t* line, ...);					// write wchar_t* line
+		void writeLog();									// write log
+		void writeCP();										// write compiler
 		void writeIn();
 		void writeError(ERROR::Error* error);
-		void writeLt();
-		void writeAt();
+		void writeLt();										// write lexTable
+		void writeAt();										// write auxTable
 		void closeLog();
 
 		void executeIn();
@@ -50,18 +50,18 @@ namespace CP{
 
 
 		void	polishNotation();
-		bool	checkPn(int& position);					// сделать в польскую запись
-		bool	buildPnFunc(							// для разбора функций
+		bool	checkPn(int& position);						// create Polish Notation
+		bool	buildPnFunc(								// create Polish Notation for functions
 					std::stack<LT::Element*>& stack,
 					std::list<LT::Element>& exitArr,
 					int& position);
-		int		getPriority(char symbol);				// приоритет символа
-		void	modifyAT();								// модифицировать дополнительную таблицу после отработки польской записи
+		int		getPriority(char symbol);					// get symbol priority
+		void	modifyAT();									// modify auxTable (ltIndex field) after Polish Notation
 
 	private:
-		PATH::Path*			path_;
-		LA::LexAnalyser*	la_;
-		IN::In*				in_;
-		LOG::Log*			log_;
+		PATH::Path*			path_;							// field to store path of files
+		LA::LexAnalyser*	la_;							// lexAnalyser
+		IN::In*				in_;							// in for read a file
+		LOG::Log*			log_;							// write log into file
 	};
 };

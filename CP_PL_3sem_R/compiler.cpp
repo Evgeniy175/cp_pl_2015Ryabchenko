@@ -147,7 +147,6 @@ namespace CP{
 		int startPos = position;
 		std::stack<LT::Element*> stack;
 		std::list<LT::Element> exitArr;
-//		AT::TYPE temp;
 
 		if (this->getElemLT(position)->getLex() == LEX_EQUALLY) startPos++;
 
@@ -177,11 +176,8 @@ namespace CP{
 				break;
 
 			case LEX_SQBRACEOPEN:
-				//temp = this->getElemAT(getElemLT(position - 1)->getIdx())->getType();
-				//if (temp == AT::TYPE::F || temp == AT::TYPE::E){
-					if (!buildPnFunc(stack, exitArr, position))
-						return false;
-				//};
+				if (!buildPnFunc(stack, exitArr, position))
+					return false;
 				break;
 
 			case LEX_EQUALLY: case LEX_COMMA: break;

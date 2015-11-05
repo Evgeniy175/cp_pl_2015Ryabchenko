@@ -22,7 +22,7 @@ namespace LA{
 		AT::Table*		getAT();													// return auxTable
 		AT::DATATYPE	getDataType(char** arrOfLines, int chainNumber);			// return DATATYPE for this line
 		char*			getDataName(AT::DATATYPE dataType);							// return char* name of this DATATYPE for this line			
-		AT::TYPE		getElemType();												// return last in table element type
+		AT::TYPE		getElemType();												// return last element type
 		LT::Element*	getElemLT(int i);											// return lexTable element(i)
 		AT::Element*	getElemAT(int i);											// return auxTable element(i)
 		int				getATidx(char* name, char* funcName);						// return index of this element from auxTable
@@ -36,10 +36,10 @@ namespace LA{
 		std::vector<AT::DATATYPE>&	getStructType();								// return struct element type from vector
 		std::vector<AT::DATATYPE>&	getFuncType();									// return function type from vector
 
-		void addElemLT(LT::Element& elem);										// add element into lexTable
-		void addElemAT(AT::Element& elem);										// add element into auxTable
+		void addElemLT(LT::Element& elem);											// add element into lexTable
+		void addElemAT(AT::Element& elem);											// add element into auxTable
 		
-		bool isIncludedInAT(char* name, char* funcName);
+		bool isIncludedInAT(char* name, char* funcName);							// is this element included into auxTable?
 		void execute(int size, LOG::Log* log, IN::In* in);
 
 		~LexAnalyser();

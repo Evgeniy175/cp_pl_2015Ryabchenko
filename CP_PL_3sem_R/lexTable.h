@@ -50,7 +50,7 @@ namespace LT{				// таблица лексем
 	private:
 		char lexeme_;						// лексема
 		int	 lineNumber_;					// номер строки в исх коде
-		int	 auxIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
+		int	 atIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
 		int	 parameterCounter;
 	};
 

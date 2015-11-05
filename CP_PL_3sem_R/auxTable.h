@@ -37,30 +37,30 @@
 
 namespace LA { class LexAnalyser; };
 
-namespace AT{		// дополнительная таблица (auxiliary table)
-	enum TYPE{			// типы
+namespace AT{		// auxiliary table
+	enum TYPE{
 		U = 0,				// unknown
-		V = 1,				// переменная
-		F = 2,				// фция
-		P = 3,				// параметр
-		L = 4,				// литерал
+		V = 1,				// variable
+		F = 2,				// function
+		P = 3,				// parameter
+		L = 4,				// literal
 		E = 5,				// extern function
-		S = 6,				// элемент структуры
-		O = 7				// действия
+		S = 6,				// element of struct variable
+		O = 7				// operation
 	};
 
-	enum DATATYPE{		// типы данных
+	enum DATATYPE{
 		UNKNOWN = 0,		// unknown
 		NUM  = 1,			// integer
 		LINE = 2,			// string
 		WASH = 3,			// wash
 		BOOL = 4,			// bool
-		NIL  = 5			// аналог void в C++
+		NIL  = 5			// like a void in C++
 	};
 
-	class DataStruct{				// типы данных идентификаторов pattern-одиночка
+	class DataInfo{		// types of data pattern-одиночка!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public:
-		DataStruct();
+		DataInfo();
 
 		std::vector<char*>&		getName();
 		std::vector<char*>&		getStructName();
@@ -84,15 +84,15 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 
 		void reset();
 
-		int			getIdx();				// get lexTable index
-		int			getIntVal();
-		//char		getOperation();
-		char*		getName();
-		char*		getFuncName();
-		char*		getStrVal();
-		char		getOperation();
-		TYPE		getType();
-		DATATYPE	getDataType();
+		int				getIdx();				// get lexTable index
+		int				getIntVal();
+		char*			getName();
+		char*			getFuncName();
+		char*			getStrVal();
+		char			getOperation();
+		TYPE			getType();
+		DATATYPE		getDataType();
+		
 
 		void		setIdx(int value);		// set lexTable index
 		void		setIntVal(int value);
@@ -113,7 +113,6 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 		int			ltIndex_;					// индекс первой строки в таблице лексем
 		char		name_[AT_NAME_MAXSIZE];		// имя (автоматически усекается до ID_MAXSIZE)
 		char		funcName_[AT_NAME_MAXSIZE];
-		//char		operation_;
 		TYPE		type_;						// тип идентификатора
 		DATATYPE	dataType_;					// тип данных
 		struct{
@@ -130,7 +129,7 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 
 		Element*	getElem(int i);								//
 		int			getSize();									//
-		DataStruct*	getDataStruct();							//
+		DataInfo*	getDataInfo();							//
 
 		void		addElem(Element& elem);						//
 
@@ -142,7 +141,7 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 	private:
 		int			maxSize_;					// максимальный размер таблицы < TI_MAXSIZE
 		int			size_;						// текущий размер таблицы < maxsize
-		DataStruct*	dataStruct_;				// типы данных
+		DataInfo*	dataInfo_;					// типы данных
 		Element*	table_;						// массив строк таблицы
 	};
 
