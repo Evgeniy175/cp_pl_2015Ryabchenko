@@ -2,8 +2,8 @@
 #include "compiler.h"
 
 namespace CP{
-	Compiler::Compiler(wchar_t* in, wchar_t* out, wchar_t* log){
-		this->path_ = new PATH::Path(in, out, log);
+	Compiler::Compiler(FilesPath* filesPath){
+		this->path_ = new PATH::Path(filesPath->in_, filesPath->out_, filesPath->log_);
 		this->log_ = new LOG::Log(this->path_->getLog());
  		this->in_ = new IN::In();
 		this->la_ = new LA::LexAnalyser();

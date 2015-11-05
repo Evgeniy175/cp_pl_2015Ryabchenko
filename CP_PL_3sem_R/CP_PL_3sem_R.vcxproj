@@ -82,6 +82,7 @@
     <ClInclude Include="compiler.h" />
     <ClInclude Include="cp_pl_3sem_R.h" />
     <ClInclude Include="errors.h" />
+    <ClInclude Include="filesPath.h" />
     <ClInclude Include="fst.h" />
     <ClInclude Include="graphs.h" />
     <ClInclude Include="auxTable.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="cp_pl_3sem_R.cpp" />
     <ClCompile Include="errors.cpp" />
+    <ClCompile Include="filesPath.cpp" />
     <ClCompile Include="fst.cpp" />
     <ClCompile Include="auxTable.cpp" />
     <ClCompile Include="in.cpp" />

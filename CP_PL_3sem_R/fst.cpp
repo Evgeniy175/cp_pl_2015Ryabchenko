@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "fst.h"
 
-namespace FST
-{
+namespace FST{
 	RELATION::RELATION(char symbol, short nextNode){
 		this->symbol_ = symbol;
 		this->nextNode_ = nextNode;

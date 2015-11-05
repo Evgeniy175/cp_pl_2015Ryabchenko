@@ -1,13 +1,12 @@
 #pragma once
 
 #include "errors.h"
+#include "filesPath.h"
 #include <cwchar>
 #include <iostream>
 #include <string>
 
-#define FILES_MAX_NAMESIZE	256
-#define FILES_OUT_POSTFIX	L".out"
-#define FILES_LOG_POSTFIX	L".log"
+#define FILES_MAX_NAMESIZE 256
 
 namespace PATH
 {
@@ -19,7 +18,7 @@ namespace PATH
 		wchar_t* getOut();
 		wchar_t* getLog();
 
-	private:
+	protected:
 		wchar_t in_[FILES_MAX_NAMESIZE];
 		wchar_t out_[FILES_MAX_NAMESIZE];
 		wchar_t log_[FILES_MAX_NAMESIZE];

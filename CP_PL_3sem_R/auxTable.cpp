@@ -191,16 +191,16 @@ namespace AT
 		this->table_ = new Element[maxSize];
 	}
 
+	DataInfo* Table::getDataInfo(){
+		return this->dataInfo_;
+	};
+
 	Element* Table::getElem(int i){
 		return (table_ + i);
 	};
 
 	int Table::getSize(){
 		return this->size_;
-	};
-
-	DataInfo* Table::getDataInfo(){
-		return this->dataInfo_;
 	};
 
 	void Table::addElem(Element& elem){

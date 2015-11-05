@@ -1,5 +1,6 @@
 #pragma once
 
+#include "filesPath.h"
 #include "errors.h"
 #include "log.h"
 #include "lexAnalyser.h"
@@ -18,11 +19,10 @@ namespace LOG{ class Log; };
 namespace PN{ class PolishNotation; };
 namespace AT{ enum TYPE; enum DATATYPE; class Table; class Element; };
 
-
 namespace CP{
 	class Compiler{
 	public:
-		Compiler(wchar_t* in, wchar_t* out, wchar_t* log);
+		Compiler(FilesPath* filesPath);
 
 		wchar_t*			getInName();
 		wchar_t*			getOutName();
