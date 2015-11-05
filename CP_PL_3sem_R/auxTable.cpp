@@ -223,7 +223,6 @@ namespace AT
 
 	int Table::getIdx(char* name, char* funcName){
 		int rc = -1;
-
 		if (this->size_ == NULL)	return rc;
 		else {
 			for (int i = 0; i < this->size_; i++){

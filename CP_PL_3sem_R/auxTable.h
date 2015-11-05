@@ -70,20 +70,18 @@ namespace AT{		// auxiliary table
 		std::vector<DATATYPE>&	getFuncType();
 
 	private:
-		std::vector<char*>		name_;			// для обычных типов
-		std::vector<char*>		structName_;	// для структуры
-		std::vector<char*>		funcName_;
-		std::vector<DATATYPE>	type_;			// для обычных типов
-		std::vector<DATATYPE>	structType_;	// для структуры
-		std::vector<DATATYPE>	funcType_;
+		std::vector<char*>		name_;			// names of normal types
+		std::vector<char*>		structName_;	// names of struct variables
+		std::vector<char*>		funcName_;		// names of STL functions
+		std::vector<DATATYPE>	type_;			// data types of normal types
+		std::vector<DATATYPE>	structType_;	// data types of struct variables
+		std::vector<DATATYPE>	funcType_;		// data types of STL functions
 	};
 
-	class Element{					// строка дополнительной таблицы
+	class Element{					// element of auxTable
 	public:
 		Element();
-
-		void reset();
-
+		
 		int				getIdx();				// get lexTable index
 		int				getIntVal();
 		char*			getName();
@@ -92,7 +90,6 @@ namespace AT{		// auxiliary table
 		char			getOperation();
 		TYPE			getType();
 		DATATYPE		getDataType();
-		
 
 		void		setIdx(int value);		// set lexTable index
 		void		setIntVal(int value);
@@ -101,13 +98,15 @@ namespace AT{		// auxiliary table
 		void		setStrVal(char* value);
 		void		setOperationVal(char operation);
 		void		setValue(char lexeme, char* line = NULL_STR);
-		void		setElem(						// заполнение элемента для идентификатора
+		void		setElem(									// заполнение элемента для идентификатора
 						LA::LexAnalyser* la,					// таблица лексем
 						char*			funcName,				// имя функции
 						char**			arrOfLines,				// массив цепочек
 						int&			i,						// номер текущей цепочки
 						int				counter = -1			// счетчик
 					);
+		
+		void reset();
 
 	private:
 		int			ltIndex_;					// индекс первой строки в таблице лексем
