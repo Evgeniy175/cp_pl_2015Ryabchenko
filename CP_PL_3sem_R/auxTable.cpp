@@ -211,9 +211,9 @@ namespace AT
 		if (this->size_ == NULL) return false;
 		else {
 			for (int i = 0; i < size_; i++){
-				if ((strcmp(this->table_[i].getName(), name) == NULL
-					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL)
-					|| (strcmp(this->table_[i].getFuncName(), name) == NULL)){
+				if ((!strcmp(this->table_[i].getName(), name)
+					&& !strcmp(this->table_[i].getFuncName(), funcName))
+					|| (!strcmp(this->table_[i].getFuncName(), name))){
 						return true;
 				};
 			};
@@ -223,14 +223,16 @@ namespace AT
 
 	int Table::getIdx(char* name, char* funcName){
 		int rc = -1;
+		int i;
 		if (this->size_ == NULL)	return rc;
 		else {
-			for (int i = 0; i < this->size_; i++){
-				if (strcmp(this->table_[i].getName(), name) == NULL
-					&& strcmp(this->table_[i].getFuncName(), funcName) == NULL){
+			for (i = 0; i < this->size_; i++){
+				if (!strcmp(this->table_[i].getName(), name)
+					&& !strcmp(this->table_[i].getFuncName(), funcName)){
 						return i;
 				};
 			};
+			
 		};
 		return rc;
 	};

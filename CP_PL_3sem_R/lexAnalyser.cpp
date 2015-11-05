@@ -20,8 +20,35 @@ namespace LA{
 		return this->getAT()->getElem(i);
 	};
 
+	int LexAnalyser::_getFuncIdx(char* name){
+		for (int i = 0; i < this->getATsize(); i++){
+			if (!strcmp(this->getElemAT(i)->getName(), name)){
+				return i;
+			};
+		};
+		return AT_NULLIDX;
+	};
+
+	bool LexAnalyser::_isIncludedFunction(char* name){
+		std::vector<char*>::iterator firstIt;
+		std::vector<AT::DATATYPE>::iterator secondIt;
+		for (firstIt = this->getFuncName().begin(),
+			secondIt = this->getFuncType().begin();
+			firstIt != this->getFuncName().end();
+			firstIt++, secondIt++){
+				if (!strcmp(*firstIt, name)) return true;
+		};
+		return false;
+	};
+
 	int LexAnalyser::getATidx(char* name, char* funcName){
-		return this->getAT()->getIdx(name, funcName);
+		int rc = this->getAT()->getIdx(name, funcName);
+
+		if (rc == AT_NULLIDX && _isIncludedFunction(name)){
+			rc = _getFuncIdx(name);
+		};
+
+		return rc;
 	};
 
 	int LexAnalyser::getATsize(){
@@ -97,7 +124,7 @@ namespace LA{
 				secondIt = this->getStructType().begin();
 				firstIt != this->getStructName().end();
 				firstIt++, secondIt++){
-					if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
+					if (!strcmp(*firstIt, arrOfLines[i])) rc = *secondIt;
 			};
 			break;
 
@@ -110,7 +137,7 @@ namespace LA{
 				secondIt = this->getType().begin();
 				firstIt != this->getName().end();
 				firstIt++, secondIt++){
-					if (strcmp(*firstIt, arrOfLines[i - 1]) == NULL) rc = *secondIt;
+					if (!strcmp(*firstIt, arrOfLines[i - 1])) rc = *secondIt;
 			};
 			break;
 
@@ -118,13 +145,14 @@ namespace LA{
 			for (firstIt = this->getFuncName().begin(),
 				secondIt = this->getFuncType().begin();
 				firstIt != this->getFuncName().end();
-			firstIt++, secondIt++){
-				if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
+				firstIt++, secondIt++){
+					if (!strcmp(*firstIt, arrOfLines[i])) rc = *secondIt;
 			};
 			break;
 		};
 		return rc;
 	};
+
 	void LexAnalyser::execute(int size, LOG::Log* log, IN::In* in){
 		this->lexTable = new LT::Table(size);
 		this->auxTable = new AT::Table(size);

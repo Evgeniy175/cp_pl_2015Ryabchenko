@@ -1,6 +1,5 @@
 #pragma once
 
-#include "filesPath.h"
 #include "errors.h"
 #include "log.h"
 #include "lexAnalyser.h"
@@ -22,7 +21,7 @@ namespace AT{ enum TYPE; enum DATATYPE; class Table; class Element; };
 namespace CP{
 	class Compiler{
 	public:
-		Compiler(FilesPath* filesPath);
+		Compiler(PATH::Path* filesPath);
 
 		wchar_t*			getInName();
 		wchar_t*			getOutName();

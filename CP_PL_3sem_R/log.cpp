@@ -117,8 +117,8 @@ namespace LOG
 			else
 				*(this->getStream()) << "null\t\t";
 
-			if (la->getLT()->getElem(i)->getLineNumber() >= NULL)
-				*(this->getStream()) << la->getElemLT(i)->getLineNumber() << "\t\t";
+			if (la->getLT()->getElem(i)->getLine() >= NULL)
+				*(this->getStream()) << la->getElemLT(i)->getLine() << "\t\t";
 			else
 				*(this->getStream()) << "null\t\t";
 

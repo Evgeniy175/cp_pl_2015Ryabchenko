@@ -5,9 +5,9 @@ namespace LT
 {
 	Element::Element(){
 		this->lexeme_ = LT_NULL_LEX;
-		this->lineNumber_ = LT_AUX_NULL_LINE;
+		this->line_ = LT_AUX_NULL_LINE;
 		this->atIndex_ = LT_AUX_NULL_IDX;
-		this->parameterCounter = LT_NULL_PARM;
+		this->parameterCounter_ = LT_NULL_PARM;
 	} 
 
 	char Element::getLex(){
@@ -19,11 +19,11 @@ namespace LT
 	};
 
 	int Element::getParmCount(){
-		return this->parameterCounter;
+		return this->parameterCounter_;
 	};
 
-	int Element::getLineNumber(){
-		return this->lineNumber_;
+	int Element::getLine(){
+		return this->line_;
 	};
 
 	void Element::setIdx(int auxIndex){
@@ -32,23 +32,23 @@ namespace LT
 
 	void Element::setElem(){
 		this->lexeme_ = LT_NULL_LEX;
-		this->lineNumber_ = LT_AUX_NULL_LINE;
+		this->line_ = LT_AUX_NULL_LINE;
 		this->atIndex_ = LT_AUX_NULL_IDX;
-		this->parameterCounter = LT_NULL_PARM;
+		this->parameterCounter_ = LT_NULL_PARM;
 	};
 
 	void Element::setElem(int& i, int& lineNumber){
 		this->lexeme_ = LT::getLex(i);
-		this->lineNumber_ = lineNumber;
+		this->line_ = lineNumber;
 		this->atIndex_ = LT_AUX_NULL_IDX;
-		this->parameterCounter = LT_NULL_PARM;
+		this->parameterCounter_ = LT_NULL_PARM;
 	};
 
 	void Element::setElem(const Element& elem){
 		this->lexeme_ = elem.lexeme_;
-		this->lineNumber_ = elem.lineNumber_;
+		this->line_ = elem.line_;
 		this->atIndex_ = elem.atIndex_;
-		this->parameterCounter = elem.parameterCounter;
+		this->parameterCounter_ = elem.parameterCounter_;
 	};
 
 	Table::Table(){
@@ -99,7 +99,7 @@ namespace LT
 	};
 
 	void Element::setParmCount(int value){
-		this->parameterCounter = value;
+		this->parameterCounter_ = value;
 	};
 	
 	Table::~Table(){

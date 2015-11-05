@@ -1,5 +1,5 @@
 #pragma once
 
 #include "compiler.h"
-#include "filesPath.h"
+#include "path.h"
 #include <ctime>

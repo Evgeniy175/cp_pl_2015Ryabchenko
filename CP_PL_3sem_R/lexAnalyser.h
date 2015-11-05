@@ -28,6 +28,8 @@ namespace LA{
 		int				getATidx(char* name, char* funcName);						// return index of this element from auxTable
 		int				getATsize();												// return auxTable size
 		int				getLTsize();												// return lexTable size
+		int				_getFuncIdx(char* name);									// return function index in auxTable
+		bool			_isIncludedFunction(char* name);
 
 		std::vector<char*>&			getName();										// return char* name type from vector
 		std::vector<char*>&			getStructName();								// return char* name struct element type from vector

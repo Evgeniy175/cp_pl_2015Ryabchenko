@@ -6,8 +6,11 @@
 
 int _tmain(int argc, _TCHAR* argv[]){
 	setlocale(LC_ALL, "Rus");
-	FilesPath* filesPath = new FilesPath(argc, argv);
-	CP::Compiler* compiler = new CP::Compiler(filesPath);
+
+	PATH::Path* initialPath = new PATH::Path();
+	initialPath->initialExecute(argc, argv);
+
+	CP::Compiler* compiler = new CP::Compiler(initialPath);
 
 	try{
 		compiler->writeLog();

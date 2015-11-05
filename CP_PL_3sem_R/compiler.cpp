@@ -2,8 +2,8 @@
 #include "compiler.h"
 
 namespace CP{
-	Compiler::Compiler(FilesPath* filesPath){
-		this->path_ = new PATH::Path(filesPath->in_, filesPath->out_, filesPath->log_);
+	Compiler::Compiler(PATH::Path* filesPath){
+		this->path_ = new PATH::Path(*filesPath);
 		this->log_ = new LOG::Log(this->path_->getLog());
  		this->in_ = new IN::In();
 		this->la_ = new LA::LexAnalyser();
@@ -131,6 +131,11 @@ namespace CP{
 				break;
 
 			case LEX_COMMA: break;
+
+			case LEX_SQBRACEOPEN:
+				if (!buildPnFunc(stack, exitArr, position))
+					return false;
+				break;
 			default: return false;
 			};
 			position++;
@@ -163,14 +168,16 @@ namespace CP{
 					stack.push(this->getElemLT(position));
 				}
 				else{
-					while (getPriority(this->getElemAT(this->getElemLT(position)->getIdx())->getOperation())
+					while (stack.size() != NULL
+						&& getPriority(this->getElemAT(this->getElemLT(position)->getIdx())->getOperation())
 						<= getPriority(this->getElemAT(stack.top()->getIdx())->getOperation())){
-						exitArr.push_back(*(stack.top()));
-						stack.pop();
+							exitArr.push_back(*(stack.top()));
+							stack.pop();
 					};
-					if (getPriority(this->getElemAT(this->getElemLT(position)->getIdx())->getOperation())
-						> getPriority(this->getElemAT(stack.top()->getIdx())->getOperation())){
-						stack.push(this->getElemLT(position));
+					if (stack.size() == NULL
+						|| (getPriority(this->getElemAT(this->getElemLT(position)->getIdx())->getOperation())
+							> getPriority(this->getElemAT(stack.top()->getIdx())->getOperation()))){
+								stack.push(this->getElemLT(position));
 					};
 				};
 				break;
@@ -202,6 +209,7 @@ namespace CP{
 		this->writeLine("\n\n", "");
 		for (int i = 0; i < this->getLTsize(); i++){
 			if (this->getElemLT(i)->getLex() == LEX_ID
+				|| this->getElemLT(i)->getLex() == LEX_LITERAL
 				|| this->getElemLT(i)->getLex() == LEX_EQUALLY
 				|| this->getElemLT(i)->getLex() == LEX_PRINT){
 				if (checkPn(i)){

@@ -36,10 +36,10 @@ namespace LT{				// таблица лексем
 	class Element{			// строка таблицы лексем
 	public:
 		Element();
-		char	getLex();
-		int		getIdx();							// get auxiliary table index
-		int		getParmCount();
-		int		getLineNumber();
+		char	getLex();							// return lexeme
+		int		getIdx();							// return auxiliary table index
+		int		getParmCount();						// return counter for parameters
+		int		getLine();							// return line number
 
 		void	setElem();
 		void	setElem(const Element& elem);
@@ -48,10 +48,10 @@ namespace LT{				// таблица лексем
 		void	setParmCount(int value);
 
 	private:
-		char lexeme_;						// лексема
-		int	 lineNumber_;					// номер строки в исх коде
-		int	 atIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
-		int	 parameterCounter;
+		char	lexeme_;						// лексема
+		int		line_;							// line number
+		int		atIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
+		int		parameterCounter_;
 	};
 
 	class Table{			// экземпл€р таблицы лексем
