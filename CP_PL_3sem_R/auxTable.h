@@ -5,13 +5,14 @@
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 0 как дефолтное значение инт
 
-#define AT_NAME_MAXSIZE	12					// максимальное число символов в имени переменной
+#define AT_NAME_MAXSIZE		12					// максимальное число символов в имени переменной
 #define AT_MAXSIZE			4096				// максимальное кол-во строк в таблице идентификаторов
 #define AT_NUM_DEFAULT		0x00000000			// значение по умолчанию для num
 #define AT_LINE_DEFAULT		0x00				// значение по умолчанию для line
 #define AT_NULLIDX			0xffffffff			// нет эл-та таблицы идентификаторов
-#define AT_LINE_MAXSIZE	255					// 
+#define AT_LINE_MAXSIZE		255					// 
 #define AT_ARR_MAXSIZE		256					//
+#define AT_NULL_OPERATION	'M'
 #define AT_LITERAL_PREFIX	"L"
 #define AT_OPERATION_PREFIX	"O"
 
@@ -57,7 +58,7 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 		NIL  = 5			// аналог void в C++
 	};
 
-	class DataStruct{				// типы данных идентификаторов
+	class DataStruct{				// типы данных идентификаторов pattern-одиночка
 	public:
 		DataStruct();
 
@@ -85,10 +86,11 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 
 		int			getIdx();				// get lexTable index
 		int			getIntVal();
-		char		getOperation();
+		//char		getOperation();
 		char*		getName();
 		char*		getFuncName();
 		char*		getStrVal();
+		char		getOperation();
 		TYPE		getType();
 		DATATYPE	getDataType();
 
@@ -97,6 +99,7 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 		void		setName(char* name);
 		void		setFuncName(char* name);
 		void		setStrVal(char* value);
+		void		setOperationVal(char operation);
 		void		setValue(char lexeme, char* line = NULL_STR);
 		void		setElem(						// заполнение элемента для идентификатора
 						LA::LexAnalyser* la,					// таблица лексем
@@ -107,16 +110,16 @@ namespace AT{		// дополнительная таблица (auxiliary table)
 					);
 
 	private:
-		bool		isChanged;
 		int			ltIndex_;					// индекс первой строки в таблице лексем
 		char		name_[AT_NAME_MAXSIZE];		// имя (автоматически усекается до ID_MAXSIZE)
 		char		funcName_[AT_NAME_MAXSIZE];
-		char		operation_;
+		//char		operation_;
 		TYPE		type_;						// тип идентификатора
 		DATATYPE	dataType_;					// тип данных
 		struct{
 			int		intValue_;
 			char	strValue_[AT_ARR_MAXSIZE];
+			char	operation_;
 		} value_;
 	};
 

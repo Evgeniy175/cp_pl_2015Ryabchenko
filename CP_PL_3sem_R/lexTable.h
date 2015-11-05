@@ -37,15 +37,15 @@ namespace LT{				// таблица лексем
 	public:
 		Element();
 		char	getLex();
-		int		getIdx();
+		int		getIdx();							// get auxiliary table index
 		int		getParmCount();
 		int		getLineNumber();
 
-		void	setIdx(int auxIndex);
-		void	setParmCount(int value);
-		void	setElem(int& i, int& lineNumber);
-		void	setElem(const Element& elem);
 		void	setElem();
+		void	setElem(const Element& elem);
+		void	setElem(int& i, int& lineNumber);
+		void	setIdx(int auxIndex);				// set auxiliary table index
+		void	setParmCount(int value);
 
 	private:
 		char lexeme_;						// лексема
@@ -63,7 +63,7 @@ namespace LT{				// таблица лексем
 
 		int			getSize();
 		Element*	getElem(int i);
-		AT::TYPE	getType();	// возвращает тип идентификатора
+		AT::TYPE	getType();
 
 		~Table();
 	private:

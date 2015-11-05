@@ -10,73 +10,7 @@ namespace IN{
 		this->numberOfChains_ = NULL;
 	};
 
-	char** In::getArr(){
-		return this->arrOfLines_;
-	};
-
-	char* In::getLine(int i){
-		return this->arrOfLines_[i];
-	};
-
-	int In::getNumOfChains(){
-		return this->numberOfChains_;
-	};
-
-	int In::getLinesCounter(){
-		return this->lines_;
-	};
-
-	int In::getSizeCounter(){
-		return this->size_;
-	};
-
-	int In::getIgnorCounter(){
-		return this->ignor_;
-	};
-
-	int In::getCode(char symbol){
-		return this->code_[unsigned char(symbol)];
-	};
-
-	void In::setCode(int* code){
-		this->code_ = code;
-	};
-
-	void In::setArr(char** arrOfLines){
-		this->arrOfLines_ = arrOfLines;
-	};
-
-	void In::setLine(char* line){
-		this->arrOfLines_[this->numberOfChains_] = line;
-	};
-
-	void In::setChar(int& currPos, char symbol){
-		this->arrOfLines_[this->numberOfChains_][currPos++] = symbol;
-	};
-
-	void In::setLineEnd(int& currChainPosition){
-		this->arrOfLines_[this->numberOfChains_++][currChainPosition] = NULL_STR;
-		this->arrOfLines_[this->numberOfChains_] = new char[IN_MAX_LEN_TEXT];
-		currChainPosition = 0;
-	};
-
-	void In::increaseIgnor(){
-		this->ignor_++;
-	};
-
-	void In::increaseLines(){
-		this->lines_++;
-	};
-
-	void In::increaseSize(){
-		this->size_++;
-	};
-
-	void In::setText(char symbol){
-		this->text_[this->size_] = symbol;
-	};
-
-	In::In(LOG::Log* log, wchar_t* infile){
+	void In::execute(LOG::Log* log, wchar_t* infile){
 		std::ifstream file(infile);
 		ERROR::Error* errorVar;
 
@@ -161,9 +95,75 @@ namespace IN{
 		}
 		else
 			throw ERROR_THROW(102);
-		
+
 		this->setText(NULL_STR);
 		file.close();
+	};
+
+	char** In::getArr(){
+		return this->arrOfLines_;
+	};
+
+	char* In::getLine(int i){
+		return this->arrOfLines_[i];
+	};
+
+	int In::getNumOfChains(){
+		return this->numberOfChains_;
+	};
+
+	int In::getLinesCounter(){
+		return this->lines_;
+	};
+
+	int In::getSizeCounter(){
+		return this->size_;
+	};
+
+	int In::getIgnorCounter(){
+		return this->ignor_;
+	};
+
+	int In::getCode(char symbol){
+		return this->code_[unsigned char(symbol)];
+	};
+
+	void In::setCode(int* code){
+		this->code_ = code;
+	};
+
+	void In::setArr(char** arrOfLines){
+		this->arrOfLines_ = arrOfLines;
+	};
+
+	void In::setLine(char* line){
+		this->arrOfLines_[this->numberOfChains_] = line;
+	};
+
+	void In::setChar(int& currPos, char symbol){
+		this->arrOfLines_[this->numberOfChains_][currPos++] = symbol;
+	};
+
+	void In::setLineEnd(int& currChainPosition){
+		this->arrOfLines_[this->numberOfChains_++][currChainPosition] = NULL_STR;
+		this->arrOfLines_[this->numberOfChains_] = new char[IN_MAX_LEN_TEXT];
+		currChainPosition = 0;
+	};
+
+	void In::increaseIgnor(){
+		this->ignor_++;
+	};
+
+	void In::increaseLines(){
+		this->lines_++;
+	};
+
+	void In::increaseSize(){
+		this->size_++;
+	};
+
+	void In::setText(char symbol){
+		this->text_[this->size_] = symbol;
 	};
 
 	void In::createLine(char firstSymbol, std::ifstream& file, int& positionCounter){

@@ -6,7 +6,6 @@ namespace AT
 	Element::Element(){
 		this->dataType_ = DATATYPE::UNKNOWN;
 		this->type_ = TYPE::U;
-		this->isChanged = false;
 		setIntVal(AT_NUM_DEFAULT);
 		setStrVal(AT_LINE_DEFAULT);
 	}
@@ -17,10 +16,6 @@ namespace AT
 
 	int Element::getIntVal(){
 		return this->value_.intValue_;
-	};
-
-	char Element::getOperation(){
-		return this->operation_;
 	};
 
 	char* Element::getName(){
@@ -35,6 +30,10 @@ namespace AT
 		return this->value_.strValue_;
 	};
 
+	char Element::getOperation(){
+		return this->value_.operation_;
+	};
+
 	TYPE Element::getType(){
 		return this->type_;
 	};
@@ -44,13 +43,7 @@ namespace AT
 	};
 
 	void Element::setIdx(int value){
-		if (this->ltIndex_ == AT_NULLIDX){
-			this->ltIndex_ = value;
-		} 
-		else if (this->isChanged == false){
-			this->isChanged = true;
-			this->ltIndex_ = value;
-		};
+		this->ltIndex_ = value;
 	};
 
 	void Element::setIntVal(int value){
@@ -71,6 +64,10 @@ namespace AT
 		
 		else
 			memset(this->value_.strValue_, AT_ARR_MAXSIZE, 'M');
+	};
+
+	void Element::setOperationVal(char operation){
+		this->value_.operation_ = operation;
 	};
 
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
@@ -94,7 +91,6 @@ namespace AT
 			_itoa(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_OPERATION_PREFIX);
 			setValue(lexeme, arrOfLines[i]);
-			this->operation_ = arrOfLines[i][0];
 		};
 	};
 
@@ -115,6 +111,9 @@ namespace AT
 			else if (this->dataType_ == AT::DATATYPE::LINE) {
 				this->setStrVal(AT_LINE_DEFAULT);
 			};
+		}
+		else if (lexeme == LEX_OPERATION){
+			this->setOperationVal(line[0]);
 		};
 	};
 
@@ -125,7 +124,7 @@ namespace AT
 		this->ltIndex_ = AT_NULLIDX;
 		this->setIntVal(AT_NUM_DEFAULT);
 		this->setStrVal(AT_LINE_DEFAULT);
-		this->operation_ = 'M';
+		this->setOperationVal(AT_NULL_OPERATION);
 	};
 
 	DataStruct::DataStruct(){

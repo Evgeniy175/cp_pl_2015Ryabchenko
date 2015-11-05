@@ -68,6 +68,8 @@ namespace IN{
 		void setLineEnd(int& currChainPosition);
 		void setText(char symbol);
 		
+		void execute(LOG::Log* log, wchar_t* infile);
+
 		void increaseIgnor();
 		void increaseLines();
 		void increaseSize();

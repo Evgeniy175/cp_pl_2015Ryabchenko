@@ -2,7 +2,130 @@
 #include "lexAnalyser.h"
 
 namespace LA{
-	LexAnalyser::LexAnalyser(int size, LOG::Log* log, IN::In* in){
+	LexAnalyser::LexAnalyser(){}
+
+	LT::Table* LexAnalyser::getLT(){
+		return this->lexTable;
+	};
+
+	AT::Table* LexAnalyser::getAT(){
+		return this->auxTable;
+	};
+
+	LT::Element* LexAnalyser::getElemLT(int i){
+		return this->getLT()->getElem(i);
+	};
+
+	AT::Element* LexAnalyser::getElemAT(int i){
+		return this->getAT()->getElem(i);
+	};
+
+	int LexAnalyser::getATidx(char* name, char* funcName){
+		return this->getAT()->getIdx(name, funcName);
+	};
+
+	int LexAnalyser::getATsize(){
+		return this->getAT()->getSize();
+	};
+
+	int LexAnalyser::getLTsize(){
+		return this->getLT()->getSize();
+	};
+
+	std::vector<char*>&	LexAnalyser::getName(){
+		return this->getAT()->getDataStruct()->getName();
+	};
+
+	std::vector<char*>&	LexAnalyser::getStructName(){
+		return this->getAT()->getDataStruct()->getStructName();
+	};
+
+	std::vector<char*>&	LexAnalyser::getFuncName(){
+		return this->getAT()->getDataStruct()->getFuncName();
+	};
+
+	std::vector<AT::DATATYPE>& LexAnalyser::getType(){
+		return this->getAT()->getDataStruct()->getType();
+	};
+
+	std::vector<AT::DATATYPE>& LexAnalyser::getStructType(){
+		return this->getAT()->getDataStruct()->getStructType();
+	};
+
+	std::vector<AT::DATATYPE>& LexAnalyser::getFuncType(){
+		return this->getAT()->getDataStruct()->getFuncType();
+	};
+
+	void LexAnalyser::addElemLT(LT::Element& elem){
+		this->getLT()->addElem(elem);
+	};
+
+	AT::TYPE LexAnalyser::getElemType(){
+		return this->getLT()->getType();
+	};
+
+	void LexAnalyser::addElemAT(AT::Element& elem){
+		this->getAT()->addElem(elem);
+	};
+
+	bool LexAnalyser::isIncludedInAT(char* name, char* funcName){
+		return this->getAT()->isIncluded(name, funcName);
+	};
+
+	char* LexAnalyser::getDataName(AT::DATATYPE dataType){
+		char* rc = "unknown";
+		std::vector<char*>::iterator firstIt;
+		std::vector<AT::DATATYPE>::iterator secondIt;
+
+		for (firstIt = this->getName().begin(),
+			secondIt = this->getType().begin();
+			secondIt != this->getType().end();
+		firstIt++, secondIt++){
+			if (*secondIt == dataType) rc = *firstIt;
+		};
+		return rc;
+	};
+
+	AT::DATATYPE LexAnalyser::getDataType(char** arrOfLines, int i){
+		AT::DATATYPE rc = AT::DATATYPE::UNKNOWN;
+		std::vector<char*>::iterator firstIt;
+		std::vector<AT::DATATYPE>::iterator secondIt;
+
+		switch (this->getElemLT(this->getLTsize() - 2)->getLex()){
+		case LEX_COLON:																			// для структурированного типа
+			for (firstIt = this->getStructName().begin(),
+				secondIt = this->getStructType().begin();
+				firstIt != this->getStructName().end();
+				firstIt++, secondIt++){
+					if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
+			};
+			break;
+
+		case LEX_OPERATION: case LEX_EQUALLY: case LEX_COMMA: case LEX_SQBRACEOPEN: case LEX_RETURN:				// для литералов
+			rc = arrOfLines[i][0] == '‘' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
+			break;
+
+		case LEX_TYPE:
+			for (firstIt = this->getName().begin(),
+				secondIt = this->getType().begin();
+				firstIt != this->getName().end();
+				firstIt++, secondIt++){
+					if (strcmp(*firstIt, arrOfLines[i - 1]) == NULL) rc = *secondIt;
+			};
+			break;
+
+		default:
+			for (firstIt = this->getFuncName().begin(),
+				secondIt = this->getFuncType().begin();
+				firstIt != this->getFuncName().end();
+			firstIt++, secondIt++){
+				if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
+			};
+			break;
+		};
+		return rc;
+	};
+	void LexAnalyser::execute(int size, LOG::Log* log, IN::In* in){
 		this->lexTable = new LT::Table(size);
 		this->auxTable = new AT::Table(size);
 		LT::Element elemLt;								// lexTable element
@@ -28,7 +151,7 @@ namespace LA{
 				if (isCorrect = fst[i].execute()){
 					//log->writeLine(log, "  Цепочка ", in->getLine(chainNumber), "\t\tраспознана", "");
 					elemLt.setElem(i, lineNumber);
-					this->getLT()->addElem(elemLt);
+					this->addElemLT(elemLt);
 
 					switch (LT::getLex(i)){
 					case LEX_BEGIN:
@@ -39,30 +162,30 @@ namespace LA{
 					case LEX_NEWLINE:	lineNumber++; break;
 
 					case LEX_ID:
-						if (this->getLT()->getType() == AT::TYPE::F){
+						if (this->getElemType() == AT::TYPE::F){
 							strncpy_s(funcName, in->getLine(chainNumber), strlen(in->getLine(chainNumber)));
-							this->getAT()->getDataStruct()->getFuncName().push_back(in->getLine(chainNumber));
-							this->getAT()->getDataStruct()->getFuncType().push_back(this->getDataType(in->getArr(), chainNumber));
+							this->getFuncName().push_back(in->getLine(chainNumber));
+							this->getFuncType().push_back(this->getDataType(in->getArr(), chainNumber));
 						}
-						if (!this->getAT()->isIncluded(in->getLine(chainNumber), funcName)){
+						if (!this->isIncludedInAT(in->getLine(chainNumber), funcName)){
 							elemAt.setElem(this, funcName, in->getArr(), chainNumber);
-							this->getAT()->addElem(elemAt);
+							this->addElemAT(elemAt);
 							if (elemAt.getType() == AT::TYPE::U)
 								throw ERROR_THROW_FULL(203, in->getLine(chainNumber), lineNumber, -1);
 						};
-						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getIdx(in->getLine(chainNumber), funcName));
+						this->getElemLT(chainNumber)->setIdx(this->getATidx(in->getLine(chainNumber), funcName));
 						break;
 
 					case LEX_LITERAL:
 						elemAt.setElem(this, funcName, in->getArr(), chainNumber, literalCounter++);
-						this->getAT()->addElem(elemAt);
-						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getSize() - 1);
+						this->addElemAT(elemAt);
+						this->getElemLT(chainNumber)->setIdx(this->getATsize() - 1);
 						break;
 
 					case LEX_OPERATION:
 						elemAt.setElem(this, funcName, in->getArr(), chainNumber, operationCounter);
-						this->getAT()->addElem(elemAt);
-						this->getLT()->getElem(chainNumber)->setIdx(this->getAT()->getSize() - 1);
+						this->addElemAT(elemAt);
+						this->getElemLT(chainNumber)->setIdx(this->getATsize() - 1);
 
 					default: break;
 					};
@@ -75,69 +198,6 @@ namespace LA{
 			};
 		};
 		log->writeLine("---Конец работы КА---", "");
-	};
-
-	LT::Table* LexAnalyser::getLT(){
-		return this->lexTable;
-	};
-
-	AT::Table* LexAnalyser::getAT(){
-		return this->auxTable;
-	};
-
-	AT::DATATYPE LexAnalyser::getDataType(char** arrOfLines, int i){
-		AT::DATATYPE rc = AT::DATATYPE::UNKNOWN;
-		std::vector<char*>::iterator firstIt;
-		std::vector<AT::DATATYPE>::iterator secondIt;
-
-		switch (this->getLT()->getElem(this->getLT()->getSize() - 2)->getLex())
-		{
-		case LEX_COLON:																			// для структурированного типа
-			for (firstIt = this->getAT()->getDataStruct()->getStructName().begin(),
-				secondIt = this->getAT()->getDataStruct()->getStructType().begin();
-				firstIt != this->getAT()->getDataStruct()->getStructName().end();
-				firstIt++, secondIt++){
-					if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
-			};
-			break;
-
-		case LEX_EQUALLY: case LEX_COMMA: case LEX_SQBRACEOPEN: case LEX_RETURN:				// для литералов
-			rc = arrOfLines[i][0] == '‘' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
-			break;
-
-		case LEX_TYPE:
-			for (firstIt = this->getAT()->getDataStruct()->getName().begin(),
-				secondIt = this->getAT()->getDataStruct()->getType().begin();
-				firstIt != this->getAT()->getDataStruct()->getName().end();
-				firstIt++, secondIt++){
-					if (strcmp(*firstIt, arrOfLines[i - 1]) == NULL) rc = *secondIt;
-			};
-			break;
-
-		default:
-			for (firstIt = this->getAT()->getDataStruct()->getFuncName().begin(),
-				secondIt = this->getAT()->getDataStruct()->getFuncType().begin();
-				firstIt != this->getAT()->getDataStruct()->getFuncName().end();
-				firstIt++, secondIt++){
-					if (strcmp(*firstIt, arrOfLines[i]) == NULL) rc = *secondIt;
-			};
-			break;
-		};
-		return rc;
-	};
-
-	char* LexAnalyser::getDataName(AT::DATATYPE dataType){
-		char* rc = "unknown";
-		std::vector<char*>::iterator firstIt;
-		std::vector<AT::DATATYPE>::iterator secondIt;
-
-		for (firstIt = this->getAT()->getDataStruct()->getName().begin(),
-			secondIt = this->getAT()->getDataStruct()->getType().begin();
-			secondIt != this->getAT()->getDataStruct()->getType().end();
-			firstIt++, secondIt++){
-				if (*secondIt == dataType) rc = *firstIt;
-		};
-		return rc;
 	};
 
 	LexAnalyser::~LexAnalyser(){

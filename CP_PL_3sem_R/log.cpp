@@ -3,7 +3,15 @@
 
 namespace LOG
 {
-	Log::Log() { }
+	Log::Log(wchar_t logFile[]){
+		this->setStream(new std::ofstream(logFile));
+
+		if ((this->getStream())->good())
+			this->setLogFile(logFile);
+
+		else
+			throw ERROR_THROW(104);
+	}
 
 	wchar_t* Log::getLogFile(){
 		return this->logFile_;
@@ -19,16 +27,14 @@ namespace LOG
 
 	void Log::setStream(std::ofstream* stream){
 		this->stream_ = stream;
+	}; 
+	
+	void Log::line(char* line){
+		*(this->getStream()) << line;
 	};
 
-	void Log::getLog(wchar_t logFile[]){
-		this->setStream(new std::ofstream(logFile));
-
-		if ((this->getStream())->good())
-			this->setLogFile(logFile);
-
-		else
-			throw ERROR_THROW(104);
+	void Log::line(wchar_t* line){
+		*(this->getStream()) << line << ' ';
 	};
 
 	void Log::writeLine(char* c, ...){
@@ -133,8 +139,8 @@ namespace LOG
 	void Log::writeAt(LA::LexAnalyser* la){
 		char lexeme;
 
-		*(this->getStream()) << std::endl << std::endl << "---Identificator table start---"
-			<< std::endl << "Help: NaL - Not a Literal\t" << std::endl << "Size: "
+		*(this->getStream()) << std::endl << std::endl << "---Auxiliary table start---"
+			<< std::endl << "Size: "
 			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
 			<< std::setw(AT_NAME_MAXSIZE) << "NAME\t\t" << "FUNC_NAME\t\t" << "DATA_TYPE\t" 
 			<< "TYPE\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
@@ -156,13 +162,16 @@ namespace LOG
 				else if (la->getAT()->getElem(i)->getDataType() == AT::DATATYPE::LINE)
 					*(this->getStream()) << la->getAT()->getElem(i)->getStrVal();
  			}
+			else if (lexeme == LEX_OPERATION){
+				*(this->getStream()) << la->getAT()->getElem(i)->getOperation();
+			}
  			else
-				*(this->getStream()) << "-NaL-";
+				*(this->getStream()) << "none";
 
 			*(this->getStream()) << std::endl;
 		};
 
-		*(this->getStream()) << "---Identificator table end---";
+		*(this->getStream()) << "---Auxiliary table end---";
 	};
 
 	void Log::close(){

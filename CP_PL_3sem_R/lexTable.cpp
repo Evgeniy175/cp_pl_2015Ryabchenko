@@ -87,7 +87,7 @@ namespace LT
 			case LEX_COMMA: case LEX_SQBRACEOPEN: rc = AT::TYPE::P; break;
 			case LEX_TYPE: rc = AT::TYPE::V; break;
 			case LEX_COLON: rc = AT::TYPE::S; break;
-			case LEX_RETURN: case LEX_EQUALLY: rc = AT::TYPE::L; break;
+			case LEX_RETURN: case LEX_EQUALLY: case LEX_OPERATION: rc = AT::TYPE::L; break;
 			default: break;
 			};
 		};

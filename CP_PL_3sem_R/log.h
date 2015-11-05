@@ -19,15 +19,16 @@ namespace IN{ class In; };
 namespace LOG{
 	class Log{
 	public:
-		Log();
+		Log(wchar_t logFile[]);
 
 		wchar_t*		getLogFile();						// 
-		std::ofstream*	getStream();						// 
-		void			getLog(wchar_t logfile[]);			// создание потока
+		std::ofstream*	getStream();						//
 
 		void setLogFile(wchar_t* logFile);					//
 		void setStream(std::ofstream* stream);				// 
 
+		void line(char* line);							// записать строку в файл(для char*)
+		void line(wchar_t* line);						// записать строку в файл(для wchar_t*)
 		void writeLine(char* c, ...);						// записать строку в файл(для char*)
 		void writeLine(wchar_t* c, ...);					// записать строку в файл(для wchar_t*)
 		void writeLog();									// записать шапку log-файла в файл
