@@ -74,7 +74,7 @@ namespace AT
 		char** arrOfLines, int& i, int counter){
 		char lexeme = la->getElemLT(la->getLTsize() - 1)->getLex();
 		this->ltIndex_ = la->getLTsize() - 1;
-		this->dataType_ = la->getDataType(arrOfLines, i);
+		//this->dataType_ = la->getDataType(arrOfLines, i);
 		this->type_ = la->getElemType();
 		this->setFuncName(funcName);
 
