@@ -71,6 +71,10 @@ namespace ERROR{
 		this->position_ = position;
 	};
 
+	Error::~Error(){
+		delete this->position_;
+	}
+
 	Error* getError(int id, char* str, int line, int position){
 		Error* rc = errors[0];
 

@@ -40,6 +40,8 @@ namespace LOG{
 
 		void close();										// завершить поток
 
+		~Log();
+
 	private:
 		wchar_t logFile_[SIZE_CHAR_ARRAY];					// выходной файл
 		std::ofstream* stream_;								// поток вывода

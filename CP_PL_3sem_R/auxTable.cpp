@@ -92,7 +92,7 @@ namespace AT{
 	
 	void Element::setLineVal(char* value){
 		if (value != NULL)
-			strcpy(this->value_.lineValue_, value);
+			strcpy_s(this->value_.lineValue_, value);
 		
 		else
 			memset(this->value_.lineValue_, AT_ARR_MAXSIZE, 'M');
@@ -111,7 +111,7 @@ namespace AT{
 		this->setFuncName(funcName);
 
 		if (lexeme == LEX_LITERAL) {
-			_itoa(counter++, this->name_, 10);
+			_itoa_s(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_LITERAL_PREFIX);
 			setValue(lexeme, arrOfLines[i]);
 		}
@@ -120,7 +120,7 @@ namespace AT{
 			setValue(lexeme);
 		}
 		else if (lexeme == LEX_OPERATION){
-			_itoa(counter++, this->name_, 10);
+			_itoa_s(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_OPERATION_PREFIX);
 			setValue(lexeme, arrOfLines[i]);
 		};
@@ -228,7 +228,7 @@ namespace AT{
 
 	void addPrefix(char* dest, char* prefix){
 		char temp[AT_ARR_MAXSIZE];
-		strcpy(temp, dest);
+		strcpy_s(temp, dest);
 		strncpy(dest, prefix, AT_NAME_MAXSIZE - 1);
 		strncat(dest, temp, AT_NAME_MAXSIZE - strlen(prefix) - 1);
 	};

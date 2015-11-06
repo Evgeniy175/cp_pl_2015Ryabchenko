@@ -26,7 +26,7 @@ namespace CP{
 		wchar_t*			getInName();
 		wchar_t*			getOutName();
 		wchar_t*			getLogName();
-		LA::LexAnalyser*	getLA();						// get LexAnalyser
+		LA::LexAnalyser*	getLA();						// return LexAnalyser
 		IN::In*				getIn();
 		LOG::Log*			getLog();
 		int					getLTsize();					// return lexTable size
@@ -47,7 +47,6 @@ namespace CP{
 		void executeIn();
 		void executeLa();
 
-
 		void	polishNotation();
 		bool	checkPn(int& position);						// create Polish Notation
 		bool	buildPnFunc(								// create Polish Notation for functions
@@ -57,10 +56,12 @@ namespace CP{
 		int		getPriority(char symbol);					// get symbol priority
 		void	modifyAT();									// modify auxTable (ltIndex field) after Polish Notation
 
+		~Compiler();
+
 	private:
 		PATH::Path*			path_;							// field to store path of files
-		LA::LexAnalyser*	la_;							// lexAnalyser
-		IN::In*				in_;							// in for read a file
 		LOG::Log*			log_;							// write log into file
+		IN::In*				in_;							// in for read a file
+		LA::LexAnalyser*	la_;							// lexAnalyser
 	};
 };

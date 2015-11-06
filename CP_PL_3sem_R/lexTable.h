@@ -30,8 +30,8 @@
 
 namespace AT{ enum TYPE; enum DATATYPE; class Table; };
 
-namespace LT{			// lex table
-	class Element{				// element of the lex table
+namespace LT{		// lex table
+	class Element{		// element of the lex table
 	public:
 		Element();
 
@@ -53,7 +53,7 @@ namespace LT{			// lex table
 		int					parameterCounter_;					// number of parameters (for function, using in Polish Notation)
 	};
 
-	class Table{				// lex table
+	class Table{		// lex table
 	public:
 		Table();
 		Table(int size);

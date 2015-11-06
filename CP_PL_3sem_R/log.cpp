@@ -177,4 +177,8 @@ namespace LOG
 	void Log::close(){
 		this->getStream()->close();
 	};
+
+	Log::~Log(){
+		this->close();
+	}
 };

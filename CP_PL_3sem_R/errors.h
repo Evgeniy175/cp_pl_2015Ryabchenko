@@ -37,6 +37,8 @@ namespace ERROR{
 		void setMessage(char* message);
 		void setPosition(Position* position);
 
+		~Error();
+
 	private:
 		int id_;
 		char message_[ERROR_MESSAGE_MAXSIZE];

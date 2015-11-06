@@ -5,7 +5,7 @@ namespace CP{
 	Compiler::Compiler(PATH::Path* filesPath){
 		this->path_ = new PATH::Path(*filesPath);
 		this->log_ = new LOG::Log(this->path_->getLog());
- 		this->in_ = new IN::In();
+		this->in_ = new IN::In();
 		this->la_ = new LA::LexAnalyser();
 	};
 
@@ -238,4 +238,11 @@ namespace CP{
 			};
 		};
 	};
+
+	Compiler::~Compiler(){
+		delete this->path_;
+		delete this->log_;
+		delete this->in_;
+		delete this->la_;
+	}
 };

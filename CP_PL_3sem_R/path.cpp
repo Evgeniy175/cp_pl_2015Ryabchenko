@@ -38,12 +38,12 @@ namespace PATH{
 				if (wcsstr(argv[i], PATH_IN)){
 					pushPath(this->in_, argv[i]);
 					if (!wcsstr(this->out_, PATH_OUT)){
-						wcscpy(this->out_, this->in_);
-						wcscat(this->out_, PATH_OUT_POSTFIX);
+						wcscpy_s(this->out_, this->in_);
+						wcscat_s(this->out_, PATH_OUT_POSTFIX);
 					}
 					if (!wcsstr(this->log_, PATH_LOG)){
-						wcscpy(this->log_, this->in_);
-						wcscat(this->log_, PATH_LOG_POSTFIX);
+						wcscpy_s(this->log_, this->in_);
+						wcscat_s(this->log_, PATH_LOG_POSTFIX);
 					}
 				}
 				else if (wcsstr(argv[i], PATH_OUT)){
