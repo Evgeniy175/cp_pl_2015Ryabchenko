@@ -6,14 +6,13 @@
 #define LT_MAXSIZE			4096		// максимальное кол-во строк в таблице лексем
 #define LT_NULL_PARM		0xffffffff	// дефолтное значение параметра
 #define LT_AUX_NULL_IDX		0xffffffff	// нет эл-та таблицы идентификаторов
-#define LT_AUX_NULL_LINE		0xffffffff
+#define LT_AUX_NULL_LINE	0xffffffff
 #define LT_NULL_LEX			'M'
 #define LEX_TYPE			't'			// лексема для  type
 #define LEX_FUNCTION		'f'			// лексема для  function
 #define LEX_RETURN			'r'			// лексема для  return
 #define LEX_PRINT			'p'			// лексема для  print
 #define LEX_BEGIN			'b'			// лексема для	main
-#define LEX_COLON			':'			// лексема для  :
 #define LEX_SEMICOLON		';'			// лексема для  ;
 #define LEX_COMMA			','			// лексема для  ,
 #define LEX_LEFTBRACE		'{'			// лексема для  {
@@ -26,7 +25,6 @@
 #define LEX_OPERATION		'v'			// лексема для  действий
 #define LEX_NEWLINE			'@'			// лексема для	@ (новая строка)
 #define LEX_CONDITION		'c'			// лексема для	условия
-#define LEX_EXTERN			'e'			// лексема для	extern
 #define LEX_ID				'i'			// лексема для  идентификатора
 #define LEX_LITERAL			'l'			// лексема для	литералов (общая)
 
@@ -63,7 +61,6 @@ namespace LT{				// таблица лексем
 
 		int			getSize();
 		Element*	getElem(int i);
-		AT::TYPE	getType();
 
 		~Table();
 	private:

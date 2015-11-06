@@ -1,21 +1,53 @@
 #include "stdafx.h"
 #include "auxTable.h"
 
-namespace AT
-{	
+namespace AT{
+	DataInfo::DataInfo(){
+		int i;
+		char* nameTemp[] = AT_PRIMITIVE_TYPES_NAMES;
+		char* funcNameTemp[] = AT_STL_FUNCTIONS;
+		DATATYPE typeTemp[AT_PRIMITIVE_TYPES_SIZE] = AT_PRIMITIVE_TYPES_TYPES;
+		DATATYPE funcTypeTemp[AT_STL_FUNCSIZE] = AT_STL_FUNCTYPES;
+
+		for (i = 0; i < AT_PRIMITIVE_TYPES_SIZE; i++){			// заполнение векторов для встроенных типов
+			this->name_.push_back(nameTemp[i]);
+			this->type_.push_back(typeTemp[i]);
+		};
+		for (i = 0; i < AT_STL_FUNCSIZE; i++){
+			this->funcName_.push_back(funcNameTemp[i]);
+			this->funcType_.push_back(funcTypeTemp[i]);
+		};
+	};
+
+	std::vector<char*>& DataInfo::getName(){
+		return this->name_;
+	};
+
+	std::vector<char*>& DataInfo::getFuncName(){
+		return this->funcName_;
+	};
+
+	std::vector<DATATYPE>& DataInfo::getType(){
+		return this->type_;
+	};
+
+	std::vector<DATATYPE>&	DataInfo::getFuncType(){
+		return this->funcType_;
+	};
+
 	Element::Element(){
 		this->dataType_ = DATATYPE::UNKNOWN;
 		this->type_ = TYPE::U;
-		setIntVal(AT_NUM_DEFAULT);
-		setStrVal(AT_LINE_DEFAULT);
+		setNumVal(AT_NUM_DEFAULT);
+		setLineVal(AT_LINE_DEFAULT);
 	}
 
 	int	Element::getIdx(){
 		return this->ltIndex_;
 	};
 
-	int Element::getIntVal(){
-		return this->value_.intValue_;
+	int Element::getNumVal(){
+		return this->value_.numValue_;
 	};
 
 	char* Element::getName(){
@@ -26,8 +58,8 @@ namespace AT
 		return this->funcName_;
 	};
 
-	char* Element::getStrVal(){
-		return this->value_.strValue_;
+	char* Element::getLineVal(){
+		return this->value_.lineValue_;
 	};
 
 	char Element::getOperation(){
@@ -46,8 +78,8 @@ namespace AT
 		this->ltIndex_ = value;
 	};
 
-	void Element::setIntVal(int value){
-		this->value_.intValue_ = value;
+	void Element::setNumVal(int value){
+		this->value_.numValue_ = value;
 	};
 
 	void Element::setName(char* name){
@@ -58,15 +90,15 @@ namespace AT
 		strncpy_s(this->funcName_, name, strlen(name));
 	};
 	
-	void Element::setStrVal(char* value){
+	void Element::setLineVal(char* value){
 		if (value != NULL)
-			strcpy(this->value_.strValue_, value);
+			strcpy(this->value_.lineValue_, value);
 		
 		else
-			memset(this->value_.strValue_, AT_ARR_MAXSIZE, 'M');
+			memset(this->value_.lineValue_, AT_ARR_MAXSIZE, 'M');
 	};
 
-	void Element::setOperationVal(char operation){
+	void Element::setOperation(char operation){
 		this->value_.operation_ = operation;
 	};
 
@@ -74,8 +106,8 @@ namespace AT
 		char** arrOfLines, int& i, int counter){
 		char lexeme = la->getElemLT(la->getLTsize() - 1)->getLex();
 		this->ltIndex_ = la->getLTsize() - 1;
-		//this->dataType_ = la->getDataType(arrOfLines, i);
-		this->type_ = la->getElemType();
+		this->dataType_ = la->getDataType(arrOfLines, i);
+		this->type_ = la->getElemType(arrOfLines[i]);
 		this->setFuncName(funcName);
 
 		if (lexeme == LEX_LITERAL) {
@@ -94,84 +126,37 @@ namespace AT
 		};
 	};
 
-	void Element::setValue(char lexeme, char* line){
-		if (lexeme == LEX_LITERAL) {
-			if (this->dataType_ == AT::DATATYPE::NUM){
-				this->setIntVal(std::atoi(line));
-			}
-			else if (this->dataType_ == AT::DATATYPE::LINE){
-				line = createStrVal(line);
-				this->setStrVal(line);
-			};
-		}
-		else if (lexeme == LEX_ID){
-			if (this->dataType_ == AT::DATATYPE::NUM){
-				this->setIntVal(AT_NUM_DEFAULT);
-			}
-			else if (this->dataType_ == AT::DATATYPE::LINE) {
-				this->setStrVal(AT_LINE_DEFAULT);
-			};
-		}
-		else if (lexeme == LEX_OPERATION){
-			this->setOperationVal(line[0]);
-		};
-	};
+  	void Element::setValue(char lexeme, char* line){
+  		if (lexeme == LEX_LITERAL) {
+  			if (this->dataType_ == AT::DATATYPE::NUM){
+  				this->setNumVal(std::atoi(line));
+  			}
+  			else if (this->dataType_ == AT::DATATYPE::LINE){
+  				line = createStrVal(line);
+  				this->setLineVal(line);
+  			};
+  		}
+  		else if (lexeme == LEX_ID){
+  			if (this->dataType_ == AT::DATATYPE::NUM){
+  				this->setNumVal(AT_NUM_DEFAULT);
+  			}
+  			else if (this->dataType_ == AT::DATATYPE::LINE) {
+  				this->setLineVal(AT_LINE_DEFAULT);
+  			};
+  		}
+  		else if (lexeme == LEX_OPERATION){
+  			this->setOperation(line[0]);
+  		};
+  	};
 
 	void Element::reset(){
 		memset(this->name_, -52, AT_NAME_MAXSIZE);
 		this->dataType_ = AT::DATATYPE::UNKNOWN;
 		this->type_ = AT::TYPE::U;
 		this->ltIndex_ = AT_NULLIDX;
-		this->setIntVal(AT_NUM_DEFAULT);
-		this->setStrVal(AT_LINE_DEFAULT);
-		this->setOperationVal(AT_NULL_OPERATION);
-	};
-
-	DataInfo::DataInfo(){
-		int i;
-		char* nameTemp[] = AT_DATA_NAMES;
-		char* structNameTemp[] = AT_DATASTRUCT_NAMES;
-		char* funcNameTemp[] = AT_STL_FUNCTIONS;
-		DATATYPE typeTemp[AT_DATA_SIZE] = AT_DATA_TYPES;
-		DATATYPE structTypeTemp[AT_DATASTRUCT_SIZE] = AT_DATASTRUCT_TYPES;
-		DATATYPE funcTypeTemp[AT_STL_FUNCSIZE] = AT_STL_FUNCTYPES;
-
-		for (i = 0; i < AT_DATA_SIZE; i++){			// заполнение векторов для встроенных типов
-			this->name_.push_back(nameTemp[i]);
-			this->type_.push_back(typeTemp[i]);
-		};
-		for (i = 0; i < AT_DATASTRUCT_SIZE; i++){	// заполнение векторов для структурированного типа
-			this->structName_.push_back(structNameTemp[i]);
-			this->structType_.push_back(structTypeTemp[i]);
-		};
-		for (i = 0; i < AT_STL_FUNCSIZE; i++){
-			this->funcName_.push_back(funcNameTemp[i]);
-			this->funcType_.push_back(funcTypeTemp[i]);
-		};
-	};
-
-	std::vector<char*>& DataInfo::getName(){
-		return this->name_;
-	};
-
-	std::vector<char*>& DataInfo::getStructName(){
-		return this->structName_;
-	};
-
-	std::vector<char*>& DataInfo::getFuncName(){
-		return this->funcName_;
-	};
-
-	std::vector<DATATYPE>& DataInfo::getType(){
-		return this->type_;
-	};
-
-	std::vector<DATATYPE>& DataInfo::getStructType(){
-		return this->structType_;
-	};
-
-	std::vector<DATATYPE>&	DataInfo::getFuncType(){
-		return this->funcType_;
+		this->setNumVal(AT_NUM_DEFAULT);
+		this->setLineVal(AT_LINE_DEFAULT);
+		this->setOperation(AT_NULL_OPERATION);
 	};
 
 	Table::Table(){
@@ -239,6 +224,7 @@ namespace AT
 
 	Table::~Table(){
 		delete[] this->table_;
+		delete this->dataInfo_;
 	};
 
 	void addPrefix(char* dest, char* prefix){

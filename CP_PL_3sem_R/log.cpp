@@ -157,10 +157,10 @@ namespace LOG
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
 				if (la->getElemAT(i)->getDataType() == AT::DATATYPE::NUM)
-					*(this->getStream()) << la->getElemAT(i)->getIntVal();
+					*(this->getStream()) << la->getElemAT(i)->getNumVal();
  
 				else if (la->getElemAT(i)->getDataType() == AT::DATATYPE::LINE)
-					*(this->getStream()) << la->getElemAT(i)->getStrVal();
+					*(this->getStream()) << la->getElemAT(i)->getLineVal();
  			}
 			else if (lexeme == LEX_OPERATION){
 				*(this->getStream()) << la->getElemAT(i)->getOperation();

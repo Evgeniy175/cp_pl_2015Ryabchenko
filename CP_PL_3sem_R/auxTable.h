@@ -3,50 +3,39 @@
 #include "errors.h"
 #include <vector>
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 0 как дефолтное значение инт
+#define AT_NAME_MAXSIZE		12					// max size of element name
+#define AT_MAXSIZE			4096				// max number of lines at auxiliary table
+#define AT_LINE_MAXSIZE		255					// max size of line
+#define AT_ARR_MAXSIZE		256					// max size of array
+#define AT_NUM_DEFAULT		0xffffffff			// default value for num
+#define AT_LINE_DEFAULT		0x00				// default value for line
+#define AT_NULLIDX			0xffffffff			// default value for index
+#define AT_NULL_OPERATION	'M'					// default value for operation
+#define AT_LITERAL_PREFIX	"L"					// literal prefix
+#define AT_OPERATION_PREFIX	"O"					// operation prefix
 
-#define AT_NAME_MAXSIZE		12					// максимальное число символов в имени переменной
-#define AT_MAXSIZE			4096				// максимальное кол-во строк в таблице идентификаторов
-#define AT_NUM_DEFAULT		0x00000000			// значение по умолчанию дл€ num
-#define AT_LINE_DEFAULT		0x00				// значение по умолчанию дл€ line
-#define AT_NULLIDX			0xffffffff			// нет эл-та таблицы идентификаторов
-#define AT_LINE_MAXSIZE		255					// 
-#define AT_ARR_MAXSIZE		256					//
-#define AT_NULL_OPERATION	'M'
-#define AT_LITERAL_PREFIX	"L"
-#define AT_OPERATION_PREFIX	"O"
+#define AT_STL_FUNCSIZE	12
+#define AT_STL_FUNCTIONS {	"print",	"start",\
+							"get_type", "get_load",	"get_temp", "get_time", "get_rpm",\
+							"set_type", "set_load", "set_temp", "set_time", "set_rpm"}
+#define AT_STL_FUNCTYPES {	AT::DATATYPE::NIL, AT::DATATYPE::BOOL,\
+							AT::DATATYPE::LINE, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, \
+							AT::DATATYPE::NIL,  AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL}
 
-#define AT_STL_FUNCSIZE	11
-#define AT_STL_FUNCTIONS {	"start", "get_type", "get_load",		\
-							"get_temp", "get_time", "get_rpm", "set_type",	\
-							"set_load", "set_temp", "set_time", "set_rpm"}
-#define AT_STL_FUNCTYPES {	AT::DATATYPE::BOOL,\
-							AT::DATATYPE::LINE, AT::DATATYPE::NUM,\
-							AT::DATATYPE::NUM, AT::DATATYPE::NUM,\
-							AT::DATATYPE::NUM,  AT::DATATYPE::NIL,\
-							AT::DATATYPE::NIL, AT::DATATYPE::NIL,\
-							AT::DATATYPE::NIL, AT::DATATYPE::NIL}
-
-#define AT_DATA_SIZE	5				// размер массива типов
-#define AT_DATA_NAMES { "num", "line", "wash", "bool", "nil" }
-#define AT_DATA_TYPES	{ AT::DATATYPE::NUM, AT::DATATYPE::LINE, AT::DATATYPE::WASH, AT::DATATYPE::BOOL, AT::DATATYPE::NIL }
-
-#define AT_DATASTRUCT_SIZE	5			// размер массива типов дл€ структуры
-#define AT_DATASTRUCT_NAMES { "type", "load", "temperature", "time", "rpm" }
-#define AT_DATASTRUCT_TYPES { AT::DATATYPE::LINE, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM }
+#define AT_PRIMITIVE_TYPES_SIZE	5
+#define AT_PRIMITIVE_TYPES_NAMES { "num", "line", "wash", "bool", "nil" }
+#define AT_PRIMITIVE_TYPES_TYPES	{ AT::DATATYPE::NUM, AT::DATATYPE::LINE,AT::DATATYPE::WASH, AT::DATATYPE::BOOL, AT::DATATYPE::NIL }
 
 namespace LA { class LexAnalyser; };
 
-namespace AT{		// auxiliary table
+namespace AT{			// auxiliary table namespace
 	enum TYPE{
 		U = 0,				// unknown
 		V = 1,				// variable
-		F = 2,				// function
-		P = 3,				// parameter
-		L = 4,				// literal
-		E = 5,				// extern function
-		S = 6,				// element of struct variable
-		O = 7				// operation
+		P = 2,				// parameter
+		L = 3,				// literal
+		F = 4,				// function
+		O = 5				// operation
 	};
 
 	enum DATATYPE{
@@ -58,92 +47,90 @@ namespace AT{		// auxiliary table
 		NIL  = 5			// like a void in C++
 	};
 
-	class DataInfo{		// types of data pattern-одиночка!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	class DataInfo{		// types of data              pattern-одиночка!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public:
 		DataInfo();
 
-		std::vector<char*>&		getName();
-		std::vector<char*>&		getStructName();
-		std::vector<char*>&		getFuncName();
-		std::vector<DATATYPE>&	getType();
-		std::vector<DATATYPE>&	getStructType();
-		std::vector<DATATYPE>&	getFuncType();
+		std::vector<char*>&		getName();						// return names of all included primitive data types
+		std::vector<char*>&		getFuncName();					// return names of all STL functions
+		std::vector<DATATYPE>&	getType();						// return DATATYPE's of all included primitive data types
+		std::vector<DATATYPE>&	getFuncType();					// return DATATYPE's of all STL functions
 
 	private:
-		std::vector<char*>		name_;			// names of normal types
-		std::vector<char*>		structName_;	// names of struct variables
-		std::vector<char*>		funcName_;		// names of STL functions
-		std::vector<DATATYPE>	type_;			// data types of normal types
-		std::vector<DATATYPE>	structType_;	// data types of struct variables
-		std::vector<DATATYPE>	funcType_;		// data types of STL functions
+		std::vector<char*>		name_;							// names of all primitive types
+		std::vector<char*>		funcName_;						// names of all STL functions
+		std::vector<DATATYPE>	type_;							// data types of all primitive types
+		std::vector<DATATYPE>	funcType_;						// data types of STL functions
 	};
 
-	class Element{					// element of auxTable
+	class Element{		// element of the auxTable
 	public:
 		Element();
 		
-		int				getIdx();				// get lexTable index
-		int				getIntVal();
-		char*			getName();
-		char*			getFuncName();
-		char*			getStrVal();
-		char			getOperation();
-		TYPE			getType();
-		DATATYPE		getDataType();
+		int				getIdx();								// return lexTable index
+		int				getNumVal();							// return num value of the element
+		char*			getName();								// return
+		char*			getFuncName();							// return
+		char*			getLineVal();							// return
+		char			getOperation();							// return
+		TYPE			getType();								// return
+		DATATYPE		getDataType();							// return
 
-		void		setIdx(int value);		// set lexTable index
-		void		setIntVal(int value);
-		void		setName(char* name);
-		void		setFuncName(char* name);
-		void		setStrVal(char* value);
-		void		setOperationVal(char operation);
-		void		setValue(char lexeme, char* line = NULL_STR);
-		void		setElem(									// заполнение элемента дл€ идентификатора
-						LA::LexAnalyser* la,					// таблица лексем
-						char*			funcName,				// им€ функции
-						char**			arrOfLines,				// массив цепочек
-						int&			i,						// номер текущей цепочки
-						int				counter = -1			// счетчик
+		void			setIdx(int value);						// set lexTable index
+		void			setName(char* name);					// set element name
+		void			setFuncName(char* name);				// set element function name
+		void			setOperation(char operation);			// set element operation
+		void			setValue(								// set element value
+							char lexeme,
+							char* line = NULL_STR);
+		void			setNumVal(int value);					// set num element value
+		void			setLineVal(char* value);				// set line element value
+		void			setElem(								// set element
+							LA::LexAnalyser*	la,					// lexTable
+							char*				funcName,			// function name
+							char**				arrOfLines,			// array of lines
+							int&				i,					// chain iterator
+							int					counter = -1		// counter
 					);
 		
-		void reset();
+		void reset();											// set element fields to default values
 
 	private:
-		int			ltIndex_;					// индекс первой строки в таблице лексем
-		char		name_[AT_NAME_MAXSIZE];		// им€ (автоматически усекаетс€ до ID_MAXSIZE)
-		char		funcName_[AT_NAME_MAXSIZE];
-		TYPE		type_;						// тип идентификатора
-		DATATYPE	dataType_;					// тип данных
+		int			ltIndex_;									// index of first entering of this element in lexTable
+		char		name_[AT_NAME_MAXSIZE];						// name of the element
+		char		funcName_[AT_NAME_MAXSIZE];					// name of the function
+		TYPE		type_;										// type of the element
+		DATATYPE	dataType_;									// data type of the element
 		struct{
-			int		intValue_;
-			char	strValue_[AT_ARR_MAXSIZE];
-			char	operation_;
-		} value_;
+			int		numValue_;										// field for numerical values
+			char	lineValue_[AT_ARR_MAXSIZE];						// field for line values
+			char	operation_;										// field for operation arithmetic elements
+		} value_;												// value of the element
 	};
 
-	class Table{					// экземпл€р таблицы
+	class Table{		// auxiliary table
 	public:
-		Table();												//
-		Table(int size);										//
+		Table();
+		Table(int size);
 
-		Element*	getElem(int i);								//
-		int			getSize();									//
-		DataInfo*	getDataInfo();							//
+		Element*	getElem(int it);							// return element by iterator
+		int			getSize();									// return size of auxiliary table
+		DataInfo*	getDataInfo();								// return all names and types of functions and primitive types
 
-		void		addElem(Element& elem);						//
+		void		addElem(Element& elem);						// add element to auxiliary table
 
-		bool		isIncluded(char* name, char* funcName);		// проверка на включенность в таблицу
-		int			getIdx(char* name, char* funcName);			// get index [i] in table_ for current name&funcName
+		bool		isIncluded(char* name, char* funcName);		// is name&funcName element included into auxiliary table?
+		int			getIdx(char* name, char* funcName);			// return index of element from auxiliary table
 
 		~Table();
 
 	private:
-		int			maxSize_;					// максимальный размер таблицы < TI_MAXSIZE
-		int			size_;						// текущий размер таблицы < maxsize
-		DataInfo*	dataInfo_;					// типы данных
-		Element*	table_;						// массив строк таблицы
+		int			maxSize_;									// max size of auxiliary table
+		int			size_;										// current size of auxiliary table
+		DataInfo*	dataInfo_;									// consists all names and types of functions and primitive types
+		Element*	table_;										// auxiliary table that consist elements
 	};
 
-	void  addPrefix(char* dest, char* prefix);	// add prefix to line
-	char* createStrVal(char* line);				// 
+	void  addPrefix(char* dest, char* prefix);					// add prefix to the line
+	char* createStrVal(char* line);								// delete quotes in line literal
 };

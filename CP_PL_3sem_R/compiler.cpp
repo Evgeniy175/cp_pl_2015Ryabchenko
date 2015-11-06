@@ -125,7 +125,7 @@ namespace CP{
 
 		while (this->getElemLT(position)->getLex() != LEX_SQBRACECLOSE){
 			switch (this->getElemLT(position)->getLex()){
-			case LEX_ID: case LEX_LITERAL: case LEX_COLON:
+			case LEX_ID: case LEX_LITERAL:
 				exitArr.push_back(*(this->getElemLT(position)));
 				parmCounter++;
 				break;
@@ -159,7 +159,7 @@ namespace CP{
 			&& this->getElemLT(position)->getLex() != LEX_RIGHTHESIS;
 			position++){
 			switch (this->getElemLT(position)->getLex()){
-			case LEX_ID: case LEX_LITERAL: case LEX_PRINT: case LEX_COLON:
+			case LEX_ID: case LEX_LITERAL: case LEX_PRINT:
 				exitArr.push_back(*(this->getElemLT(position)));
 				break;
 

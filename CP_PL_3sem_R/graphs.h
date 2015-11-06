@@ -1,6 +1,6 @@
 #pragma once
 
-#define NUMBER_OF_GRAPHS 22
+#define NUMBER_OF_GRAPHS 20
 
 #define GRAPH_TYPE 14, \
 	/* 0 */ NODE(5, RELATION('l', 1), RELATION('n', 4), RELATION('w', 6), RELATION('b', 9), RELATION('n', 12)),  \
@@ -55,10 +55,6 @@
 	/* 4 */ NODE(1, RELATION('n', 5)), \
 	/* 5 */ NODE()
 
-#define GRAPH_COLON 1, \
-	/* 0 */ NODE(1, RELATION(':', 1)), \
-	/* 1 */ NODE()
-
 #define GRAPH_SEMICOLON 1, \
 	/* 0 */ NODE(1, RELATION(';', 1)), \
 	/* 1 */ NODE()
@@ -107,15 +103,6 @@
 	/* 0 */ NODE(1, RELATION('i', 1)), \
 	/* 1 */ NODE(1, RELATION('f', 2)), \
 	/* 2 */ NODE()
-
-#define GRAPH_EXTERN 6,		\
-	/* 0 */ NODE(1, RELATION('e', 1)), \
-	/* 1 */ NODE(1, RELATION('x', 2)), \
-	/* 2 */ NODE(1, RELATION('t', 3)), \
-	/* 3 */ NODE(1, RELATION('e', 4)), \
-	/* 4 */ NODE(1, RELATION('r', 5)), \
-	/* 5 */ NODE(1, RELATION('n', 6)), \
-	/* 6 */ NODE()
 
 #define GRAPH_ID 1, \
 	/* 0 */ NODE(0, 1, "abcdefghijklmnopqrstuvwxyz_"), \
