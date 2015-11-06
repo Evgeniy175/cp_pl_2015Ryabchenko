@@ -26,7 +26,7 @@ namespace LA{
 				return i;
 			};
 		};
-		return AT_NULLIDX;
+		return AT_NULL_INDEX;
 	};
 
 	bool LexAnalyser::isNewFunc(char* name){
@@ -42,9 +42,9 @@ namespace LA{
 	};
 
 	int LexAnalyser::getATidx(char* name, char* funcName){
-		int rc = this->getAT()->getIdx(name, funcName);
+		int rc = this->getAT()->getIndex(name, funcName);
 
-		if (rc == AT_NULLIDX && !isNewFunc(name)){
+		if (rc == AT_NULL_INDEX && !isNewFunc(name)){
 			rc = _getFuncIdx(name);
 		};
 
@@ -209,19 +209,19 @@ namespace LA{
 							if (elemAt.getType() == AT::TYPE::U)
 								throw ERROR_THROW_FULL(203, in->getLine(chainNumber), lineNumber, -1);
 						};
-						this->getElemLT(chainNumber)->setIdx(this->getATidx(in->getLine(chainNumber), funcName));
+						this->getElemLT(chainNumber)->setIndex(this->getATidx(in->getLine(chainNumber), funcName));
 						break;
 
 					case LEX_LITERAL:
 						elemAt.setElem(this, funcName, in->getArr(), chainNumber, literalCounter++);
 						this->addElemAT(elemAt);
-						this->getElemLT(chainNumber)->setIdx(this->getATsize() - 1);
+						this->getElemLT(chainNumber)->setIndex(this->getATsize() - 1);
 						break;
 
 					case LEX_OPERATION:
 						elemAt.setElem(this, funcName, in->getArr(), chainNumber, operationCounter);
 						this->addElemAT(elemAt);
-						this->getElemLT(chainNumber)->setIdx(this->getATsize() - 1);
+						this->getElemLT(chainNumber)->setIndex(this->getATsize() - 1);
 
 					default: break;
 					};

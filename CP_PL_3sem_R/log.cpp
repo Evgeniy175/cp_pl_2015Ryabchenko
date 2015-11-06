@@ -122,8 +122,8 @@ namespace LOG
 			else
 				*(this->getStream()) << "null\t\t";
 
-			if (la->getLT()->getElem(i)->getIdx() >= NULL)
-				*(this->getStream()) << la->getElemLT(i)->getIdx() << "\t\t\t";
+			if (la->getLT()->getElem(i)->getIndex() >= NULL)
+				*(this->getStream()) << la->getElemLT(i)->getIndex() << "\t\t\t";
 			else
 				*(this->getStream()) << "null\t\t\t";
 
@@ -146,14 +146,14 @@ namespace LOG
 			<< "TYPE\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
 
 		for (int i = 0; i < la->getAT()->getSize(); i++){
-			lexeme = la->getElemLT(la->getElemAT(i)->getIdx())->getLex();
+			lexeme = la->getElemLT(la->getElemAT(i)->getIndex())->getLex();
 
 			*(this->getStream()) << i << '\t'
 				<< std::setw(AT_NAME_MAXSIZE) << la->getElemAT(i)->getName()
 				<< "\t\t" << std::setw(AT_NAME_MAXSIZE) << la->getElemAT(i)->getFuncName()
 				<< "\t\t" << la->getDataName(la->getElemAT(i)->getDataType())
 				<< "\t\t" << la->getElemAT(i)->getType()
-				<< '\t' << la->getElemAT(i)->getIdx() << "\t\t";
+				<< '\t' << la->getElemAT(i)->getIndex() << "\t\t";
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
 				if (la->getElemAT(i)->getDataType() == AT::DATATYPE::NUM)

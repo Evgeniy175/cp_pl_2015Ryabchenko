@@ -4,12 +4,12 @@
 #include <vector>
 
 #define AT_NAME_MAXSIZE		12					// max size of element name
-#define AT_MAXSIZE			4096				// max number of lines at auxiliary table
+#define AT_MAX_SIZE			4096				// max number of lines at auxiliary table
 #define AT_LINE_MAXSIZE		255					// max size of line
 #define AT_ARR_MAXSIZE		256					// max size of array
 #define AT_NUM_DEFAULT		0xffffffff			// default value for num
 #define AT_LINE_DEFAULT		0x00				// default value for line
-#define AT_NULLIDX			0xffffffff			// default value for index
+#define AT_NULL_INDEX		0xffffffff			// default value for index
 #define AT_NULL_OPERATION	'M'					// default value for operation
 #define AT_LITERAL_PREFIX	"L"					// literal prefix
 #define AT_OPERATION_PREFIX	"O"					// operation prefix
@@ -67,36 +67,36 @@ namespace AT{			// auxiliary table namespace
 	public:
 		Element();
 		
-		int				getIdx();								// return lexTable index
-		int				getNumVal();							// return num value of the element
-		char*			getName();								// return
-		char*			getFuncName();							// return
-		char*			getLineVal();							// return
-		char			getOperation();							// return
-		TYPE			getType();								// return
-		DATATYPE		getDataType();							// return
+		int			getIndex();									// return lexTable index
+		int			getNumVal();								// return num value of the element
+		char*		getName();									// return
+		char*		getFuncName();									// return
+		char*		getLineVal();								// return
+		char		getOperation();								// return
+		TYPE		getType();									// return
+		DATATYPE	getDataType();								// return
 
-		void			setIdx(int value);						// set lexTable index
-		void			setName(char* name);					// set element name
-		void			setFuncName(char* name);				// set element function name
-		void			setOperation(char operation);			// set element operation
-		void			setValue(								// set element value
-							char lexeme,
-							char* line = NULL_STR);
-		void			setNumVal(int value);					// set num element value
-		void			setLineVal(char* value);				// set line element value
-		void			setElem(								// set element
-							LA::LexAnalyser*	la,					// lexTable
-							char*				funcName,			// function name
-							char**				arrOfLines,			// array of lines
-							int&				i,					// chain iterator
-							int					counter = -1		// counter
+		void		setIndex(int value);						// set lexTable index
+		void		setName(char* name);						// set element name
+		void		setFuncName(char* name);					// set element function name
+		void		setOperation(char operation);				// set element operation
+		void		setValue(									// set element value
+						char lexeme,
+						char* line = NULL_STR);
+		void		setNumVal(int value);						// set num element value
+		void		setLineVal(char* value);					// set line element value
+		void		setElem(									// set element
+						LA::LexAnalyser*	la,						// lexTable
+						char*				funcName,				// function name
+						char**				arrOfLines,				// array of lines
+						int&				i,						// chain iterator
+						int					counter = -1			// counter
 					);
 		
-		void reset();											// set element fields to default values
+		void		reset();									// set element fields to default values
 
 	private:
-		int			ltIndex_;									// index of first entering of this element in lexTable
+		int			ltIndex_;									// index of first occurrence of this element in lexTable
 		char		name_[AT_NAME_MAXSIZE];						// name of the element
 		char		funcName_[AT_NAME_MAXSIZE];					// name of the function
 		TYPE		type_;										// type of the element
@@ -120,7 +120,7 @@ namespace AT{			// auxiliary table namespace
 		void		addElem(Element& elem);						// add element to auxiliary table
 
 		bool		isIncluded(char* name, char* funcName);		// is name&funcName element included into auxiliary table?
-		int			getIdx(char* name, char* funcName);			// return index of element from auxiliary table
+		int			getIndex(char* name, char* funcName);		// return index of element from auxiliary table
 
 		~Table();
 

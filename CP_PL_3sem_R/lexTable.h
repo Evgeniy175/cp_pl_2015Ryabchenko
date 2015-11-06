@@ -3,72 +3,73 @@
 #include "errors.h"
 #include "auxTable.h"
 
-#define LT_MAXSIZE			4096		// максимальное кол-во строк в таблице лексем
-#define LT_NULL_PARM		0xffffffff	// дефолтное значение параметра
-#define LT_AUX_NULL_IDX		0xffffffff	// нет эл-та таблицы идентификаторов
-#define LT_AUX_NULL_LINE	0xffffffff
-#define LT_NULL_LEX			'M'
-#define LEX_TYPE			't'			// лексема для  type
-#define LEX_FUNCTION		'f'			// лексема для  function
-#define LEX_RETURN			'r'			// лексема для  return
-#define LEX_PRINT			'p'			// лексема для  print
-#define LEX_BEGIN			'b'			// лексема для	main
-#define LEX_SEMICOLON		';'			// лексема для  ;
-#define LEX_COMMA			','			// лексема для  ,
-#define LEX_LEFTBRACE		'{'			// лексема для  {
-#define LEX_RIGHTBRACE		'}'			// лексема для  }
-#define LEX_LEFTHESIS		'('			// лексема для  (
-#define LEX_RIGHTHESIS		')'			// лексема для  )
-#define LEX_SQBRACEOPEN		'['			// лексема для  [
-#define LEX_SQBRACECLOSE	']'			// лексема для  ]
-#define LEX_EQUALLY			'='			// лексема для	=
-#define LEX_OPERATION		'v'			// лексема для  действий
-#define LEX_NEWLINE			'@'			// лексема для	@ (новая строка)
-#define LEX_CONDITION		'c'			// лексема для	условия
-#define LEX_ID				'i'			// лексема для  идентификатора
-#define LEX_LITERAL			'l'			// лексема для	литералов (общая)
+#define LT_MAX_SIZE			4096		// max number of lines in lex table
+#define LT_NULL_PARM		0xffffffff	// default value for parameter counter
+#define LT_AUX_NULL_INDEX	0xffffffff	// default value for index
+#define LT_AUX_NULL_LINE	0xffffffff	// default value for line
+#define LT_NULL_LEX			'M'			// null lexeme
+#define LEX_TYPE			't'			// lexeme for type
+#define LEX_FUNCTION		'f'			// lexeme for function
+#define LEX_RETURN			'r'			// lexeme for return
+#define LEX_PRINT			'p'			// lexeme for print
+#define LEX_BEGIN			'b'			// lexeme for main
+#define LEX_SEMICOLON		';'			// lexeme for ;
+#define LEX_COMMA			','			// lexeme for ,
+#define LEX_LEFTBRACE		'{'			// lexeme for {
+#define LEX_RIGHTBRACE		'}'			// lexeme for }
+#define LEX_LEFTHESIS		'('			// lexeme for (
+#define LEX_RIGHTHESIS		')'			// lexeme for )
+#define LEX_SQBRACEOPEN		'['			// lexeme for [
+#define LEX_SQBRACECLOSE	']'			// lexeme for ]
+#define LEX_EQUALLY			'='			// lexeme for =
+#define LEX_OPERATION		'v'			// lexeme for operations
+#define LEX_NEWLINE			'@'			// lexeme for @ (new line)
+#define LEX_CONDITION		'c'			// lexeme for conditions
+#define LEX_ID				'i'			// lexeme for identificator
+#define LEX_LITERAL			'l'			// lexeme for literal
 
 namespace AT{ enum TYPE; enum DATATYPE; class Table; };
 
-namespace LT{				// таблица лексем
-	class Element{			// строка таблицы лексем
+namespace LT{			// lex table
+	class Element{				// element of the lex table
 	public:
 		Element();
-		char	getLex();							// return lexeme
-		int		getIdx();							// return auxiliary table index
-		int		getParmCount();						// return counter for parameters
-		int		getLine();							// return line number
 
-		void	setElem();
-		void	setElem(const Element& elem);
-		void	setElem(int& i, int& lineNumber);
-		void	setIdx(int auxIndex);				// set auxiliary table index
-		void	setParmCount(int value);
+		char				getLex();							// return lexeme
+		int					getIndex();							// return auxiliary table index
+		int					getParmCount();						// return counter for parameters
+		int					getLine();							// return line number
+
+		void				setElem();							// set element to default
+		void				setElem(const Element& elem);		// set copy elem field's into this element
+		void				setElem(int& i, int& lineNumber);	// set element
+		void				setIndex(int auxIndex);				// set auxiliary table index
+		void				setParmCount(int value);			// set parameter counter
 
 	private:
-		char	lexeme_;						// лексема
-		int		line_;							// line number
-		int		atIndex_;						// индекс в таблице идентификаторов или LT_TI_NULLIDX
-		int		parameterCounter_;
+		char				lexeme_;
+		int					line_;								// line number
+		int					atIndex_;							// index of this element in auxTable
+		int					parameterCounter_;					// number of parameters (for function, using in Polish Notation)
 	};
 
-	class Table{			// экземпляр таблицы лексем
+	class Table{				// lex table
 	public:
 		Table();
 		Table(int size);
+		
+		int					getSize();							// return size of lex table
+		Element*			getElem(int it);					// return element by iterator
 
-		void		addElem(Element& elem);
-
-		int			getSize();
-		Element*	getElem(int i);
+		void				addElem(Element& elem);				// add element to the lex table
 
 		~Table();
+
 	private:
-		int maxSize_;					// емкость таблицы лексем < LT_MAXSIZE
-		int size_;						// текущий размер таблицы лексем < maxsize
-		Element* table_;				// массив строк таблицы лексем
-		//char lexArr[NUMBER_OF_GRAPHS];
+		int					maxSize_;							// max size of the lex table
+		int					size_;								// current size of the lex table
+		Element*			table_;								// lex table that consist elements
 	};
 
-	char getLex(int switchCount);			// возвращает лексему для текущей разобранной цепочки
+	char getLex(int i);											// return lexeme
 };

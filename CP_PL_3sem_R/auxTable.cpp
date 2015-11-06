@@ -42,7 +42,7 @@ namespace AT{
 		setLineVal(AT_LINE_DEFAULT);
 	}
 
-	int	Element::getIdx(){
+	int	Element::getIndex(){
 		return this->ltIndex_;
 	};
 
@@ -74,12 +74,8 @@ namespace AT{
 		return this->dataType_;
 	};
 
-	void Element::setIdx(int value){
+	void Element::setIndex(int value){
 		this->ltIndex_ = value;
-	};
-
-	void Element::setNumVal(int value){
-		this->value_.numValue_ = value;
 	};
 
 	void Element::setName(char* name){
@@ -88,6 +84,10 @@ namespace AT{
 
 	void Element::setFuncName(char* name){
 		strncpy_s(this->funcName_, name, strlen(name));
+	};
+
+	void Element::setNumVal(int value){
+		this->value_.numValue_ = value;
 	};
 	
 	void Element::setLineVal(char* value){
@@ -153,7 +153,7 @@ namespace AT{
 		memset(this->name_, -52, AT_NAME_MAXSIZE);
 		this->dataType_ = AT::DATATYPE::UNKNOWN;
 		this->type_ = AT::TYPE::U;
-		this->ltIndex_ = AT_NULLIDX;
+		this->ltIndex_ = AT_NULL_INDEX;
 		this->setNumVal(AT_NUM_DEFAULT);
 		this->setLineVal(AT_LINE_DEFAULT);
 		this->setOperation(AT_NULL_OPERATION);
@@ -167,7 +167,7 @@ namespace AT{
 		this->dataInfo_ = new DataInfo();
 		this->size_ = NULL;
 
-		if (maxSize < AT_MAXSIZE)
+		if (maxSize < AT_MAX_SIZE)
 			this->maxSize_ = maxSize;
 
 		else
@@ -206,7 +206,7 @@ namespace AT{
 		return false;
 	};
 
-	int Table::getIdx(char* name, char* funcName){
+	int Table::getIndex(char* name, char* funcName){
 		int rc = -1;
 		int i;
 		if (this->size_ == NULL)	return rc;
@@ -217,7 +217,6 @@ namespace AT{
 						return i;
 				};
 			};
-			
 		};
 		return rc;
 	};

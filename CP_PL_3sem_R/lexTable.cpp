@@ -6,7 +6,7 @@ namespace LT
 	Element::Element(){
 		this->lexeme_ = LT_NULL_LEX;
 		this->line_ = LT_AUX_NULL_LINE;
-		this->atIndex_ = LT_AUX_NULL_IDX;
+		this->atIndex_ = LT_AUX_NULL_INDEX;
 		this->parameterCounter_ = LT_NULL_PARM;
 	} 
 
@@ -14,7 +14,7 @@ namespace LT
 		return this->lexeme_;
 	};
 
-	int	Element::getIdx(){
+	int	Element::getIndex(){
 		return this->atIndex_;
 	};
 
@@ -26,21 +26,14 @@ namespace LT
 		return this->line_;
 	};
 
-	void Element::setIdx(int auxIndex){
+	void Element::setIndex(int auxIndex){
 		this->atIndex_ = auxIndex;
 	};
 
 	void Element::setElem(){
 		this->lexeme_ = LT_NULL_LEX;
 		this->line_ = LT_AUX_NULL_LINE;
-		this->atIndex_ = LT_AUX_NULL_IDX;
-		this->parameterCounter_ = LT_NULL_PARM;
-	};
-
-	void Element::setElem(int& i, int& lineNumber){
-		this->lexeme_ = LT::getLex(i);
-		this->line_ = lineNumber;
-		this->atIndex_ = LT_AUX_NULL_IDX;
+		this->atIndex_ = LT_AUX_NULL_INDEX;
 		this->parameterCounter_ = LT_NULL_PARM;
 	};
 
@@ -51,6 +44,13 @@ namespace LT
 		this->parameterCounter_ = elem.parameterCounter_;
 	};
 
+	void Element::setElem(int& i, int& lineNumber){
+		this->lexeme_ = LT::getLex(i);
+		this->line_ = lineNumber;
+		this->atIndex_ = LT_AUX_NULL_INDEX;
+		this->parameterCounter_ = LT_NULL_PARM;
+	};
+
 	Table::Table(){
 		this->size_ = NULL;
 	}
@@ -58,7 +58,7 @@ namespace LT
 	Table::Table(int maxSize){
 		this->size_ = NULL;
 
-		if (maxSize < LT_MAXSIZE) this->maxSize_ = maxSize;
+		if (maxSize < LT_MAX_SIZE) this->maxSize_ = maxSize;
 		else throw ERROR_THROW(200);
 
 		this->table_ = new Element[maxSize];
@@ -71,6 +71,7 @@ namespace LT
 	Element* Table::getElem(int i){
 		return (table_ + i);
 	};
+
 	void Table::addElem(Element& elem){
 		this->table_[this->size_++] = elem;
 	};

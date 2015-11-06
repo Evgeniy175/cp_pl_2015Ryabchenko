@@ -169,14 +169,14 @@ namespace CP{
 				}
 				else{
 					while (stack.size() != NULL
-						&& getPriority(this->getElemAT(this->getElemLT(position)->getIdx())->getOperation())
-						<= getPriority(this->getElemAT(stack.top()->getIdx())->getOperation())){
+						&& getPriority(this->getElemAT(this->getElemLT(position)->getIndex())->getOperation())
+						<= getPriority(this->getElemAT(stack.top()->getIndex())->getOperation())){
 							exitArr.push_back(*(stack.top()));
 							stack.pop();
 					};
 					if (stack.size() == NULL
-						|| (getPriority(this->getElemAT(this->getElemLT(position)->getIdx())->getOperation())
-							> getPriority(this->getElemAT(stack.top()->getIdx())->getOperation()))){
+						|| (getPriority(this->getElemAT(this->getElemLT(position)->getIndex())->getOperation())
+							> getPriority(this->getElemAT(stack.top()->getIndex())->getOperation()))){
 								stack.push(this->getElemLT(position));
 					};
 				};
@@ -231,8 +231,8 @@ namespace CP{
 		for (int auxIt = 0; auxIt < this->getATsize(); auxIt++){
 			isModified = false;
 			for (int lexIt = 0; !isModified && lexIt < this->getLTsize(); lexIt++){
-				if (this->getElemLT(lexIt)->getIdx() == auxIt){
-					this->getElemAT(auxIt)->setIdx(lexIt);
+				if (this->getElemLT(lexIt)->getIndex() == auxIt){
+					this->getElemAT(auxIt)->setIndex(lexIt);
 					isModified = true;
 				};
 			};
