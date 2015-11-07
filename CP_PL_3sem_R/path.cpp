@@ -4,10 +4,10 @@
 namespace PATH{
 	Path::Path(){}
 
-	Path::Path(Path* filesPath){
-		wcscpy_s(this->in_, filesPath->in_);
-		wcscpy_s(this->out_, filesPath->out_);
-		wcscpy_s(this->log_, filesPath->log_);
+	Path::Path(const Path& filesPath){
+		wcscpy_s(this->in_, filesPath.in_);
+		wcscpy_s(this->out_, filesPath.out_);
+		wcscpy_s(this->log_, filesPath.log_);
 	}
 
 	wchar_t* Path::getIn(){

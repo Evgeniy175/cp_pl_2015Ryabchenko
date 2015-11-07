@@ -20,7 +20,7 @@ namespace PATH
 	class Path{
 	public:
 		Path();
-		Path(Path* initial);								// copy initial path fields into object
+		Path(const Path& initial);								// copy initial path fields into object
 
 		void initialExecute(int argc, _TCHAR* argv[]);		// create initial path's
 		void pushPath(wchar_t* dest, wchar_t* source);		// copy source into dest

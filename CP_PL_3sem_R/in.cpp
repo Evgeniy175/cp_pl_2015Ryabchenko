@@ -46,11 +46,11 @@ namespace IN{
 		this->arrOfLines_ = arrOfLines;
 	};
 
-	void In::setLine(char* line){
+	void In::addLine(char* line){
 		this->arrOfLines_[this->numberOfChains_] = line;
 	};
 
-	void In::setChar(int& currPos, char symbol){
+	void In::addChar(int& currPos, char symbol){
 		this->arrOfLines_[this->numberOfChains_][currPos++] = symbol;
 	};
 
@@ -106,19 +106,19 @@ namespace IN{
 			log->writeLine("---Начало проверки допустимости символов---", "");
 
 			this->setArr(new char*[IN_MAX_LINE_NUMBER]);	// выделение памяти под кол-во строк In_MAX_LInE_NUMBER
-			this->setLine(new char[IN_MAX_LEN_TEXT]);		// выделение памяти для нулевой строки, In_MAX_LEN_TEXT символов
+			this->addLine(new char[IN_MAX_LEN_TEXT]);		// выделение памяти для нулевой строки, In_MAX_LEN_TEXT символов
 
 			tempChar = file.get();
 
 			while (!file.eof())	{
 				switch (this->getCode(tempChar)){
 				case IN::A:
-					this->setChar(currChainPosition, tempChar);
+					this->addChar(currChainPosition, tempChar);
 					positionCounter++;
 					break;
 
 				case IN::D:
-					this->setChar(currChainPosition, tempChar);
+					this->addChar(currChainPosition, tempChar);
 					errorVar = ERROR_THROW_FULL(103, NULL, this->getLinesCounter(), positionCounter);
 					log->writeError(errorVar);
 					positionCounter++;
@@ -135,11 +135,11 @@ namespace IN{
 						positionCounter = 0;
 					};
 					if (tempChar == IN_CODE_ENDL){
-						this->setChar(currChainPosition, LEX_NEWLINE);
+						this->addChar(currChainPosition, LEX_NEWLINE);
 						this->increaseLines();
 					}
 					else{
-						this->setChar(currChainPosition, tempChar);
+						this->addChar(currChainPosition, tempChar);
 					};
 					this->setLineEnd(currChainPosition);
 					positionCounter = 0;
@@ -159,7 +159,7 @@ namespace IN{
 					break;
 
 				default:
-					this->setChar(currChainPosition, tempChar);
+					this->addChar(currChainPosition, tempChar);
 					positionCounter++;
 					break;
 				};

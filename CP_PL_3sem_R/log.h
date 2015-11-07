@@ -21,29 +21,29 @@ namespace LOG{
 	public:
 		Log(wchar_t logFile[]);
 
-		wchar_t*		getLogFile();						// 
-		std::ofstream*	getStream();						//
+		wchar_t*		getLogFile();						// return current path of log file
+		std::ofstream*	getStream();						// return current stream
 
-		void setLogFile(wchar_t* logFile);					//
-		void setStream(std::ofstream* stream);				// 
+		void			setLogFile(wchar_t* logFile);		// set a new path for log file
+		void			setStream(std::ofstream* stream);	// set a new stream
 
-		void line(char* line);							// записать строку в файл(для char*)
-		void line(wchar_t* line);						// записать строку в файл(для wchar_t*)
-		void writeLine(char* c, ...);						// записать строку в файл(для char*)
-		void writeLine(wchar_t* c, ...);					// записать строку в файл(для wchar_t*)
-		void writeLog();									// записать шапку log-файла в файл
-		void writeCP(CP::Compiler* cp);						// запись путей исходных файлов
-		void writeIn(IN::In* in);							// запись информации о входном файле
-		void writeError(ERROR::Error* error);				// запись ошибки
-		void writeLt(LA::LexAnalyser* la);					// вывод таблицы лексем
-		void writeAt(LA::LexAnalyser* la);					// вывод дополнительной таблицы
+		void			line(char* line);					// write 1 line to a file
+		void 			line(wchar_t* line);				// write 1 line to a file
+		void 			writeLine(char* c, ...);			// write a set of lines to a file
+		void 			writeLine(wchar_t* c, ...);			// write a set of lines to a file
+		void 			writeLog();							// write log info to a file
+		void 			writeCP(CP::Compiler* cp);			// write path's of input file to a file
+		void 			writeIn(IN::In* in);				// write info about input data to a file
+		void 			writeError(ERROR::Error* error);	// write error to a file
+		void 			writeLt(LA::LexAnalyser* la);		// write lexeme table to a file
+		void 			writeAt(LA::LexAnalyser* la);		// write auxiliary table to a file
 
-		void close();										// завершить поток
+		void close();										// close a stream
 
 		~Log();
 
 	private:
-		wchar_t logFile_[SIZE_CHAR_ARRAY];					// выходной файл
-		std::ofstream* stream_;								// поток вывода
+		wchar_t logFile_[SIZE_CHAR_ARRAY];					// file path for logging
+		std::ofstream* stream_;								// out stream
 	};
 };

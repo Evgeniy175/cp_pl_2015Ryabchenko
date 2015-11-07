@@ -29,12 +29,12 @@ int _tmain(int argc, _TCHAR* argv[]){
 
 		compiler->writeLt();
 		compiler->writeAt();
-
 		compiler->closeLog();
 	}
 	catch (ERROR::Error* err){
 		compiler->writeError(err);
 	};
+
 
 	return 0;
 };

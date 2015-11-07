@@ -59,7 +59,7 @@ namespace LT{		// lex table
 		Table(int size);
 		
 		int					getSize();							// return size of lex table
-		Element*			getElem(int it);					// return element by iterator
+		Element*			getElem(int index);					// return element by index
 
 		void				addElem(Element& elem);				// add element to the lex table
 

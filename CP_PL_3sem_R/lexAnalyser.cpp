@@ -124,7 +124,7 @@ namespace LA{
 			secondIt = this->getTypeList().begin();
 			secondIt != this->getTypeList().end();
 			firstIt++, secondIt++){
-				if (*secondIt == dataType) rc = *firstIt;
+				if (*secondIt == dataType) return *firstIt;
 		};
 		return rc;
 	};
@@ -136,7 +136,7 @@ namespace LA{
 
 		switch (this->getElemLT(this->getLTsize() - 2)->getLex()){
 		case LEX_OPERATION: case LEX_EQUALLY: case LEX_COMMA: case LEX_SQBRACEOPEN: case LEX_RETURN:				// дл€ литералов
-			rc = arrOfLines[i][0] == 'С' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
+			return arrOfLines[i][0] == 'С' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
 			break;
 
 		case LEX_TYPE:
@@ -144,7 +144,7 @@ namespace LA{
 				secondIt = this->getTypeList().begin();
 				firstIt != this->getNameList().end();
 				firstIt++, secondIt++){
-					if (!strcmp(*firstIt, arrOfLines[i - 1])) rc = *secondIt;
+					if (!strcmp(*firstIt, arrOfLines[i - 1])) return *secondIt;
 			};
 			break;
 

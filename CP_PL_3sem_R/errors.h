@@ -18,8 +18,8 @@ namespace ERROR{
 		Position();
 		Position(int line, int position);
 
-		short getLine();
-		short getLinePosition();
+		short getLine();														// return line
+		short getLinePosition();												// return position in line
 
 	private:
 		short line_;
@@ -30,9 +30,9 @@ namespace ERROR{
 	public:
 		Error(int id, char* message, ERROR::Position* position);
 
-		int getId();
+		int getId();															// return error id
 		char* getMessage();
-		Position* getPosition();
+		Position* getPosition();												// return position that includes line&position in line
 
 		void setMessage(char* message);
 		void setPosition(Position* position);

@@ -89,7 +89,7 @@ namespace AT{			// auxiliary table namespace
 						LA::LexAnalyser*	la,						// lexTable
 						char*				funcName,				// function name
 						char**				arrOfLines,				// array of lines
-						int&				i,						// chain iterator
+						int&				i,						// chain index number
 						int					counter = -1			// counter
 					);
 		
@@ -113,7 +113,7 @@ namespace AT{			// auxiliary table namespace
 		Table();
 		Table(int size);
 
-		Element*	getElem(int it);							// return element by iterator
+		Element*	getElem(int index);							// return element by index
 		int			getSize();									// return size of auxiliary table
 		DataInfo*	getDataInfo();								// return all names and types of functions and primitive types
 

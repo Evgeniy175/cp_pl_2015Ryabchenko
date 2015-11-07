@@ -117,7 +117,7 @@ namespace CP{
 		this->log_->close();
 	};
 
-	bool Compiler::buildPnFunc(std::stack<LT::Element*>& stack, std::list<LT::Element>& exitArr, int& position){
+	bool Compiler::funcCreate(std::stack<LT::Element*>& stack, std::list<LT::Element>& exitArr, int& position){
 		int parmCounter = 0;
 		LT::Element temp = (exitArr.back());
 		exitArr.pop_back();
@@ -133,7 +133,7 @@ namespace CP{
 			case LEX_COMMA: break;
 
 			case LEX_SQBRACEOPEN:
-				if (!buildPnFunc(stack, exitArr, position))
+				if (!funcCreate(stack, exitArr, position))
 					return false;
 				break;
 			default: return false;
@@ -148,7 +148,7 @@ namespace CP{
 		return true;
 	};
 
-	bool Compiler::checkPn(int& position){
+	bool Compiler::create(int& position){
 		int startPos = position;
 		std::stack<LT::Element*> stack;
 		std::list<LT::Element> exitArr;
@@ -183,7 +183,7 @@ namespace CP{
 				break;
 
 			case LEX_SQBRACEOPEN:
-				if (!buildPnFunc(stack, exitArr, position))
+				if (!funcCreate(stack, exitArr, position))
 					return false;
 				break;
 
@@ -212,7 +212,7 @@ namespace CP{
 				|| this->getElemLT(i)->getLex() == LEX_LITERAL
 				|| this->getElemLT(i)->getLex() == LEX_EQUALLY
 				|| this->getElemLT(i)->getLex() == LEX_PRINT){
-				if (checkPn(i)){
+				if (create(i)){
 					this->writeLine("Польская запись построена", "");
 				}
 				else{

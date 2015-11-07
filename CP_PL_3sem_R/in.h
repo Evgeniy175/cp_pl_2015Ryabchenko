@@ -38,51 +38,59 @@ namespace LOG{ class Log; };
 
 namespace IN{
 	enum{
-		A = 1024,		// ALLOWED,		допустимые
-		D = 2048,		// DISALLOWED,	запрещенные
-		I = 4096,		// IGNORE,		игнорируемые
-		S = 8192,		// SEPARATOR,	сепаратор
-		B = 16384,		// SPACE,		пробел
-		Q = 32768		// QUOTE,		кавычка
+		A = 1024,		// ALLOWED symbols
+		D = 2048,		// DISALLOWED symbols
+		I = 4096,		// IGNORE symbols
+		S = 8192,		// SEPARATOR symbols
+		B = 16384,		// SPACE symbols
+		Q = 32768		// QUOTE symbols
 	};
 
 	class In{
 	public:
 		In();
-		In(LOG::Log* log, wchar_t* infile);
 
-		int getCode(char symbol);			// возвращает значение из таблицы допустимости символов для текущего символа строки
-		void createLine(char firstSymbol, std::ifstream& file, int& positionCounter);	// для корректного считывания текста в кавычках
+		int		getCode(char symbol);						// return IN_CODE_TABLE value for symbol
 
-		char** getArr();
-		char* getLine(int i);
-		int getNumOfChains();
-		int getLinesCounter();
-		int getSizeCounter();
-		int getIgnorCounter();
+		char**	getArr();									// return array of lines
+		char*	getLine(int index);							// return line from array of lines using index
+		int		getNumOfChains();							// return number of chains
+		int		getLinesCounter();							// return number of line counter value
+		int		getSizeCounter();							// return size counter value
+		int		getIgnorCounter();							// return ignor counter value
 
-		void setArr(char** arrOfLines);
-		void setLine(char* line);
-		void setChar(int& currPos, char symbol);	// в текущую строку добавляем symbol
-		void setCode(int* code);
-		void setLineEnd(int& currChainPosition);
-		void setText(char symbol);
-		
-		void execute(LOG::Log* log, wchar_t* infile);
+		void	setArr(char** arrOfLines);					// set array of lines
+		void	setCode(int* code);							// set code symbol table
+		void	setLineEnd(int& currChainPosition);			// set the end of the line
 
-		void increaseIgnor();
-		void increaseLines();
-		void increaseSize();
+		void	addChar(int& currPos, char symbol);			// add symbol to current line
+		void	addLine(char* line);						// add line to array of lines
+		void	setText(char symbol);						// add symbol to exit text
+
+		void	execute(LOG::Log* log, wchar_t* infile);
+		void	createLine(									// correct read line literal(with spaces)
+					char firstSymbol,
+					std::ifstream& file,
+					int& positionCounter);
+
+		void	increaseIgnor();							// like ignor++
+		void	increaseLines();							// like lines++
+		void	increaseSize();								// like size++
 
 	private:
-		int		size_;						// кол-во символов в файле
-		int		lines_;						// кол-во строк в файле
-		int		ignor_;						// кол-во игнорируемых символов
-		int*	code_;						// массив значений таблицы допустимых символов
-		int		numberOfChains_;			// количество цепочек
-		char	text_[IN_CODE_TABLE_SIZE];	// обработанный текст
-		char**	arrOfLines_;				// массив цепочек
+		char	text_[IN_CODE_TABLE_SIZE];					// raw text from input file
+		int		size_;										// number of symbols in the input file
+		int		lines_;										// number of lines in the input file
+		int		ignor_;										// number of ignored symbols
+		int*	code_;										// code symbol table
+		char**	arrOfLines_;								// array of lines
+		int		numberOfChains_;
 	};
 
-	char*	createLine(char firstSymbol, std::ifstream& file, char* text, int& textSize, int& positionCounter);	// для корректного считывания текста в кавычках
+	char*		createLine(									// correct read text in quotes(with spaces)
+					char firstSymbol,
+					std::ifstream& file,
+					char* text,
+					int& textSize,
+					int& positionCounter);
 };
