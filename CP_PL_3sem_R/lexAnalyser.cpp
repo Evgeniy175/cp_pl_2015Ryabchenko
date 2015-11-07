@@ -165,14 +165,14 @@ namespace LA{
 		this->auxTable = new AT::Table(size);
 		LT::Element elemLt;								// lexTable element
 		AT::Element elemAt;								// auxTable element
-		FST::FST* fst = new FST::FST[NUMBER_OF_GRAPHS];	// конечный автомат
-		bool isCorrect = false;							// распознана ли строка
-		int  lineNumber = 0;							// счётчик строк
-		int	 literalCounter = 0;						// счётчик литералов
-		int  operationCounter = 0;						// счётчик операций
-		char funcName[AT_NAME_MAXSIZE + 1];				// имя функции
+		FST::FST* fst = new FST::FST[NUMBER_OF_GRAPHS];	// final state machine
+		bool isCorrect = false;							// is this string executed by graphs?
+		int  lineNumber = 0;							// number of lines in input file
+		int	 literalCounter = 0;
+		int  operationCounter = 0;
+		char funcName[AT_NAME_MAXSIZE + 1];				// function name
 
-		fst->createFst();								// формирование массива fst
+		fst->createFst();
 
 		log->writeLine("---Начало работы КА---", "");
 
@@ -203,7 +203,7 @@ namespace LA{
 								this->getFuncNameList().push_back(in->getLine(chainNumber));
 								this->getFuncTypeList().push_back(this->getDataType(in->getArr(), chainNumber));
 						}
-						if (!this->isIncludedInAT(in->getLine(chainNumber), funcName)){		// isincludedfunc
+						if (!this->isIncludedInAT(in->getLine(chainNumber), funcName)){		// isincludedfunc?
 							elemAt.setElem(this, funcName, in->getArr(), chainNumber);
 							this->addElemAT(elemAt);
 							if (elemAt.getType() == AT::TYPE::U)
@@ -228,7 +228,7 @@ namespace LA{
 					elemAt.reset();
 				};
 			};
-			if (!isCorrect){	// если не распознана
+			if (!isCorrect){
 				ERROR::Error* err = ERROR_THROW_FULL(202, in->getLine(chainNumber), lineNumber, -1);
 				log->writeError(err);
 			};

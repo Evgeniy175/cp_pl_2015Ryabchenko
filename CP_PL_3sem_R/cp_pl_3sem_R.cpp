@@ -1,5 +1,5 @@
 // by Evgeniy Ryabchenko
-// TODO:  ןונוטלוםמגאעü דנאפû
+// TODO:  
 
 #include "stdafx.h"
 #include "cp_pl_3sem_R.h"

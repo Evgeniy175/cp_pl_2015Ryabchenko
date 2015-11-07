@@ -20,19 +20,19 @@ namespace PATH
 	class Path{
 	public:
 		Path();
-		Path(const Path& initial);								// copy initial path fields into object
+		Path(const Path& initial);							// copy initial path fields into this object
 
 		void initialExecute(int argc, _TCHAR* argv[]);		// create initial path's
 		void pushPath(wchar_t* dest, wchar_t* source);		// copy source into dest
 
-		wchar_t* getIn();
-		wchar_t* getOut();
-		wchar_t* getLog();
+		wchar_t* getIn();									// return path of a in file
+		wchar_t* getOut();									// return path of a out file
+		wchar_t* getLog();									// return path of a out file
 
 	protected:
-		wchar_t in_[PATH_MAX_NAMESIZE];
-		wchar_t out_[PATH_MAX_NAMESIZE];
-		wchar_t log_[PATH_MAX_NAMESIZE];
+		wchar_t in_[PATH_MAX_NAMESIZE];						// path of a in file
+		wchar_t out_[PATH_MAX_NAMESIZE];					// path of a out file
+		wchar_t log_[PATH_MAX_NAMESIZE];					// path of a out file
 	};
 
 };
