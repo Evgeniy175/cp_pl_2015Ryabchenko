@@ -92,9 +92,9 @@ namespace LA{
 		else{
 			switch (this->getElemLT(this->getLTsize() - 2)->getLex())
 			{
-			case LEX_COMMA: case LEX_OPEN_SQBRACE:					return AT::TYPE::P;
-			case LEX_TYPE:											return AT::TYPE::V;
-			case LEX_RETURN: case LEX_EQUALLY: case LEX_OPERATION:	return AT::TYPE::L;
+			case LEX_COMMA: case LEX_OPEN_SQBRACE:										return AT::TYPE::P;
+			case LEX_TYPE:																return AT::TYPE::V;
+			case LEX_COMPARE: case LEX_RETURN: case LEX_EQUALLY: case LEX_OPERATION:	return AT::TYPE::L;
 			default:
 				for (firstIt = this->getFuncNameList().begin();
 					firstIt != this->getFuncNameList().end();
@@ -135,7 +135,7 @@ namespace LA{
 		std::vector<AT::DATATYPE>::iterator secondIt;
 
 		switch (this->getElemLT(this->getLTsize() - 2)->getLex()){
-		case LEX_OPERATION: case LEX_EQUALLY: case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:				// для литералов
+		case LEX_COMPARE: case LEX_OPERATION: case LEX_EQUALLY: case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:				// для литералов
 			return arrOfLines[i][0] == '‘' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
 			break;
 

@@ -85,30 +85,30 @@ namespace LT
 	};
 
 	char getLex(int switchCount){
-		char rc;
 		switch (switchCount)
 		{
-		case 0:		rc = LEX_TYPE;					break;
-		case 1:		rc = LEX_NEW_LINE;				break;
-		case 2:		rc = LEX_SEMICOLON;				break;
-		case 3:		rc = LEX_COMMA;					break;
-		case 4:		rc = LEX_EQUALLY;				break;
-		case 5:		rc = LEX_OPEN_BRACE;			break;
-		case 6:		rc = LEX_CLOSE_BRACE;			break;
-		case 7:		rc = LEX_OPEN_PARENTHESIS;		break;
-		case 8:		rc = LEX_CLOSE_PARENTHESIS;		break;
-		case 9:		rc = LEX_OPEN_SQBRACE;			break;
-		case 10:	rc = LEX_CLOSE_SQBRACE;			break;
-		case 11:	rc = LEX_OPERATION;				break;
-		case 12:	rc = LEX_CONDITION;				break;
-		case 13:	rc = LEX_FUNCTION;				break;
-		case 14:	rc = LEX_RETURN;				break;
-		case 15:	rc = LEX_BEGIN;					break;
-		case 16:	rc = LEX_ID;					break;
-		case 17:	rc = LEX_LITERAL;				break;
-		case 18:	rc = LEX_LITERAL;				break;
+		case 0:		return LEX_TYPE;
+		case 1:		return LEX_NEW_LINE;
+		case 2:		return LEX_SEMICOLON;
+		case 3:		return LEX_COMMA;
+		case 4:		return LEX_COMPARE;
+		case 5:		return LEX_EQUALLY;
+		case 6:		return LEX_OPEN_BRACE;
+		case 7:		return LEX_CLOSE_BRACE;
+		case 8:		return LEX_OPEN_PARENTHESIS;
+		case 9:		return LEX_CLOSE_PARENTHESIS;
+		case 10:		return LEX_OPEN_SQBRACE;
+		case 11:	return LEX_CLOSE_SQBRACE;
+		case 12:	return LEX_OPERATION;
+		case 13:	return LEX_CONDITION;
+		case 14:	return LEX_FUNCTION;
+		case 15:	return LEX_RETURN;
+		case 16:	return LEX_BEGIN;
+		case 17:	return LEX_ID;
+		case 18:	return LEX_LITERAL;
+		case 19:	return LEX_LITERAL;
 		default:	break;
 		};
-		return rc;
+		return LT_NULL_LEX;
 	};
 };

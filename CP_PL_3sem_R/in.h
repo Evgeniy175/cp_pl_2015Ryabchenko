@@ -17,8 +17,8 @@
 #define IN_CODE_TABLE {\
 	/*0-15*/    IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::I, IN::S, IN::D, IN::D, IN::D, IN::D, IN::D, \
 	IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, IN::D, \
-	/*32-47*/   IN::B, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::A, IN::S, \
-	IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::D, IN::S, IN::S, IN::S, IN::S, IN::A, \
+	/*32-47*/   IN::B, IN::C, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::A, IN::S, \
+	IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::D, IN::S, IN::C, IN::C, IN::C, IN::A, \
 	/*64-79*/   IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, \
 	IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::S, IN::A, IN::S, IN::A, IN::A, \
 	/*96-111*/  IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, IN::A, \
@@ -38,12 +38,13 @@ namespace LOG{ class Log; };
 
 namespace IN{
 	enum{
-		A = 1024,		// ALLOWED symbols
-		D = 2048,		// DISALLOWED symbols
-		I = 4096,		// IGNORE symbols
-		S = 8192,		// SEPARATOR symbols
-		B = 16384,		// SPACE symbols
-		Q = 32768		// QUOTE symbols
+		A = 512,		// ALLOWED symbols
+		D = 768,		// DISALLOWED symbols
+		I = 1024,		// IGNORE symbols
+		S = 1280,		// SEPARATOR symbols
+		B = 1536,		// SPACE symbols
+		Q = 1792,		// QUOTE symbols
+		C = 2048		// CONDITION symbols
 	};
 
 	class In{

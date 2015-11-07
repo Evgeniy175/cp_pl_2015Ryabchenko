@@ -47,7 +47,7 @@ namespace AT{			// auxiliary table namespace
 		NIL  = 5			// like a void in C++
 	};
 
-	class DataInfo{		// types of data              pattern-одиночка!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	class DataInfo{		// types of data
 	public:
 		DataInfo();
 
@@ -69,12 +69,12 @@ namespace AT{			// auxiliary table namespace
 		
 		int			getIndex();									// return lexTable index
 		int			getNumVal();								// return num value of the element
-		char*		getName();									// return
-		char*		getFuncName();									// return
-		char*		getLineVal();								// return
-		char		getOperation();								// return
-		TYPE		getType();									// return
-		DATATYPE	getDataType();								// return
+		char*		getName();									// return element name
+		char*		getFuncName();								// return function name
+		char*		getLineVal();								// return line number
+		char		getOperation();								// return element operation
+		TYPE		getType();									// return element type
+		DATATYPE	getDataType();								// return element data type
 
 		void		setIndex(int value);						// set lexTable index
 		void		setName(char* name);						// set element name
@@ -97,15 +97,15 @@ namespace AT{			// auxiliary table namespace
 
 	private:
 		int			ltIndex_;									// index of first occurrence of this element in lexTable
-		char		name_[AT_NAME_MAXSIZE];						// name of the element
-		char		funcName_[AT_NAME_MAXSIZE];					// name of the function
-		TYPE		type_;										// type of the element
-		DATATYPE	dataType_;									// data type of the element
+		char		name_[AT_NAME_MAXSIZE];						// element name
+		char		funcName_[AT_NAME_MAXSIZE];					// element function name
+		TYPE		type_;										// element type
+		DATATYPE	dataType_;									// element data type
 		struct{
 			int		numValue_;										// field for numerical values
 			char	lineValue_[AT_ARR_MAXSIZE];						// field for line values
 			char	operation_;										// field for operation arithmetic elements
-		} value_;												// value of the element
+		} value_;												// element value
 	};
 
 	class Table{		// auxiliary table

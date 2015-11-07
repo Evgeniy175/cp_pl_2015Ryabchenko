@@ -134,10 +134,10 @@ namespace IN{
 						this->setLineEnd(currChainPosition);
 						positionCounter = 0;
 					};
-					if (tempChar == IN_CODE_ENDL){
-						this->addChar(currChainPosition, LEX_NEW_LINE);
-						this->increaseLines();
-					}
+ 					if (tempChar == IN_CODE_ENDL){
+ 						this->addChar(currChainPosition, LEX_NEW_LINE);
+ 						this->increaseLines();
+ 					}
 					else{
 						this->addChar(currChainPosition, tempChar);
 					};
@@ -156,6 +156,20 @@ namespace IN{
 					this->createLine(tempChar, file, positionCounter);
 					positionCounter = 0;
 					currChainPosition = 0;
+					break;
+
+				case IN::C:
+					if (this->getCode(previousChar) != IN::C
+						&& currChainPosition != NULL){
+						this->setLineEnd(currChainPosition);
+						positionCounter = 0;
+					};
+					this->addChar(currChainPosition, tempChar);
+
+					if (this->getCode(file.peek()) != IN::C){
+						this->setLineEnd(currChainPosition);
+						positionCounter = 0;
+					};
 					break;
 
 				default:

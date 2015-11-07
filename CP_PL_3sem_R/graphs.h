@@ -1,6 +1,6 @@
 #pragma once
 
-#define NUMBER_OF_GRAPHS 19
+#define NUMBER_OF_GRAPHS 20
 
 #define GRAPH_TYPE 14, \
 	/* 0 */ new NODE(5, new RELATION('l', 1), new RELATION('n', 4), new RELATION('w', 6), new RELATION('b', 9), new RELATION('n', 12)),  \
@@ -54,6 +54,11 @@
 #define GRAPH_COMMA 1, \
 	/* 0 */ new NODE(1, new RELATION(',', 1)), \
 	/* 1 */ new NODE()
+
+#define GRAPH_COMPARE 2, \
+	/* 0 */ new NODE(4, new RELATION('<', 1), new RELATION('>', 1), new RELATION('=', 1), new RELATION('!', 1)), \
+	/* 1 */ new NODE(1, new RELATION('=', 2)), \
+	/* 2 */ new NODE()
 
 #define GRAPH_EQUALLY 1, \
 	/* 0 */ new NODE(1, new RELATION('=', 1)), \

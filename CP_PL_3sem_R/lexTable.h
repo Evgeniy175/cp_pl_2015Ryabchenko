@@ -20,6 +20,7 @@
 #define LEX_CLOSE_PARENTHESIS	')'			// lexeme for )
 #define LEX_OPEN_SQBRACE		'['			// lexeme for [
 #define LEX_CLOSE_SQBRACE		']'			// lexeme for ]
+#define LEX_COMPARE				'#'			// lexeme for compare (==, !=, <=, >=)
 #define LEX_EQUALLY				'='			// lexeme for =
 #define LEX_OPERATION			'v'			// lexeme for operations
 #define LEX_NEW_LINE			'@'			// lexeme for @ (new line)

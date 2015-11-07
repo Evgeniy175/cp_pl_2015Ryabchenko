@@ -156,7 +156,8 @@ namespace CP{
 		if (this->getElemLT(position)->getLex() == LEX_EQUALLY) startPos++;
 
 		for (; this->getElemLT(position)->getLex() != LEX_SEMICOLON
-			&& this->getElemLT(position)->getLex() != LEX_CLOSE_PARENTHESIS;
+			&& this->getElemLT(position)->getLex() != LEX_CLOSE_PARENTHESIS
+			&& this->getElemLT(position)->getLex() != LEX_EQUALLY;
 			position++){
 			switch (this->getElemLT(position)->getLex()){
 			case LEX_ID: case LEX_LITERAL:
@@ -169,15 +170,15 @@ namespace CP{
 				}
 				else{
 					while (stack.size() != NULL
-						&& getPriority(this->getElemAT(this->getElemLT(position)->getIndex())->getOperation())
-						<= getPriority(this->getElemAT(stack.top()->getIndex())->getOperation())){
-							exitArr.push_back(*(stack.top()));
-							stack.pop();
+						&& (getPriority(this->getElemAT(this->getElemLT(position)->getIndex())->getOperation())
+						<= getPriority(this->getElemAT(stack.top()->getIndex())->getOperation()))){
+						exitArr.push_back(*(stack.top()));
+						stack.pop();
 					};
 					if (stack.size() == NULL
 						|| (getPriority(this->getElemAT(this->getElemLT(position)->getIndex())->getOperation())
 							> getPriority(this->getElemAT(stack.top()->getIndex())->getOperation()))){
-								stack.push(this->getElemLT(position));
+						stack.push(this->getElemLT(position));
 					};
 				};
 				break;
@@ -187,7 +188,7 @@ namespace CP{
 					return false;
 				break;
 
-			case LEX_EQUALLY: case LEX_COMMA: break;
+			case LEX_COMMA: break;
 			default: return false;
 			};
 		};
@@ -199,7 +200,7 @@ namespace CP{
 			this->getElemLT(startPos++)->setElem(exitArr.front());
 			exitArr.pop_front();
 		};
-		while (startPos != position){			// обнуляем лишние элементы
+		while (startPos < position){			// обнуляем лишние элементы
 			this->getElemLT(startPos++)->setElem();
 		};
 		return true;
@@ -211,16 +212,16 @@ namespace CP{
 			if (this->getElemLT(i)->getLex() == LEX_ID
 				|| this->getElemLT(i)->getLex() == LEX_LITERAL
 				|| this->getElemLT(i)->getLex() == LEX_EQUALLY){
-				if (create(i)){
-					this->writeLine("Польская запись построена", "");
-				}
-				else{
-					this->writeLine("Не удалось построить польскую запись", "");
-					while (this->getElemLT(i)->getLex() != LEX_SEMICOLON
-						&& this->getElemLT(i)->getLex() != LEX_CLOSE_SQBRACE){
-							i++;
+					if (create(i)){
+						this->writeLine("Польская запись построена", "");
+					}
+					else{
+						this->writeLine("Не удалось построить польскую запись", "");
+// 						while (this->getElemLT(i)->getLex() != LEX_SEMICOLON
+// 							&& this->getElemLT(i)->getLex() != LEX_CLOSE_SQBRACE){
+// 								i++;
+// 						};
 					};
-				};
 			};
 		};
 	};
