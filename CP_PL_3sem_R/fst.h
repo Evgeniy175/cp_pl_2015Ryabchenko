@@ -28,7 +28,8 @@ namespace FST{
 		NODE(
 			short firstRelation,
 			short secondRelation,
-			char* str);
+			char* str
+			);
 
 		short							getNumberOfRel();				// number of relations in this node
 		RELATION*						getRelation(int index);			// return relation using index
@@ -36,8 +37,8 @@ namespace FST{
 		~NODE();
 
 	private:
-		short							numOfRel_;						// number of relation's
-		std::vector<RELATION*>			relations_;						// vector if relation's
+		short							numOfRel_;						// number of relations
+		std::vector<RELATION*>			relations_;						// vector if relations
 	};
 
 	class FST{

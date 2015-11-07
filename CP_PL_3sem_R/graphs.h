@@ -56,7 +56,7 @@
 	/* 1 */ new NODE()
 
 #define GRAPH_COMPARE 2, \
-	/* 0 */ new NODE(4, new RELATION('<', 1), new RELATION('>', 1), new RELATION('=', 1), new RELATION('!', 1)), \
+	/* 0 */ new NODE(6, new RELATION('<', 1), new RELATION('<', 2), new RELATION('>', 1), new RELATION('>', 2), new RELATION('=', 1), new RELATION('!', 1)), \
 	/* 1 */ new NODE(1, new RELATION('=', 2)), \
 	/* 2 */ new NODE()
 

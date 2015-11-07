@@ -79,11 +79,11 @@ namespace AT{
 	};
 
 	void Element::setName(char* name){
-		strncpy_s(this->name_, name, strlen(name));
+		strncpy_s(this->name_, name, AT_NAME_MAXSIZE - 1);
 	};
 
 	void Element::setFuncName(char* name){
-		strncpy_s(this->funcName_, name, strlen(name));
+		strncpy_s(this->funcName_, name, AT_NAME_MAXSIZE - 1);
 	};
 
 	void Element::setNumVal(int value){

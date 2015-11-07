@@ -81,10 +81,10 @@ namespace LOG
 	};
 
 	void Log::writeIn(IN::In* in){
-		*(this->getStream()) << std::endl << std::endl << "---Исходные данные---" << std::endl
+		*(this->getStream()) << "---Исходные данные---" << std::endl
 			<< "Количество символов: "	<< in->getSizeCounter()	 << std::endl
 			<< "Проигнорировано: "		<< in->getIgnorCounter() << std::endl 
-			<< "Количество строк: "		<< in->getLinesCounter() << std::endl;
+			<< "Количество строк: "		<< in->getLinesCounter() << std::endl << std::endl;
 	};
 
 	void Log::writeError(ERROR::Error* error){
@@ -104,7 +104,7 @@ namespace LOG
 	void Log::writeLt(LA::LexAnalyser* la){
 		int currentLineNumber = 0;
 
-		*(this->getStream()) << std::endl << std::endl << "---Lexeme table start---"
+		*(this->getStream()) << std::endl << "---Lexeme table start---"
 			<< std::endl << "Size: " << la->getLT()->getSize() << std::endl << std::endl
 			<< "NUMBER\t\t" << "LEXEME\t\t" << "LINE\t\t" << "AUX_INDEX\t\t"
 			<< "PARAMETER_COUNTER"<< std::endl;

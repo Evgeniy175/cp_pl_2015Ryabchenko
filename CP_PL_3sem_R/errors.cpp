@@ -64,7 +64,8 @@ namespace ERROR{
 	};
 
 	void Error::setMessage(char* message){
-		strcpy_s(this->message_, message_);
+		//strcpy_s(this->message_, message_);
+		strcat_s(this->message_, message);
 	};
 
 	void Error::setPosition(Position* position){
@@ -81,7 +82,7 @@ namespace ERROR{
 		if (0 < id && id < ERROR_MAX_ENTRY)
 			rc = errors[id];
 
-		if (line != NULL_STR)
+		if (str != NULL_STR)
 			rc->setMessage(str);
 
 		if (line >= NULL && position >= NULL)
