@@ -47,6 +47,14 @@ namespace AT{			// auxiliary table namespace
 		NIL  = 5			// like a void in C++
 	};
 
+	enum COMPARE{
+		EQUAL_OR_GREATER = 0,
+		EQUAL_OR_LESS = 1,
+		NOT_EQUAL = 2,
+		LESS_SIGN = 3,
+		GREATER_SIGN = 4
+	};
+
 	class DataInfo{		// types of data
 	public:
 		DataInfo();

@@ -1,6 +1,6 @@
 // by Evgeniy Ryabchenko
 // параметры/переменные
-// TODO: помен€й фст конструктор, enum дл€ условий, мб и дл€ действий
+// TODO: enum дл€ условий, мб и дл€ действий
 
 #include "stdafx.h"
 #include "cp_pl_3sem_R.h"
