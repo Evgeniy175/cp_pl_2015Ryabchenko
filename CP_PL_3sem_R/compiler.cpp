@@ -123,7 +123,7 @@ namespace CP{
 		exitArr.pop_back();
 		stack.push(this->getElemLT(position++));
 
-		while (this->getElemLT(position)->getLex() != LEX_SQBRACECLOSE){
+		while (this->getElemLT(position)->getLex() != LEX_CLOSE_SQBRACE){
 			switch (this->getElemLT(position)->getLex()){
 			case LEX_ID: case LEX_LITERAL:
 				exitArr.push_back(*(this->getElemLT(position)));
@@ -132,7 +132,7 @@ namespace CP{
 
 			case LEX_COMMA: break;
 
-			case LEX_SQBRACEOPEN:
+			case LEX_OPEN_SQBRACE:
 				if (!funcCreate(stack, exitArr, position))
 					return false;
 				break;
@@ -156,10 +156,10 @@ namespace CP{
 		if (this->getElemLT(position)->getLex() == LEX_EQUALLY) startPos++;
 
 		for (; this->getElemLT(position)->getLex() != LEX_SEMICOLON
-			&& this->getElemLT(position)->getLex() != LEX_RIGHTHESIS;
+			&& this->getElemLT(position)->getLex() != LEX_CLOSE_PARENTHESIS;
 			position++){
 			switch (this->getElemLT(position)->getLex()){
-			case LEX_ID: case LEX_LITERAL: case LEX_PRINT:
+			case LEX_ID: case LEX_LITERAL:
 				exitArr.push_back(*(this->getElemLT(position)));
 				break;
 
@@ -182,7 +182,7 @@ namespace CP{
 				};
 				break;
 
-			case LEX_SQBRACEOPEN:
+			case LEX_OPEN_SQBRACE:
 				if (!funcCreate(stack, exitArr, position))
 					return false;
 				break;
@@ -210,15 +210,14 @@ namespace CP{
 		for (int i = 0; i < this->getLTsize(); i++){
 			if (this->getElemLT(i)->getLex() == LEX_ID
 				|| this->getElemLT(i)->getLex() == LEX_LITERAL
-				|| this->getElemLT(i)->getLex() == LEX_EQUALLY
-				|| this->getElemLT(i)->getLex() == LEX_PRINT){
+				|| this->getElemLT(i)->getLex() == LEX_EQUALLY){
 				if (create(i)){
 					this->writeLine("Польская запись построена", "");
 				}
 				else{
 					this->writeLine("Не удалось построить польскую запись", "");
 					while (this->getElemLT(i)->getLex() != LEX_SEMICOLON
-						&& this->getElemLT(i)->getLex() != LEX_SQBRACECLOSE){
+						&& this->getElemLT(i)->getLex() != LEX_CLOSE_SQBRACE){
 							i++;
 					};
 				};

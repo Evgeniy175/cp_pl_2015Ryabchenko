@@ -1,5 +1,5 @@
 // by Evgeniy Ryabchenko
-// TODO:  переименовать графы ; вектор встроенных фций и пользовательских
+// TODO:  переименовать графы
 
 #include "stdafx.h"
 #include "cp_pl_3sem_R.h"
@@ -34,7 +34,5 @@ int _tmain(int argc, _TCHAR* argv[]){
 	catch (ERROR::Error* err){
 		compiler->writeError(err);
 	};
-
-
 	return 0;
 };

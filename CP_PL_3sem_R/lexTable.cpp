@@ -89,25 +89,24 @@ namespace LT
 		switch (switchCount)
 		{
 		case 0:		rc = LEX_TYPE;					break;
-		case 1:		rc = LEX_NEWLINE;				break;
+		case 1:		rc = LEX_NEW_LINE;				break;
 		case 2:		rc = LEX_SEMICOLON;				break;
 		case 3:		rc = LEX_COMMA;					break;
 		case 4:		rc = LEX_EQUALLY;				break;
-		case 5:		rc = LEX_LEFTBRACE;				break;
-		case 6:		rc = LEX_RIGHTBRACE;			break;
-		case 7:		rc = LEX_LEFTHESIS;				break;
-		case 8:		rc = LEX_RIGHTHESIS;			break;
-		case 9:		rc = LEX_SQBRACEOPEN;			break;
-		case 10:	rc = LEX_SQBRACECLOSE;			break;
+		case 5:		rc = LEX_OPEN_BRACE;			break;
+		case 6:		rc = LEX_CLOSE_BRACE;			break;
+		case 7:		rc = LEX_OPEN_PARENTHESIS;		break;
+		case 8:		rc = LEX_CLOSE_PARENTHESIS;		break;
+		case 9:		rc = LEX_OPEN_SQBRACE;			break;
+		case 10:	rc = LEX_CLOSE_SQBRACE;			break;
 		case 11:	rc = LEX_OPERATION;				break;
 		case 12:	rc = LEX_CONDITION;				break;
 		case 13:	rc = LEX_FUNCTION;				break;
-		case 14:	rc = LEX_PRINT;					break;
-		case 15:	rc = LEX_RETURN;				break;
-		case 16:	rc = LEX_BEGIN;					break;
-		case 17:	rc = LEX_ID;					break;
+		case 14:	rc = LEX_RETURN;				break;
+		case 15:	rc = LEX_BEGIN;					break;
+		case 16:	rc = LEX_ID;					break;
+		case 17:	rc = LEX_LITERAL;				break;
 		case 18:	rc = LEX_LITERAL;				break;
-		case 19:	rc = LEX_LITERAL;				break;
 		default:	break;
 		};
 		return rc;

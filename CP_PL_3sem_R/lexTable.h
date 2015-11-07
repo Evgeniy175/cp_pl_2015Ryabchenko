@@ -3,35 +3,34 @@
 #include "errors.h"
 #include "auxTable.h"
 
-#define LT_MAX_SIZE			4096		// max number of lines in lex table
-#define LT_NULL_PARM		0xffffffff	// default value for parameter counter
-#define LT_AUX_NULL_INDEX	0xffffffff	// default value for index
-#define LT_AUX_NULL_LINE	0xffffffff	// default value for line
-#define LT_NULL_LEX			'M'			// null lexeme
-#define LEX_TYPE			't'			// lexeme for type
-#define LEX_FUNCTION		'f'			// lexeme for function
-#define LEX_RETURN			'r'			// lexeme for return
-#define LEX_PRINT			'p'			// lexeme for print
-#define LEX_BEGIN			'b'			// lexeme for main
-#define LEX_SEMICOLON		';'			// lexeme for ;
-#define LEX_COMMA			','			// lexeme for ,
-#define LEX_LEFTBRACE		'{'			// lexeme for {
-#define LEX_RIGHTBRACE		'}'			// lexeme for }
-#define LEX_LEFTHESIS		'('			// lexeme for (
-#define LEX_RIGHTHESIS		')'			// lexeme for )
-#define LEX_SQBRACEOPEN		'['			// lexeme for [
-#define LEX_SQBRACECLOSE	']'			// lexeme for ]
-#define LEX_EQUALLY			'='			// lexeme for =
-#define LEX_OPERATION		'v'			// lexeme for operations
-#define LEX_NEWLINE			'@'			// lexeme for @ (new line)
-#define LEX_CONDITION		'c'			// lexeme for conditions
-#define LEX_ID				'i'			// lexeme for identificator
-#define LEX_LITERAL			'l'			// lexeme for literal
+#define LT_MAX_SIZE				4096		// max number of lines in lex table
+#define LT_NULL_PARM			0xffffffff	// default value for parameter counter
+#define LT_AUX_NULL_INDEX		0xffffffff	// default value for index
+#define LT_AUX_NULL_LINE		0xffffffff	// default value for line
+#define LT_NULL_LEX				'M'			// null lexeme
+#define LEX_TYPE				't'			// lexeme for type
+#define LEX_FUNCTION			'f'			// lexeme for function
+#define LEX_RETURN				'r'			// lexeme for return
+#define LEX_BEGIN				'b'			// lexeme for main
+#define LEX_SEMICOLON			';'			// lexeme for ;
+#define LEX_COMMA				','			// lexeme for ,
+#define LEX_OPEN_BRACE			'{'			// lexeme for {
+#define LEX_CLOSE_BRACE			'}'			// lexeme for }
+#define LEX_OPEN_PARENTHESIS	'('			// lexeme for (
+#define LEX_CLOSE_PARENTHESIS	')'			// lexeme for )
+#define LEX_OPEN_SQBRACE		'['			// lexeme for [
+#define LEX_CLOSE_SQBRACE		']'			// lexeme for ]
+#define LEX_EQUALLY				'='			// lexeme for =
+#define LEX_OPERATION			'v'			// lexeme for operations
+#define LEX_NEW_LINE			'@'			// lexeme for @ (new line)
+#define LEX_CONDITION			'c'			// lexeme for conditions
+#define LEX_ID					'i'			// lexeme for identificator
+#define LEX_LITERAL				'l'			// lexeme for literal
 
 namespace AT{ enum TYPE; enum DATATYPE; class Table; };
 
-namespace LT{		// lex table
-	class Element{		// element of the lex table
+namespace LT{		// lexeme table
+	class Element{		// element of the lexeme table
 	public:
 		Element();
 
@@ -49,7 +48,7 @@ namespace LT{		// lex table
 	private:
 		char				lexeme_;
 		int					line_;								// line number
-		int					atIndex_;							// index of this element in auxTable
+		int					atIndex_;							// index of this element in auxiliary table
 		int					parameterCounter_;					// number of parameters (for function, using in Polish Notation)
 	};
 
@@ -58,17 +57,17 @@ namespace LT{		// lex table
 		Table();
 		Table(int size);
 		
-		int					getSize();							// return size of lex table
+		int					getSize();							// return size of lexeme table
 		Element*			getElem(int index);					// return element by index
 
-		void				addElem(Element& elem);				// add element to the lex table
+		void				addElem(Element& elem);				// add element to the lexeme table
 
 		~Table();
 
 	private:
-		int					maxSize_;							// max size of the lex table
-		int					size_;								// current size of the lex table
-		Element*			table_;								// lex table that consist elements
+		int					maxSize_;							// max size of the lexeme table
+		int					size_;								// current size of the lexeme table
+		Element*			table_;								// lexeme table that consist elements
 	};
 
 	char getLex(int i);											// return lexeme

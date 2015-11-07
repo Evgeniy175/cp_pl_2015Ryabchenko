@@ -104,10 +104,10 @@ namespace LOG
 	void Log::writeLt(LA::LexAnalyser* la){
 		int currentLineNumber = 0;
 
-		*(this->getStream()) << std::endl << std::endl << "---Lex table start---"
+		*(this->getStream()) << std::endl << std::endl << "---Lexeme table start---"
 			<< std::endl << "Size: " << la->getLT()->getSize() << std::endl << std::endl
-			<< "NUMBER\t\t" << "LEXEMA\t\t" << "LINE\t\t" << "AUX_INDEX\t\t"
-			<< "PARAMERER_COUNTER"<< std::endl;
+			<< "NUMBER\t\t" << "LEXEME\t\t" << "LINE\t\t" << "AUX_INDEX\t\t"
+			<< "PARAMETER_COUNTER"<< std::endl;
 
 		for (int i = 0; i < la->getLT()->getSize(); i++){
 			*(this->getStream()) << i << "\t\t";
@@ -133,7 +133,7 @@ namespace LOG
 				*(this->getStream()) << "null" << std::endl;
 		};
 
-		*(this->getStream()) << "---Lex table end---" << std::endl;
+		*(this->getStream()) << "---Lexeme table end---" << std::endl;
 	};
 
 	void Log::writeAt(LA::LexAnalyser* la){

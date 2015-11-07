@@ -92,7 +92,7 @@ namespace LA{
 		else{
 			switch (this->getElemLT(this->getLTsize() - 2)->getLex())
 			{
-			case LEX_COMMA: case LEX_SQBRACEOPEN:					return AT::TYPE::P;
+			case LEX_COMMA: case LEX_OPEN_SQBRACE:					return AT::TYPE::P;
 			case LEX_TYPE:											return AT::TYPE::V;
 			case LEX_RETURN: case LEX_EQUALLY: case LEX_OPERATION:	return AT::TYPE::L;
 			default:
@@ -135,7 +135,7 @@ namespace LA{
 		std::vector<AT::DATATYPE>::iterator secondIt;
 
 		switch (this->getElemLT(this->getLTsize() - 2)->getLex()){
-		case LEX_OPERATION: case LEX_EQUALLY: case LEX_COMMA: case LEX_SQBRACEOPEN: case LEX_RETURN:				// для литералов
+		case LEX_OPERATION: case LEX_EQUALLY: case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:				// для литералов
 			return arrOfLines[i][0] == '‘' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
 			break;
 
@@ -194,7 +194,7 @@ namespace LA{
 								  static_cast<int> (strlen(in->getLine(chainNumber))));
 						break;
 
-					case LEX_NEWLINE:	lineNumber++; break;
+					case LEX_NEW_LINE:	lineNumber++; break;
 
 					case LEX_ID:
 						if (this->getElemType(in->getLine(chainNumber)) == AT::TYPE::F

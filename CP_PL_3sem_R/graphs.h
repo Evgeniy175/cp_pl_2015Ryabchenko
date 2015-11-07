@@ -1,6 +1,6 @@
 #pragma once
 
-#define NUMBER_OF_GRAPHS 20
+#define NUMBER_OF_GRAPHS 19
 
 #define GRAPH_TYPE 14, \
 	/* 0 */ NODE(5, RELATION('l', 1), RELATION('n', 4), RELATION('w', 6), RELATION('b', 9), RELATION('n', 12)),  \
@@ -39,14 +39,6 @@
 	/* 5 */ NODE(1, RELATION('n', 6)), \
 	/* 6 */ NODE()
 
-#define GRAPH_PRINT 5, \
-	/* 0 */ NODE(1, RELATION('p', 1)), \
-	/* 1 */ NODE(1, RELATION('r', 2)), \
-	/* 2 */ NODE(1, RELATION('i', 3)), \
-	/* 3 */ NODE(1, RELATION('n', 4)), \
-	/* 4 */ NODE(1, RELATION('t', 5)), \
-	/* 5 */ NODE()
-
 #define GRAPH_BEGIN 5, \
 	/* 0 */ NODE(1, RELATION('b', 1)), \
 	/* 1 */ NODE(1, RELATION('e', 2)), \
@@ -67,27 +59,27 @@
 	/* 0 */ NODE(1, RELATION('=', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_LEFTBRACE 1, \
+#define GRAPH_OPEN_BRACE 1, \
 	/* 0 */ NODE(1, RELATION('{', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_RIGHTBRACE 1, \
+#define GRAPH_CLOSE_BRACE 1, \
 	/* 0 */ NODE(1, RELATION('}', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_LEFTHESIS 1, \
+#define GRAPH_OPEN_PARENTHESIS 1, \
 	/* 0 */ NODE(1, RELATION('(', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_RIGHTHESIS 1, \
+#define GRAPH_CLOSE_PARENTHESIS 1, \
 	/* 0 */ NODE(1, RELATION(')', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_SQBRACE_OPEN 1, \
+#define GRAPH_OPEN_SQBRACE 1, \
 	/* 0 */ NODE(1, RELATION('[', 1)), \
 	/* 1 */ NODE()
 
-#define GRAPH_SQBRACE_CLOSE 1, \
+#define GRAPH_CLOSE_SQBRACE 1, \
 	/* 0 */ NODE(1, RELATION(']', 1)), \
 	/* 1 */ NODE()
 
@@ -109,9 +101,9 @@
 	/* 1 */ NODE()
 
 #define GRAPH_LITERAL_STRING 3, \
-	/* 0 */ NODE(1, RELATION('‘', 1)), \
+	/* 0 */ NODE(1, RELATION('\‘', 1)), \
 	/* 1 */ NODE(1, 2, "abcdefghijklmnopqrstuvwxyz. 0123456789"), \
-	/* 2 */ NODE(1, RELATION('’', 3)), \
+	/* 2 */ NODE(1, RELATION('\’', 3)), \
 	/* 3 */ NODE()
 
 #define GRAPH_LITERAL_NUMBER 1, \

@@ -135,7 +135,7 @@ namespace IN{
 						positionCounter = 0;
 					};
 					if (tempChar == IN_CODE_ENDL){
-						this->addChar(currChainPosition, LEX_NEWLINE);
+						this->addChar(currChainPosition, LEX_NEW_LINE);
 						this->increaseLines();
 					}
 					else{
@@ -171,7 +171,7 @@ namespace IN{
 				tempChar = file.get();
 			};
 
-			log->writeLine("---Конец проверки допустимости символов---", "");
+			log->writeLine("---Конец проверки допустимости символов---\n", "");
 		}
 		else
 			throw ERROR_THROW(102);
