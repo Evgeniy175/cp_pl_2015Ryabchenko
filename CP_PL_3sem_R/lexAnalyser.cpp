@@ -234,6 +234,8 @@ namespace LA{
 			};
 		};
 		log->writeLine("---Конец работы КА---", "");
+
+		delete[] fst;
 	};
 
 	LexAnalyser::~LexAnalyser(){
