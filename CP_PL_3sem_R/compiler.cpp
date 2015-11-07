@@ -3,14 +3,16 @@
 
 namespace CP{
 	Compiler::Compiler(PATH::Path* filesPath){
-		this->path_ = new PATH::Path(*filesPath);
-		this->log_ = new LOG::Log(this->path_->getLog());
+		wcscpy_s(this->inPath_, filesPath->getIn());
+		wcscpy_s(this->outPath_, filesPath->getOut());
+		wcscpy_s(this->logPath_, filesPath->getLog());
+		this->log_ = new LOG::Log(this->logPath_);
 		this->in_ = new IN::In();
 		this->la_ = new LA::LexAnalyser();
 	};
 
 	void Compiler::executeIn(){
-		this->in_->execute(this->log_, this->path_->getIn());
+		this->in_->execute(this->log_, this->inPath_);
 	};
 
 	void Compiler::executeLa(){
@@ -18,34 +20,34 @@ namespace CP{
 	};
 
 	wchar_t* Compiler::getInName(){
-		return this->path_->getIn();
+		return this->inPath_;
 	};
 
 	wchar_t* Compiler::getOutName(){
-		return this->path_->getOut();
+		return this->outPath_;
 	};
 
 	wchar_t* Compiler::getLogName(){
-		return this->path_->getLog();
+		return this->logPath_;
 	};
 	
-	LT::Element* Compiler::getElemLT(int i){
-		return this->getLA()->getLT()->getElem(i);
+	LT::Element* Compiler::getElemLt(int i){
+		return this->getLa()->getLT()->getElem(i);
 	};
 
-	AT::Element* Compiler::getElemAT(int i){
-		return this->getLA()->getAT()->getElem(i);
+	AT::Element* Compiler::getElemAt(int i){
+		return this->getLa()->getAT()->getElem(i);
 	};
 	
-	int Compiler::getLTsize(){
-		return this->getLA()->getLT()->getSize();
+	int Compiler::getLtSize(){
+		return this->getLa()->getLT()->getSize();
 	};
 
-	int Compiler::getATsize(){
-		return this->getLA()->getAT()->getSize();
+	int Compiler::getAtSize(){
+		return this->getLa()->getAT()->getSize();
 	};
 
-	LA::LexAnalyser* Compiler::getLA(){
+	LA::LexAnalyser* Compiler::getLa(){
 		return this->la_;
 	};
 
@@ -93,8 +95,8 @@ namespace CP{
 		this->log_->writeLog();
 	};
 
-	void Compiler::writeCP(){
-		this->log_->writeCP(this);
+	void Compiler::writeCp(){
+		this->log_->writeCp(this);
 	};
 
 	void Compiler::writeIn(){
@@ -117,23 +119,24 @@ namespace CP{
 		this->log_->close();
 	};
 
-	bool Compiler::funcCreate(std::stack<LT::Element*>& stack, std::list<LT::Element>& exitArr, int& position){
+	bool Compiler::executeFuncPn(std::stack<LT::Element*>& stack,
+		std::list<LT::Element>& exitArr, int& position){
 		int parmCounter = 0;
 		LT::Element temp = (exitArr.back());
 		exitArr.pop_back();
-		stack.push(this->getElemLT(position++));
+		stack.push(this->getElemLt(position++));
 
-		while (this->getElemLT(position)->getLex() != LEX_CLOSE_SQBRACE){
-			switch (this->getElemLT(position)->getLex()){
+		while (this->getElemLt(position)->getLex() != LEX_CLOSE_SQBRACE){
+			switch (this->getElemLt(position)->getLex()){
 			case LEX_ID: case LEX_LITERAL:
-				exitArr.push_back(*(this->getElemLT(position)));
+				exitArr.push_back(*(this->getElemLt(position)));
 				parmCounter++;
 				break;
 
 			case LEX_COMMA: break;
 
 			case LEX_OPEN_SQBRACE:
-				if (!funcCreate(stack, exitArr, position))
+				if (!executeFuncPn(stack, exitArr, position))
 					return false;
 				break;
 			default: return false;
@@ -148,44 +151,61 @@ namespace CP{
 		return true;
 	};
 
-	bool Compiler::create(int& position){
+	bool Compiler::executePn(int& position){
 		int startPos = position;
 		std::stack<LT::Element*> stack;
 		std::list<LT::Element> exitArr;
 
-		if (this->getElemLT(position)->getLex() == LEX_EQUALLY) startPos++;
+		if (this->getElemLt(position)->getLex() == LEX_EQUALLY) startPos++;
 
-		for (; this->getElemLT(position)->getLex() != LEX_SEMICOLON
-			&& this->getElemLT(position)->getLex() != LEX_CLOSE_PARENTHESIS
-			&& this->getElemLT(position)->getLex() != LEX_EQUALLY;
+		for (; this->getElemLt(position)->getLex() != LEX_SEMICOLON
+			&& this->getElemLt(position)->getLex() != LEX_CLOSE_PARENTHESIS
+			&& this->getElemLt(position)->getLex() != LEX_EQUALLY;
 			position++){
-			switch (this->getElemLT(position)->getLex()){
+			switch (this->getElemLt(position)->getLex()){
 			case LEX_ID: case LEX_LITERAL:
-				exitArr.push_back(*(this->getElemLT(position)));
+				exitArr.push_back(*(this->getElemLt(position)));
 				break;
 
 			case LEX_OPERATION:
 				if (stack.size() == NULL){
-					stack.push(this->getElemLT(position));
+					stack.push(this->getElemLt(position));
 				}
 				else{
 					while (stack.size() != NULL
-						&& (getPriority(this->getElemAT(this->getElemLT(position)->getIndex())->getOperation())
-						<= getPriority(this->getElemAT(stack.top()->getIndex())->getOperation()))){
+						&& (getPriority(this->getElemAt(this->getElemLt(position)->getIndex())->getOperation())
+						<= getPriority(this->getElemAt(stack.top()->getIndex())->getOperation()))){
 						exitArr.push_back(*(stack.top()));
 						stack.pop();
 					};
 					if (stack.size() == NULL
-						|| (getPriority(this->getElemAT(this->getElemLT(position)->getIndex())->getOperation())
-							> getPriority(this->getElemAT(stack.top()->getIndex())->getOperation()))){
-						stack.push(this->getElemLT(position));
+						|| (getPriority(this->getElemAt(this->getElemLt(position)->getIndex())->getOperation())
+							> getPriority(this->getElemAt(stack.top()->getIndex())->getOperation()))){
+						stack.push(this->getElemLt(position));
 					};
 				};
 				break;
 
 			case LEX_OPEN_SQBRACE:
-				if (!funcCreate(stack, exitArr, position))
-					return false;
+				if (this->getElemAt(this->getElemLt(position - 1)->getIndex())->getType() != AT::TYPE::F){
+					stack.push(this->getElemLt(position));
+				}
+				else{
+					if (!executeFuncPn(stack, exitArr, position)){
+						return false;
+					};
+				};
+				break;
+
+			case LEX_CLOSE_SQBRACE:
+				if (stack.size() != NULL){
+					while (stack.top()->getLex() != LEX_OPEN_SQBRACE){
+						exitArr.push_back(*(stack.top()));
+						stack.pop();
+					};
+					stack.pop();
+				}
+				else return false;
 				break;
 
 			case LEX_COMMA: break;
@@ -197,42 +217,38 @@ namespace CP{
 			stack.pop();
 		};
 		while (exitArr.size() != NULL){			// помещаем из строки в таблицы
-			this->getElemLT(startPos++)->setElem(exitArr.front());
+			this->getElemLt(startPos++)->setElem(exitArr.front());
 			exitArr.pop_front();
 		};
 		while (startPos < position){			// обнул€ем лишние элементы
-			this->getElemLT(startPos++)->setElem();
+			this->getElemLt(startPos++)->setElem();
 		};
 		return true;
 	};
 
 	void Compiler::polishNotation(){
 		this->writeLine("\n\n", "");
-		for (int i = 0; i < this->getLTsize(); i++){
-			if (this->getElemLT(i)->getLex() == LEX_ID
-				|| this->getElemLT(i)->getLex() == LEX_LITERAL
-				|| this->getElemLT(i)->getLex() == LEX_EQUALLY){
-					if (create(i)){
+		for (int i = 0; i < this->getLtSize(); i++){
+			if (this->getElemLt(i)->getLex() == LEX_ID
+				|| this->getElemLt(i)->getLex() == LEX_LITERAL
+				|| this->getElemLt(i)->getLex() == LEX_EQUALLY){
+					if (executePn(i)){
 						this->writeLine("ѕольска€ запись построена", "");
 					}
 					else{
 						this->writeLine("Ќе удалось построить польскую запись", "");
-// 						while (this->getElemLT(i)->getLex() != LEX_SEMICOLON
-// 							&& this->getElemLT(i)->getLex() != LEX_CLOSE_SQBRACE){
-// 								i++;
-// 						};
 					};
 			};
 		};
 	};
 
-	void Compiler::modifyAT(){
+	void Compiler::modifyAt(){
 		bool isModified;
-		for (int auxIt = 0; auxIt < this->getATsize(); auxIt++){
+		for (int auxIt = 0; auxIt < this->getAtSize(); auxIt++){
 			isModified = false;
-			for (int lexIt = 0; !isModified && lexIt < this->getLTsize(); lexIt++){
-				if (this->getElemLT(lexIt)->getIndex() == auxIt){
-					this->getElemAT(auxIt)->setIndex(lexIt);
+			for (int lexIt = 0; !isModified && lexIt < this->getLtSize(); lexIt++){
+				if (this->getElemLt(lexIt)->getIndex() == auxIt){
+					this->getElemAt(auxIt)->setIndex(lexIt);
 					isModified = true;
 				};
 			};
@@ -240,7 +256,6 @@ namespace CP{
 	};
 
 	Compiler::~Compiler(){
-		delete this->path_;
 		delete this->log_;
 		delete this->in_;
 		delete this->la_;

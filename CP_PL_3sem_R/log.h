@@ -32,7 +32,7 @@ namespace LOG{
 		void 			writeLine(char* c, ...);			// write a set of lines to a file
 		void 			writeLine(wchar_t* c, ...);			// write a set of lines to a file
 		void 			writeLog();							// write log info to a file
-		void 			writeCP(CP::Compiler* cp);			// write path's of input file to a file
+		void 			writeCp(CP::Compiler* cp);			// write path's of input file to a file
 		void 			writeIn(IN::In* in);				// write info about input data to a file
 		void 			writeError(ERROR::Error* error);	// write error to a file
 		void 			writeLt(LA::LexAnalyser* la);		// write lexeme table to a file

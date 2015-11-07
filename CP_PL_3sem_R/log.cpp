@@ -70,7 +70,7 @@ namespace LOG
 		*(this->getStream()) << "--- Протокол ---" << std::endl << "Дата:  " << buf << std::endl;
 	};
 
-	void Log::writeCP(CP::Compiler* cp){
+	void Log::writeCp(CP::Compiler* cp){
 		*(this->getStream()) << std::endl << "---Параметры---" << std::endl << "-log: ";
 		writeLine(cp->getLogName());
 		*(this->getStream()) << "-out: ";

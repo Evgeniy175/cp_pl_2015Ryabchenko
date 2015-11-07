@@ -1,11 +1,17 @@
 // by Evgeniy Ryabchenko
-// TODO:  
+// параметры/переменные
+// TODO: помен€й фст конструктор, enum дл€ условий, мб и дл€ действий
 
 #include "stdafx.h"
 #include "cp_pl_3sem_R.h"
 
 int _tmain(int argc, _TCHAR* argv[]){
 	setlocale(LC_ALL, "Rus");
+// 	char** path = new char*[3];
+// 	path[0] = "-in:D:\\\\in.txt";
+// 	path[1] = "-log:D:\\\\log.txt";
+// 	path[2] = "-out:D:\\\\out.txt";
+//	initialPath->initialExecute("-in:D:\\\\in.txt");
 
 	PATH::Path* initialPath = new PATH::Path();
 	initialPath->initialExecute(argc, argv);
@@ -14,18 +20,19 @@ int _tmain(int argc, _TCHAR* argv[]){
 
 	try{
 		compiler->writeLog();
-		compiler->writeCP();
+		compiler->writeCp();
 
 		compiler->executeIn();
-		compiler->executeLa();
 
 		compiler->writeIn();
+
+		compiler->executeLa();
+
 		compiler->writeLt();
 		compiler->writeAt();
-		compiler->getLog();
 
 		compiler->polishNotation();
-		compiler->modifyAT();
+		compiler->modifyAt();
 
 		compiler->writeLt();
 		compiler->writeAt();

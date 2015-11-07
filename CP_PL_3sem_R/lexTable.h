@@ -71,5 +71,5 @@ namespace LT{		// lexeme table
 		Element*			table_;								// lexeme table that consist elements
 	};
 
-	char getLex(int i);											// return lexeme
+	char getLex(int i);											// return lexeme by index
 };

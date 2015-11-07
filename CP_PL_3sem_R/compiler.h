@@ -26,18 +26,18 @@ namespace CP{
 		wchar_t*			getInName();
 		wchar_t*			getOutName();
 		wchar_t*			getLogName();
-		LA::LexAnalyser*	getLA();							// return LexAnalyser
+		LA::LexAnalyser*	getLa();							// return LexAnalyser
 		IN::In*				getIn();
 		LOG::Log*			getLog();
-		int					getLTsize();						// return lexTable size
-		LT::Element*		getElemLT(int i);					// return lexTable element(i)
-		int					getATsize();						// return auxTable size
-		AT::Element*		getElemAT(int i);					// return auxTable element(i)
+		int					getLtSize();						// return lexTable size
+		LT::Element*		getElemLt(int i);					// return lexTable element(i)
+		int					getAtSize();						// return auxTable size
+		AT::Element*		getElemAt(int i);					// return auxTable element(i)
 
 		void				writeLine(char* line, ...);			// write char* line
 		void				writeLine(wchar_t* line, ...);		// write wchar_t* line
 		void 				writeLog();							// write log
-		void 				writeCP();							// write compiler
+		void 				writeCp();							// write compiler
 		void 				writeIn();
 		void 				writeError(ERROR::Error* error);
 		void 				writeLt();							// write lexTable
@@ -49,18 +49,20 @@ namespace CP{
 		void				executeLa();
 
 		void				polishNotation();
-		bool				create(int& position);				// create Polish Notation
-		bool				funcCreate(							// create Polish Notation for functions
+		bool				executePn(int& position);			// create Polish Notation for
+		bool				executeFuncPn(						// create Polish Notation for functions
 								std::stack<LT::Element*>& stack,
 								std::list<LT::Element>& exitArr,
 								int& position);
 		int					getPriority(char symbol);			// get symbol priority
-		void				modifyAT();							// modify auxTable (ltIndex field) after Polish Notation
+		void				modifyAt();							// modify auxTable (ltIndex field) after Polish Notation
 
 		~Compiler();
 
 	private:
-		PATH::Path*			path_;								// field to store path of files
+		wchar_t				inPath_[PATH_MAX_NAMESIZE];			// path of a in file
+		wchar_t				outPath_[PATH_MAX_NAMESIZE];		// path of a out file
+		wchar_t				logPath_[PATH_MAX_NAMESIZE];		// path of a out file
 		LOG::Log*			log_;								// write log into file
 		IN::In*				in_;								// in for read a file
 		LA::LexAnalyser*	la_;								// lexAnalyser

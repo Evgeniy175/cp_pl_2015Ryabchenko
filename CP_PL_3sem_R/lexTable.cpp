@@ -97,7 +97,7 @@ namespace LT
 		case 7:		return LEX_CLOSE_BRACE;
 		case 8:		return LEX_OPEN_PARENTHESIS;
 		case 9:		return LEX_CLOSE_PARENTHESIS;
-		case 10:		return LEX_OPEN_SQBRACE;
+		case 10:	return LEX_OPEN_SQBRACE;
 		case 11:	return LEX_CLOSE_SQBRACE;
 		case 12:	return LEX_OPERATION;
 		case 13:	return LEX_CONDITION;
