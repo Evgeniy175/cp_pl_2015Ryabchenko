@@ -160,7 +160,6 @@ namespace CP{
 
 		for (; this->getElemLt(position)->getLex() != LEX_SEMICOLON
 			&& this->getElemLt(position)->getLex() != LEX_CLOSE_PARENTHESIS
-			&& this->getElemLt(position)->getLex() != LEX_EQUAL
 			&& this->getElemLt(position)->getLex() != LEX_COMPARE;
 			position++){
 			switch (this->getElemLt(position)->getLex()){
@@ -176,13 +175,13 @@ namespace CP{
 					while (stack.size() != NULL
 						&& (getPriority(this->getElemAt(this->getElemLt(position)->getIndex())->getOperation())
 						<= getPriority(this->getElemAt(stack.top()->getIndex())->getOperation()))){
-						exitArr.push_back(*(stack.top()));
-						stack.pop();
+							exitArr.push_back(*(stack.top()));
+							stack.pop();
 					};
 					if (stack.size() == NULL
 						|| (getPriority(this->getElemAt(this->getElemLt(position)->getIndex())->getOperation())
-							> getPriority(this->getElemAt(stack.top()->getIndex())->getOperation()))){
-						stack.push(this->getElemLt(position));
+						> getPriority(this->getElemAt(stack.top()->getIndex())->getOperation()))){
+							stack.push(this->getElemLt(position));
 					};
 				};
 				break;
@@ -190,7 +189,7 @@ namespace CP{
 			case LEX_OPEN_SQBRACE:
 				if (this->getElemAt(this->getElemLt(position - 1)->getIndex())->getType() != AT::TYPE::F
 					&& this->getElemAt(this->getElemLt(position - 1)->getIndex())->getDataType() != AT::DATATYPE::WASH){
-					stack.push(this->getElemLt(position));
+						stack.push(this->getElemLt(position));
 				}
 				else{
 					if (!executeFuncPn(stack, exitArr, position)){

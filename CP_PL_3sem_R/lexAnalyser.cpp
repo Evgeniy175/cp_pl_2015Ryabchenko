@@ -30,23 +30,13 @@ namespace LA{
 	};
 
 	bool LexAnalyser::isNewFunc(char* name){
-		std::vector<char*>::iterator firstIt;
-		std::vector<AT::DATATYPE>::iterator secondIt;
-		for (firstIt = this->getFuncNameList().begin(),
-			secondIt = this->getFuncTypeList().begin();
-			firstIt != this->getFuncNameList().end();
-			firstIt++, secondIt++){
-				if (!strcmp(*firstIt, name)) return false;
-		};
-		return true;
+		return this->getAT()->getInfo()->isNewFunction(name);
 	};
 
 	int LexAnalyser::getATidx(char* name, char* funcName){
 		int rc = this->getAT()->getIndex(name, funcName);
 
-		if (rc == AT_NULL_INDEX && !isNewFunc(name)){
-			rc = _getFuncIdx(name);
-		};
+		if (rc == AT_NULL_INDEX && !isNewFunc(name)) rc = _getFuncIdx(name);
 
 		return rc;
 	};
@@ -59,20 +49,21 @@ namespace LA{
 		return this->getLT()->getSize();
 	};
 
-	std::vector<char*>&	LexAnalyser::getNameList(){
-		return this->getAT()->getDataInfo()->getName();
+	char* LexAnalyser::getFuncName(AT::DATATYPE type){
+		return this->getAT()->getInfo()->getFuncName(type);
 	};
 
-	std::vector<char*>&	LexAnalyser::getFuncNameList(){
-		return this->getAT()->getDataInfo()->getFuncName();
+	AT::DATATYPE LexAnalyser::getType(char* line){
+		return this->getAT()->getInfo()->getType(line);
 	};
 
-	std::vector<AT::DATATYPE>& LexAnalyser::getTypeList(){
-		return this->getAT()->getDataInfo()->getType();
+	AT::DATATYPE LexAnalyser::getFuncType(char* line){
+		return this->getAT()->getInfo()->getFuncType(line);
 	};
 
-	std::vector<AT::DATATYPE>& LexAnalyser::getFuncTypeList(){
-		return this->getAT()->getDataInfo()->getFuncType();
+	void LexAnalyser::pushToFuncList(char* line, AT::DATATYPE type){
+		this->getAT()->getInfo()->pushFuncName(line);
+		this->getAT()->getInfo()->pushFuncType(type);
 	};
 
 	void LexAnalyser::addElemLT(LT::Element& elem){
@@ -98,12 +89,8 @@ namespace LA{
 				if (this->getElemLT(this->getLTsize() - 2)->getLex() == LEX_TYPE){
 					return AT::TYPE::V;
 				}
-				else{
-					for (firstIt = this->getFuncNameList().begin();
-						firstIt != this->getFuncNameList().end();
-						firstIt++){
-							if (!strcmp(*firstIt, line)) return AT::TYPE::F;
-					};
+				else if (this->getAT()->getInfo()->getFuncType(line) != AT::DATATYPE::UNKNOWN){
+					return AT::TYPE::F;
 				};
 				break;
 			};
@@ -123,17 +110,11 @@ namespace LA{
 	};
 
 	char* LexAnalyser::getDataName(AT::DATATYPE dataType){
-		char* rc = "unknown";
-		std::vector<char*>::iterator firstIt;
-		std::vector<AT::DATATYPE>::iterator secondIt;
+		return this->getAT()->getInfo()->getName(dataType);
+	};
 
-		for (firstIt = this->getNameList().begin(),
-			secondIt = this->getTypeList().begin();
-			secondIt != this->getTypeList().end();
-			firstIt++, secondIt++){
-				if (*secondIt == dataType) return *firstIt;
-		};
-		return rc;
+	char* LexAnalyser::getTypeName(AT::TYPE type){
+		return this->getAT()->getInfo()->getTypeName(type);
 	};
 
 	AT::DATATYPE LexAnalyser::getDataType(char** arrOfLines, int i){
@@ -151,22 +132,10 @@ namespace LA{
 			return arrOfLines[i][0] == 'С' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
 			break;
 
-		case LEX_TYPE:
-			for (firstIt = this->getNameList().begin(),
-				secondIt = this->getTypeList().begin();
-				firstIt != this->getNameList().end();
-				firstIt++, secondIt++){
-					if (!strcmp(*firstIt, arrOfLines[i - 1])) return *secondIt;
-			};
-			break;
+		case LEX_TYPE: return this->getType(arrOfLines[i - 1]);
 
 		default:
-			for (firstIt = this->getFuncNameList().begin(),
-				secondIt = this->getFuncTypeList().begin();
-				firstIt != this->getFuncNameList().end();
-				firstIt++, secondIt++){
-					if (!strcmp(*firstIt, arrOfLines[i])) return *secondIt;
-			};
+			return this->getFuncType(arrOfLines[i]);
 			break;
 		};
 		return rc;
@@ -197,7 +166,7 @@ namespace LA{
 				fst[i].setString(in->getLine(chainNumber));
 
 				if (isCorrect = fst[i].execute()){
-					//log->writeLine("  ÷епочка ", in->getLine(chainNumber), "\t\tраспознана", "");
+					log->writeLine("  ÷епочка ", in->getLine(chainNumber), "\t\tраспознана", "");
 					elemLt.setElem(i, lineNumber);
 					this->addElemLT(elemLt);
 
@@ -213,8 +182,7 @@ namespace LA{
 						if (this->getElemType(in->getLine(chainNumber)) == AT::TYPE::F
 							&& this->isNewFunc(in->getLine(chainNumber))){
 								strncpy_s(funcName, in->getLine(chainNumber), strlen(in->getLine(chainNumber)));
-								this->getFuncNameList().push_back(in->getLine(chainNumber));
-								this->getFuncTypeList().push_back(this->getDataType(in->getArr(), chainNumber));
+								this->pushToFuncList(in->getLine(chainNumber), this->getDataType(in->getArr(), chainNumber));
 						}
 						if (!this->isIncludedInAT(in->getLine(chainNumber), funcName)){		// isincludedfunc?
 							elemAt.setElem(this, funcName, in->getArr(), chainNumber);

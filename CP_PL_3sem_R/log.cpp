@@ -153,19 +153,8 @@ namespace LOG
 				<< std::setw(AT_NAME_MAXSIZE) << std::left << la->getElemAT(i)->getName()
 				<< "\t\t" << std::setw(AT_NAME_MAXSIZE) << std::left
 				<< la->getElemAT(i)->getFuncName() << "\t\t"
-				<< la->getDataName(la->getElemAT(i)->getDataType()) << "\t\t";
-
-			switch (la->getElemAT(i)->getType())
-			{
-			case AT::TYPE::F: *(this->getStream()) << "function";	break;
-			case AT::TYPE::L: *(this->getStream()) << "literal ";	break;
-			case AT::TYPE::O: *(this->getStream()) << "operation";	break;
-			case AT::TYPE::P: *(this->getStream()) << "parameter";	break;
-			case AT::TYPE::V: *(this->getStream()) << "variable";	break;
-			case AT::TYPE::C: *(this->getStream()) << "compare ";	break;
-			case AT::TYPE::U: *(this->getStream()) << "unknown ";	break;
-			default: break;
-			};
+				<< la->getDataName(la->getElemAT(i)->getDataType()) << "\t\t"
+				<< la->getTypeName(la->getElemAT(i)->getType());
 
 			*(this->getStream()) << '\t' << la->getElemAT(i)->getIndex() << "\t\t";
 
