@@ -60,7 +60,7 @@
 	/* 1 */ new NODE(1, new RELATION('=', 2)), \
 	/* 2 */ new NODE()
 
-#define GRAPH_EQUALLY 1, \
+#define GRAPH_EQUAL 1, \
 	/* 0 */ new NODE(1, new RELATION('=', 1)), \
 	/* 1 */ new NODE()
 

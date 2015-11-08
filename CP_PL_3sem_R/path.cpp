@@ -23,7 +23,7 @@ namespace PATH{
 		wcscpy(dest, temp);
 	};
 
-	void Path::initialExecute(int linesNumber, char** lines){
+	void Path::initialExecute(int linesNumber, char* lines[]){
 		wchar_t tempPath[PATH_MAX_NAMESIZE];
 		if (linesNumber < 1){
 			throw ERROR_THROW(100);

@@ -46,10 +46,6 @@ namespace AT{
 		return this->ltIndex_;
 	};
 
-	int Element::getNumVal(){
-		return this->value_.numValue_;
-	};
-
 	char* Element::getName(){
 		return this->name_;
 	};
@@ -58,12 +54,20 @@ namespace AT{
 		return this->funcName_;
 	};
 
+	int Element::getNumVal(){
+		return this->value_.numValue_;
+	};
+
 	char* Element::getLineVal(){
 		return this->value_.lineValue_;
 	};
 
+	char* Element::getOtherVal(){
+		return this->value_.otherValue_;
+	};
+
 	char Element::getOperation(){
-		return this->value_.operation_;
+		return this->value_.otherValue_[0];
 	};
 
 	TYPE Element::getType(){
@@ -98,8 +102,8 @@ namespace AT{
 			memset(this->value_.lineValue_, AT_ARR_MAXSIZE, 'M');
 	};
 
-	void Element::setOperation(char operation){
-		this->value_.operation_ = operation;
+	void Element::setOtherVal(char* value){
+		strcpy_s(this->value_.otherValue_, value);
 	};
 
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
@@ -110,24 +114,29 @@ namespace AT{
 		this->type_ = la->getElemType(arrOfLines[i]);
 		this->setFuncName(funcName);
 
-		if (lexeme == LEX_LITERAL) {
+		if (lexeme == LEX_LITERAL){
 			_itoa_s(counter++, this->name_, 10);
-			addPrefix(this->name_, AT_LITERAL_PREFIX);
+			addPrefix(this->name_, AT_PREFIX_LITERAL);
 			setValue(lexeme, arrOfLines[i]);
 		}
-		else if (lexeme == LEX_ID) {
+		else if (lexeme == LEX_IDENTIFIER){
 			this->setName(arrOfLines[i]);
 			setValue(lexeme);
 		}
 		else if (lexeme == LEX_OPERATION){
 			_itoa_s(counter++, this->name_, 10);
-			addPrefix(this->name_, AT_OPERATION_PREFIX);
+			addPrefix(this->name_, AT_PREFIX_OPERATION);
+			setValue(lexeme, arrOfLines[i]);
+		}
+		else if (lexeme == LEX_COMPARE){
+			_itoa_s(counter++, this->name_, 10);
+			addPrefix(this->name_, AT_PREFIX_COMPARE);
 			setValue(lexeme, arrOfLines[i]);
 		};
 	};
 
   	void Element::setValue(char lexeme, char* line){
-  		if (lexeme == LEX_LITERAL) {
+  		if (lexeme == LEX_LITERAL){
   			if (this->dataType_ == AT::DATATYPE::NUM){
   				this->setNumVal(std::atoi(line));
   			}
@@ -136,17 +145,20 @@ namespace AT{
   				this->setLineVal(line);
   			};
   		}
-  		else if (lexeme == LEX_ID){
+  		else if (lexeme == LEX_IDENTIFIER){
   			if (this->dataType_ == AT::DATATYPE::NUM){
   				this->setNumVal(AT_NUM_DEFAULT);
   			}
-  			else if (this->dataType_ == AT::DATATYPE::LINE) {
+  			else if (this->dataType_ == AT::DATATYPE::LINE){
   				this->setLineVal(AT_LINE_DEFAULT);
   			};
   		}
   		else if (lexeme == LEX_OPERATION){
-  			this->setOperation(line[0]);
-  		};
+  			this->setOtherVal(line);
+  		}
+		else if (lexeme == LEX_COMPARE){
+			this->setOtherVal(line);
+		};
   	};
 
 	void Element::reset(){
@@ -156,7 +168,7 @@ namespace AT{
 		this->ltIndex_ = AT_NULL_INDEX;
 		this->setNumVal(AT_NUM_DEFAULT);
 		this->setLineVal(AT_LINE_DEFAULT);
-		this->setOperation(AT_NULL_OPERATION);
+		this->setOtherVal(AT_NULL_OTHER_VALUE);
 	};
 
 	Table::Table(){
@@ -194,7 +206,7 @@ namespace AT{
 
 	bool Table::isIncluded(char* name, char* funcName){
 		if (this->size_ == NULL) return false;
-		else {
+		else{
 			for (int i = 0; i < size_; i++){
 				if ((!strcmp(this->table_[i].getName(), name)
 					&& !strcmp(this->table_[i].getFuncName(), funcName))
@@ -210,7 +222,7 @@ namespace AT{
 		int rc = -1;
 		int i;
 		if (this->size_ == NULL)	return rc;
-		else {
+		else{
 			for (i = 0; i < this->size_; i++){
 				if (!strcmp(this->table_[i].getName(), name)
 					&& !strcmp(this->table_[i].getFuncName(), funcName)){

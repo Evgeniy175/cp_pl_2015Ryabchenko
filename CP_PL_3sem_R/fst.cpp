@@ -71,7 +71,7 @@ namespace FST{
 			case 2:		this[i] = *(new FST(NULL_STR, GRAPH_SEMICOLON));			break;
 			case 3:		this[i] = *(new FST(NULL_STR, GRAPH_COMMA));				break;
 			case 4:		this[i] = *(new FST(NULL_STR, GRAPH_COMPARE));				break;
-			case 5:		this[i] = *(new FST(NULL_STR, GRAPH_EQUALLY));				break;
+			case 5:		this[i] = *(new FST(NULL_STR, GRAPH_EQUAL));				break;
 			case 6:		this[i] = *(new FST(NULL_STR, GRAPH_OPEN_BRACE));			break;
 			case 7:		this[i] = *(new FST(NULL_STR, GRAPH_CLOSE_BRACE));			break;
 			case 8:		this[i] = *(new FST(NULL_STR, GRAPH_OPEN_PARENTHESIS));		break;

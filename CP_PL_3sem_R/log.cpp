@@ -142,18 +142,32 @@ namespace LOG
 		*(this->getStream()) << std::endl << std::endl << "---Auxiliary table start---"
 			<< std::endl << "Size: "
 			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
-			<< std::setw(AT_NAME_MAXSIZE) << "NAME\t\t" << "FUNC_NAME\t\t" << "DATA_TYPE\t" 
-			<< "TYPE\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
+			<< std::setw(AT_NAME_MAXSIZE) << std::left << "NAME\t\t"
+			<< std::setw(AT_NAME_MAXSIZE) << std::left << "FUNC_NAME\t\t\t"
+			<< "DATA_TYPE\t" << "TYPE\t\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
 
 		for (int i = 0; i < la->getAT()->getSize(); i++){
 			lexeme = la->getElemLT(la->getElemAT(i)->getIndex())->getLex();
 
 			*(this->getStream()) << i << '\t'
-				<< std::setw(AT_NAME_MAXSIZE) << la->getElemAT(i)->getName()
-				<< "\t\t" << std::setw(AT_NAME_MAXSIZE) << la->getElemAT(i)->getFuncName()
-				<< "\t\t" << la->getDataName(la->getElemAT(i)->getDataType())
-				<< "\t\t" << la->getElemAT(i)->getType()
-				<< '\t' << la->getElemAT(i)->getIndex() << "\t\t";
+				<< std::setw(AT_NAME_MAXSIZE) << std::left << la->getElemAT(i)->getName()
+				<< "\t\t" << std::setw(AT_NAME_MAXSIZE) << std::left
+				<< la->getElemAT(i)->getFuncName() << "\t\t"
+				<< la->getDataName(la->getElemAT(i)->getDataType()) << "\t\t";
+
+			switch (la->getElemAT(i)->getType())
+			{
+			case AT::TYPE::F: *(this->getStream()) << "function";	break;
+			case AT::TYPE::L: *(this->getStream()) << "literal ";	break;
+			case AT::TYPE::O: *(this->getStream()) << "operation";	break;
+			case AT::TYPE::P: *(this->getStream()) << "parameter";	break;
+			case AT::TYPE::V: *(this->getStream()) << "variable";	break;
+			case AT::TYPE::C: *(this->getStream()) << "compare ";	break;
+			case AT::TYPE::U: *(this->getStream()) << "unknown ";	break;
+			default: break;
+			};
+
+			*(this->getStream()) << '\t' << la->getElemAT(i)->getIndex() << "\t\t";
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
 				if (la->getElemAT(i)->getDataType() == AT::DATATYPE::NUM)
@@ -162,8 +176,8 @@ namespace LOG
 				else if (la->getElemAT(i)->getDataType() == AT::DATATYPE::LINE)
 					*(this->getStream()) << la->getElemAT(i)->getLineVal();
  			}
-			else if (lexeme == LEX_OPERATION){
-				*(this->getStream()) << la->getElemAT(i)->getOperation();
+			else if (lexeme == LEX_OPERATION || lexeme == LEX_COMPARE){
+				*(this->getStream()) << la->getElemAT(i)->getOtherVal();
 			}
  			else
 				*(this->getStream()) << "none";

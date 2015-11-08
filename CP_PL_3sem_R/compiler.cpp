@@ -128,7 +128,7 @@ namespace CP{
 
 		while (this->getElemLt(position)->getLex() != LEX_CLOSE_SQBRACE){
 			switch (this->getElemLt(position)->getLex()){
-			case LEX_ID: case LEX_LITERAL:
+			case LEX_IDENTIFIER: case LEX_LITERAL:
 				exitArr.push_back(*(this->getElemLt(position)));
 				parmCounter++;
 				break;
@@ -156,14 +156,15 @@ namespace CP{
 		std::stack<LT::Element*> stack;
 		std::list<LT::Element> exitArr;
 
-		if (this->getElemLt(position)->getLex() == LEX_EQUALLY) startPos++;
+		if (this->getElemLt(position)->getLex() == LEX_EQUAL) startPos++;
 
 		for (; this->getElemLt(position)->getLex() != LEX_SEMICOLON
 			&& this->getElemLt(position)->getLex() != LEX_CLOSE_PARENTHESIS
-			&& this->getElemLt(position)->getLex() != LEX_EQUALLY;
+			&& this->getElemLt(position)->getLex() != LEX_EQUAL
+			&& this->getElemLt(position)->getLex() != LEX_COMPARE;
 			position++){
 			switch (this->getElemLt(position)->getLex()){
-			case LEX_ID: case LEX_LITERAL:
+			case LEX_IDENTIFIER: case LEX_LITERAL:
 				exitArr.push_back(*(this->getElemLt(position)));
 				break;
 
@@ -187,7 +188,8 @@ namespace CP{
 				break;
 
 			case LEX_OPEN_SQBRACE:
-				if (this->getElemAt(this->getElemLt(position - 1)->getIndex())->getType() != AT::TYPE::F){
+				if (this->getElemAt(this->getElemLt(position - 1)->getIndex())->getType() != AT::TYPE::F
+					&& this->getElemAt(this->getElemLt(position - 1)->getIndex())->getDataType() != AT::DATATYPE::WASH){
 					stack.push(this->getElemLt(position));
 				}
 				else{
@@ -229,9 +231,9 @@ namespace CP{
 	void Compiler::polishNotation(){
 		this->writeLine("\n\n", "");
 		for (int i = 0; i < this->getLtSize(); i++){
-			if (this->getElemLt(i)->getLex() == LEX_ID
+			if (this->getElemLt(i)->getLex() == LEX_IDENTIFIER
 				|| this->getElemLt(i)->getLex() == LEX_LITERAL
-				|| this->getElemLt(i)->getLex() == LEX_EQUALLY){
+				|| this->getElemLt(i)->getLex() == LEX_EQUAL){
 					if (executePn(i)){
 						this->writeLine("Польская запись построена", "");
 					}

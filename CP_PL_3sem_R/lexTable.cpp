@@ -92,7 +92,7 @@ namespace LT
 		case 2:		return LEX_SEMICOLON;
 		case 3:		return LEX_COMMA;
 		case 4:		return LEX_COMPARE;
-		case 5:		return LEX_EQUALLY;
+		case 5:		return LEX_EQUAL;
 		case 6:		return LEX_OPEN_BRACE;
 		case 7:		return LEX_CLOSE_BRACE;
 		case 8:		return LEX_OPEN_PARENTHESIS;
@@ -104,7 +104,7 @@ namespace LT
 		case 14:	return LEX_FUNCTION;
 		case 15:	return LEX_RETURN;
 		case 16:	return LEX_BEGIN;
-		case 17:	return LEX_ID;
+		case 17:	return LEX_IDENTIFIER;
 		case 18:	return LEX_LITERAL;
 		case 19:	return LEX_LITERAL;
 		default:	break;

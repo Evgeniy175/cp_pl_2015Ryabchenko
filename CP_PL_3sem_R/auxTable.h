@@ -10,9 +10,10 @@
 #define AT_NUM_DEFAULT		0xffffffff			// default value for num
 #define AT_LINE_DEFAULT		0x00				// default value for line
 #define AT_NULL_INDEX		0xffffffff			// default value for index
-#define AT_NULL_OPERATION	'M'					// default value for operation
-#define AT_LITERAL_PREFIX	"L"					// literal prefix
-#define AT_OPERATION_PREFIX	"O"					// operation prefix
+#define AT_NULL_OTHER_VALUE	"M"					// default value for operation
+#define AT_PREFIX_LITERAL	"L"					// prefix of literal
+#define AT_PREFIX_OPERATION	"O"					// prefix of operation
+#define AT_PREFIX_COMPARE	"C"					// prefix of compare
 
 #define AT_STL_FUNCSIZE	12
 #define AT_STL_FUNCTIONS {	"print",	"start",\
@@ -30,29 +31,31 @@ namespace LA { class LexAnalyser; };
 
 namespace AT{			// auxiliary table namespace
 	enum TYPE{
-		U = 0,				// unknown
-		V = 1,				// variable
-		P = 2,				// parameter
-		L = 3,				// literal
-		F = 4,				// function
-		O = 5				// operation
+		U,					// unknown
+		V,					// variable
+		P,					// parameter
+		L,					// literal
+		F,					// function
+		O,					// operation
+		C					// compare
 	};
 
 	enum DATATYPE{
-		UNKNOWN = 0,		// unknown
-		NUM  = 1,			// integer
-		LINE = 2,			// string
-		WASH = 3,			// wash
-		BOOL = 4,			// bool
-		NIL  = 5			// like a void in C++
+		UNKNOWN,			// unknown
+		NUM,				// integer
+		LINE,				// string
+		WASH,				// wash
+		BOOL,				// bool
+		NIL					// like a void in C++
 	};
 
 	enum COMPARE{
-		EQUAL_OR_GREATER = 0,
-		EQUAL_OR_LESS = 1,
-		NOT_EQUAL = 2,
-		LESS_SIGN = 3,
-		GREATER_SIGN = 4
+		EQUAL,				// == equal
+		EQUAL_OR_GREATER,	// >= equal or greater than
+		EQUAL_OR_LESS,		// <= equal or less than
+		NOT_EQUAL,			// != not equal
+		LESS,				// <  less than
+		GREATER				// >  greater than
 	};
 
 	class DataInfo{		// types of data
@@ -76,23 +79,24 @@ namespace AT{			// auxiliary table namespace
 		Element();
 		
 		int			getIndex();									// return lexTable index
-		int			getNumVal();								// return num value of the element
 		char*		getName();									// return element name
 		char*		getFuncName();								// return function name
-		char*		getLineVal();								// return line number
-		char		getOperation();								// return element operation
+		int			getNumVal();								// return element num value
+		char*		getLineVal();								// return element line value
+		char*		getOtherVal();								// return element other value
+		char		getOperation();								// return element operation value
 		TYPE		getType();									// return element type
 		DATATYPE	getDataType();								// return element data type
 
 		void		setIndex(int value);						// set lexTable index
 		void		setName(char* name);						// set element name
 		void		setFuncName(char* name);					// set element function name
-		void		setOperation(char operation);				// set element operation
 		void		setValue(									// set element value
 						char lexeme,
 						char* line = NULL_STR);
 		void		setNumVal(int value);						// set num element value
 		void		setLineVal(char* value);					// set line element value
+		void		setOtherVal(char* value);					// set element other value
 		void		setElem(									// set element
 						LA::LexAnalyser*	la,						// lexTable
 						char*				funcName,				// function name
@@ -112,7 +116,7 @@ namespace AT{			// auxiliary table namespace
 		struct{
 			int		numValue_;										// field for numerical values
 			char	lineValue_[AT_ARR_MAXSIZE];						// field for line values
-			char	operation_;										// field for operation arithmetic elements
+			char	otherValue_[AT_ARR_MAXSIZE];					// field for other values
 		} value_;												// element value
 	};
 

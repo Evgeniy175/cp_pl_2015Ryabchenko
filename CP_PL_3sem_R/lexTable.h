@@ -21,11 +21,11 @@
 #define LEX_OPEN_SQBRACE		'['			// lexeme for [
 #define LEX_CLOSE_SQBRACE		']'			// lexeme for ]
 #define LEX_COMPARE				'#'			// lexeme for compare (==, !=, <=, >=)
-#define LEX_EQUALLY				'='			// lexeme for =
+#define LEX_EQUAL				'='			// lexeme for =
 #define LEX_OPERATION			'v'			// lexeme for operations
 #define LEX_NEW_LINE			'@'			// lexeme for @ (new line)
 #define LEX_CONDITION			'c'			// lexeme for conditions
-#define LEX_ID					'i'			// lexeme for identificator
+#define LEX_IDENTIFIER			'i'			// lexeme for identificator
 #define LEX_LITERAL				'l'			// lexeme for literal
 
 namespace AT{ enum TYPE; enum DATATYPE; class Table; };

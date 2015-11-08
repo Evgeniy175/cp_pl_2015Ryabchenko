@@ -1,6 +1,6 @@
 // by Evgeniy Ryabchenko
 // параметры/переменные
-// TODO: enum дл€ условий, мб и дл€ действий
+// TODO: enum дл€ условий, мб и дл€ действий ; параметры фции помен€й
 
 #include "stdafx.h"
 #include "cp_pl_3sem_R.h"
@@ -11,7 +11,10 @@ int _tmain(int argc, _TCHAR* argv[]){
 // 	path[0] = "-in:D:\\\\in.txt";
 // 	path[1] = "-log:D:\\\\log.txt";
 // 	path[2] = "-out:D:\\\\out.txt";
+
 //	initialPath->initialExecute("-in:D:\\\\in.txt");
+
+//	initialPath->initialExecute(L"-in:D:\\\\in.txt");
 
 	PATH::Path* initialPath = new PATH::Path();
 	initialPath->initialExecute(argc, argv);

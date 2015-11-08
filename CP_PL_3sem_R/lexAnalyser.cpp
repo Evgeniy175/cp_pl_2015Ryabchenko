@@ -83,26 +83,33 @@ namespace LA{
 		AT::TYPE rc = AT::TYPE::U;
 		std::vector<char*>::iterator firstIt;
 
-		if (this->getElemLT(this->getLTsize() - 3)->getLex() == LEX_FUNCTION){
-			return AT::TYPE::F;
-		}
-		else if (this->getElemLT(this->getLTsize() - 1)->getLex() == LEX_OPERATION){
-			return AT::TYPE::O;
-		}
-		else{
-			switch (this->getElemLT(this->getLTsize() - 2)->getLex())
-			{
-			case LEX_COMMA: case LEX_OPEN_SQBRACE:										return AT::TYPE::P;
-			case LEX_TYPE:																return AT::TYPE::V;
-			case LEX_COMPARE: case LEX_RETURN: case LEX_EQUALLY: case LEX_OPERATION:	return AT::TYPE::L;
+		switch (this->getElemLT(this->getLTsize() - 1)->getLex())
+		{
+		case LEX_LITERAL:	return AT::TYPE::L;
+		case LEX_OPERATION: return AT::TYPE::O;
+		case LEX_COMPARE:	return AT::TYPE::C;
+
+		case LEX_IDENTIFIER:
+			switch (this->getElemLT(this->getLTsize() - 3)->getLex()){
+			case LEX_FUNCTION:						return AT::TYPE::F;
+			case LEX_OPEN_SQBRACE: case LEX_COMMA:	return AT::TYPE::P;
+
 			default:
-				for (firstIt = this->getFuncNameList().begin();
-					firstIt != this->getFuncNameList().end();
-					firstIt++){
-						if (!strcmp(*firstIt, line)) return AT::TYPE::F;
+				if (this->getElemLT(this->getLTsize() - 2)->getLex() == LEX_TYPE){
+					return AT::TYPE::V;
+				}
+				else{
+					for (firstIt = this->getFuncNameList().begin();
+						firstIt != this->getFuncNameList().end();
+						firstIt++){
+							if (!strcmp(*firstIt, line)) return AT::TYPE::F;
+					};
 				};
 				break;
 			};
+			break;
+
+		default: break;
 		};
 		return rc;
 	};
@@ -134,8 +141,13 @@ namespace LA{
 		std::vector<char*>::iterator firstIt;
 		std::vector<AT::DATATYPE>::iterator secondIt;
 
+		if (this->getElemLT(this->getLTsize() - 1)->getLex() == LEX_OPERATION
+			|| this->getElemLT(this->getLTsize() - 1)->getLex() == LEX_COMPARE){
+			return AT::DATATYPE::UNKNOWN;
+		};
+
 		switch (this->getElemLT(this->getLTsize() - 2)->getLex()){
-		case LEX_COMPARE: case LEX_OPERATION: case LEX_EQUALLY: case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:				// для литералов
+		case LEX_COMPARE: case LEX_OPERATION: case LEX_EQUAL: case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:				// для литералов
 			return arrOfLines[i][0] == '‘' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
 			break;
 
@@ -170,6 +182,7 @@ namespace LA{
 		int  lineNumber = 0;							// number of lines in input file
 		int	 literalCounter = 0;
 		int  operationCounter = 0;
+		int  compareCounter = 0;
 		char funcName[AT_NAME_MAXSIZE + 1];				// function name
 
 		fst->createFst();
@@ -196,7 +209,7 @@ namespace LA{
 
 					case LEX_NEW_LINE:	lineNumber++; break;
 
-					case LEX_ID:
+					case LEX_IDENTIFIER:
 						if (this->getElemType(in->getLine(chainNumber)) == AT::TYPE::F
 							&& this->isNewFunc(in->getLine(chainNumber))){
 								strncpy_s(funcName, in->getLine(chainNumber), strlen(in->getLine(chainNumber)));
@@ -219,9 +232,16 @@ namespace LA{
 						break;
 
 					case LEX_OPERATION:
-						elemAt.setElem(this, funcName, in->getArr(), chainNumber, operationCounter);
+						elemAt.setElem(this, funcName, in->getArr(), chainNumber, operationCounter++);
 						this->addElemAT(elemAt);
 						this->getElemLT(chainNumber)->setIndex(this->getATsize() - 1);
+						break;
+
+					case LEX_COMPARE:
+						elemAt.setElem(this, funcName, in->getArr(), chainNumber, compareCounter++);
+						this->addElemAT(elemAt);
+						this->getElemLT(chainNumber)->setIndex(this->getATsize() - 1);
+						break;
 
 					default: break;
 					};
