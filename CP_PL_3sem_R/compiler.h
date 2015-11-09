@@ -22,6 +22,8 @@ namespace CP{
 	class Compiler{
 	public:
 		Compiler(PATH::Path* filesPath);
+		Compiler(wchar_t* in);
+		Compiler(char* in);
 
 		wchar_t*			getInName();
 		wchar_t*			getOutName();
@@ -36,7 +38,6 @@ namespace CP{
 
 		void				writeLine(char* line, ...);			// write char* line
 		void				writeLine(wchar_t* line, ...);		// write wchar_t* line
-		void 				writeLog();							// write log
 		void 				writeCp();							// write compiler
 		void 				writeIn();
 		void 				writeError(ERROR::Error* error);
@@ -60,6 +61,8 @@ namespace CP{
 		~Compiler();
 
 	private:
+		void				reset();
+
 		wchar_t				inPath_[PATH_MAX_NAMESIZE];			// path of a in file
 		wchar_t				outPath_[PATH_MAX_NAMESIZE];		// path of a out file
 		wchar_t				logPath_[PATH_MAX_NAMESIZE];		// path of a out file

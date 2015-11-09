@@ -3,12 +3,33 @@
 
 namespace CP{
 	Compiler::Compiler(PATH::Path* filesPath){
+		this->reset();
 		wcscpy_s(this->inPath_, filesPath->getIn());
 		wcscpy_s(this->outPath_, filesPath->getOut());
 		wcscpy_s(this->logPath_, filesPath->getLog());
 		this->log_ = new LOG::Log(this->logPath_);
 		this->in_ = new IN::In();
 		this->la_ = new LA::LexAnalyser();
+	};
+
+	Compiler::Compiler(wchar_t* in){
+		this->reset();
+		wcscpy_s(this->inPath_, in);
+		wcscpy_s(this->logPath_, this->inPath_);
+		wcscat_s(this->logPath_, PATH_LOG_POSTFIX);
+		wcscpy_s(this->outPath_, this->inPath_);
+		wcscat_s(this->outPath_, PATH_OUT_POSTFIX);
+	};
+
+	Compiler::Compiler(char* in){
+		this->reset();
+		wchar_t temp[PATH_MAX_NAMESIZE];
+		mbstowcs(temp, in, static_cast<int> (wcslen(temp)) - 1);
+		wcscpy_s(this->inPath_, temp);
+		wcscpy_s(this->logPath_, this->inPath_);
+		wcscat_s(this->logPath_, PATH_LOG_POSTFIX);
+		wcscpy_s(this->outPath_, this->inPath_);
+		wcscat_s(this->outPath_, PATH_OUT_POSTFIX);
 	};
 
 	void Compiler::executeIn(){
@@ -32,19 +53,19 @@ namespace CP{
 	};
 	
 	LT::Element* Compiler::getElemLt(int i){
-		return this->getLa()->getLT()->getElem(i);
+		return this->getLa()->getElemLt(i);
 	};
 
 	AT::Element* Compiler::getElemAt(int i){
-		return this->getLa()->getAT()->getElem(i);
+		return this->getLa()->getElemAt(i);
 	};
 	
 	int Compiler::getLtSize(){
-		return this->getLa()->getLT()->getSize();
+		return this->getLa()->getLtSize();
 	};
 
 	int Compiler::getAtSize(){
-		return this->getLa()->getAT()->getSize();
+		return this->getLa()->getAtSize();
 	};
 
 	LA::LexAnalyser* Compiler::getLa(){
@@ -89,10 +110,6 @@ namespace CP{
 			this->log_->line(p);
 		};
 		this->log_->writeLine("\n");
-	};
-
-	void Compiler::writeLog(){
-		this->log_->writeLog();
 	};
 
 	void Compiler::writeCp(){
@@ -253,6 +270,21 @@ namespace CP{
 					isModified = true;
 				};
 			};
+		};
+	};
+
+	void Compiler::reset(){
+		if (this->log_ != NULL){
+			delete this->log_;
+			this->log_ = nullptr;
+		};
+		if (this->in_ != NULL){
+			delete this->in_;
+			this->in_ = nullptr;
+		};
+		if (this->la_ != NULL){
+			delete this->la_;
+			this->la_ = nullptr;
 		};
 	};
 

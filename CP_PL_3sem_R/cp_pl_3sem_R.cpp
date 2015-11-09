@@ -1,7 +1,9 @@
 // by Evgeniy Ryabchenko
 // параметры/переменные
-// TODO: enum дл€ условий, мб и дл€ действий ; параметры фции помен€й
-
+// TODO: enum дл€ условий, мб и дл€ действий (делать отдельное поле или нет, т.к. сейчас хранитс€ char*) ; объ€вление функций(прототипы, количество параметров)
+// reset compiler
+// add begin to auxt
+//
 #include "stdafx.h"
 #include "cp_pl_3sem_R.h"
 
@@ -22,7 +24,6 @@ int _tmain(int argc, _TCHAR* argv[]){
 	CP::Compiler* compiler = new CP::Compiler(initialPath);
 
 	try{
-		compiler->writeLog();
 		compiler->writeCp();
 
 		compiler->executeIn();
@@ -44,5 +45,6 @@ int _tmain(int argc, _TCHAR* argv[]){
 	catch (ERROR::Error* err){
 		compiler->writeError(err);
 	};
+	delete compiler;
 	return 0;
 };

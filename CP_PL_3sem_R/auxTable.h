@@ -20,8 +20,8 @@
 									"get_type", "get_load",	"get_temp", "get_time", "get_rpm",\
 									"set_type", "set_load", "set_temp", "set_time", "set_rpm"}
 #define AT_STL_FUNCTIONS_TYPES	{	AT::DATATYPE::NIL,	AT::DATATYPE::BOOL,\
-									AT::DATATYPE::LINE, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, \
-									AT::DATATYPE::NIL,	AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL}
+	AT::DATATYPE::LINE, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, \
+	AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL}
 
 #define AT_PRIMITIVE_TYPES_SIZE	5
 #define AT_PRIMITIVE_TYPES_NAMES { "num", "line", "wash", "bool", "nil" }
@@ -31,11 +31,25 @@
 #define AT_ELEMENT_TYPES_NAMES { "unknown ", "variable", "parameter", "literal ", "function", "operation", "compare " }
 #define AT_ELEMENT_TYPES { AT::TYPE::U, AT::TYPE::V, AT::TYPE::P, AT::TYPE::L, AT::TYPE::F, AT::TYPE::O, AT::TYPE::C }
 
+#define AT_COMPARE_SIZE 6
+#define AT_COMPARE_NAME { "==", ">=","<=", "!=", ">", "<" }
+#define AT_COMPARE_VALUE {  AT::COMPARE::EQUAL, AT::COMPARE::EQUAL_OR_GREATER,\
+	AT::COMPARE::EQUAL_OR_LESS, AT::COMPARE::NOT_EQUAL, \
+	AT::COMPARE::GREATER, AT::COMPARE::LESS }
+
+#define AT_OPERATION_SIZE 4
+#define AT_OPERATION_NAME { "+", "-", "*", "/" }
+#define AT_OPERATION_VALUE { AT::OPERATION::PLUS, AT::OPERATION::MINUS, AT::OPERATION::MULTIPLY, AT::OPERATION::DIVIDE }
+
 namespace LA { class LexAnalyser; };
 
 namespace AT{			// auxiliary table namespace
+	enum SERVICE{			// service enum for universal values
+		ERROR_VALUE = -1
+	};
+
 	enum DATATYPE{
-		UNKNOWN,			// unknown
+		UNKNOWN = -1,		// unknown
 		NUM,				// integer
 		LINE,				// string
 		WASH,				// wash
@@ -44,7 +58,7 @@ namespace AT{			// auxiliary table namespace
 	};
 
 	enum TYPE{
-		U,					// unknown
+		U = -1,				// unknown
 		V,					// variable
 		P,					// parameter
 		L,					// literal
@@ -54,6 +68,7 @@ namespace AT{			// auxiliary table namespace
 	};
 
 	enum COMPARE{
+		OTHER = -1,
 		EQUAL,				// == equal
 		EQUAL_OR_GREATER,	// >= equal or greater than
 		EQUAL_OR_LESS,		// <= equal or less than
@@ -62,16 +77,28 @@ namespace AT{			// auxiliary table namespace
 		GREATER				// >  greater than
 	};
 
+	enum OPERATION{
+		NOT_ALLOWED = -1,
+		PLUS,				// +
+		MINUS,				// -
+		MULTIPLY,			// *
+		DIVIDE				// /
+	};
+
 	class Info{		// types of data
 	public:
 		Info();
 
-		char*					getName(AT::DATATYPE);			// return name of primitive data type
-		char*					getFuncName(AT::DATATYPE);		// return name of function
-		char*					getTypeName(AT::TYPE);			// return name of type
-		DATATYPE				getType(char* name);			// return DATATYPE of primitive data type name
-		DATATYPE				getFuncType(char* name);		// return DATATYPE of function
-		TYPE					getElemType(char* name);		// return TYPE of type name
+		char*					getName(DATATYPE);				// return name of primitive data type
+		char*					getFuncName(DATATYPE);			// return name of function
+		char*					getTypeName(TYPE);				// return name of type
+		char*					getCompareName(COMPARE);		// return name of compare
+		char*					getOperationName(OPERATION);	// return name of operation
+		DATATYPE				getType(char* name);			// return DATATYPE value for primitive data type name
+		DATATYPE				getFuncType(char* name);		// return DATATYPE value for function
+		TYPE					getElemType(char* name);		// return TYPE value for type name
+		COMPARE					getCompareValue(char* name);	// return COMPARE value for compare name
+		OPERATION				getOperationValue(char* name);	// return OPERATION value for operation name
 
 		void pushFuncName(char*);
 		void pushFuncType(AT::DATATYPE);
@@ -82,24 +109,28 @@ namespace AT{			// auxiliary table namespace
 		std::vector<char*>		name_;							// names of all primitive types
 		std::vector<char*>		funcName_;						// names of all included functions
 		std::vector<char*>		typeName_;						// names of all element types
-		std::vector<DATATYPE>	type_;							// data types of all primitive types
-		std::vector<DATATYPE>	funcType_;						// data types of included functions
-		std::vector<TYPE>		elemType_;						// types of elements
+		std::vector<char*>		compareName_;					// names of all compares
+		std::vector<char*>		operationName_;					// names of all operations
+		std::vector<DATATYPE>	typeValue_;						// data types of all primitive types
+		std::vector<DATATYPE>	funcTypeValue_;					// data types of included functions
+		std::vector<TYPE>		elemTypeValue_;					// types of elements
+		std::vector<COMPARE>	compareValue_;					// compares values
+		std::vector<OPERATION>	operationValue_;				// operations values
 	};
 
 	class Element{		// element of the auxTable
 	public:
 		Element();
 		
-		int			getIndex();									// return lexTable index
+		TYPE		getType();									// return element type
+		DATATYPE	getDataType();								// return element data type
 		char*		getName();									// return element name
 		char*		getFuncName();								// return function name
+		int			getIndex();									// return lexTable index
 		int			getNumVal();								// return element num value
 		char*		getLineVal();								// return element line value
 		char*		getOtherVal();								// return element other value
 		char		getOperation();								// return element operation value
-		TYPE		getType();									// return element type
-		DATATYPE	getDataType();								// return element data type
 
 		void		setIndex(int value);						// set lexTable index
 		void		setName(char* name);						// set element name
@@ -138,9 +169,9 @@ namespace AT{			// auxiliary table namespace
 		Table();
 		Table(int size);
 
+		Info*		getInfo();									// return all names and types of functions and primitive types etc.
 		Element*	getElem(int index);							// return element by index
 		int			getSize();									// return size of auxiliary table
-		Info*		getInfo();									// return all names and types of functions and primitive types etc.
 
 		void		addElem(Element& elem);						// add element to auxiliary table
 
@@ -150,6 +181,7 @@ namespace AT{			// auxiliary table namespace
 		~Table();
 
 	private:
+
 		int			maxSize_;									// max size of auxiliary table
 		int			size_;										// current size of auxiliary table
 		Info*		info_;										// consists all names and types of functions and primitive types etc.

@@ -7,26 +7,38 @@ namespace AT{
 		char* nameTemp[] = AT_PRIMITIVE_TYPES_NAMES;
 		char* funcNameTemp[] = AT_STL_FUNCTIONS;
 		char* typeNameTemp[] = AT_ELEMENT_TYPES_NAMES;
-		DATATYPE typeTemp[AT_PRIMITIVE_TYPES_SIZE] = AT_PRIMITIVE_TYPES;
-		DATATYPE funcTypeTemp[AT_STL_FUNCSIZE] = AT_STL_FUNCTIONS_TYPES;
-		TYPE elemTypeTemp[AT_ELEMENT_TYPES_SIZE] = AT_ELEMENT_TYPES;
+		char* compareNameTemp[] = AT_COMPARE_NAME;
+		char* operationNameTemp[] = AT_OPERATION_NAME;
+		DATATYPE typeValTemp[AT_PRIMITIVE_TYPES_SIZE] = AT_PRIMITIVE_TYPES;
+		DATATYPE funcTypeValTemp[AT_STL_FUNCSIZE] = AT_STL_FUNCTIONS_TYPES;
+		TYPE elemTypeValTemp[AT_ELEMENT_TYPES_SIZE] = AT_ELEMENT_TYPES;
+		COMPARE compareValTemp[AT_COMPARE_SIZE] = AT_COMPARE_VALUE;
+		OPERATION operationValTemp[AT_OPERATION_SIZE] = AT_OPERATION_VALUE;
 
 		for (i = 0; i < AT_PRIMITIVE_TYPES_SIZE; i++){			// заполнение векторов для встроенных типов
 			this->name_.push_back(nameTemp[i]);
-			this->type_.push_back(typeTemp[i]);
+			this->typeValue_.push_back(typeValTemp[i]);
 		};
 		for (i = 0; i < AT_STL_FUNCSIZE; i++){
 			this->funcName_.push_back(funcNameTemp[i]);
-			this->funcType_.push_back(funcTypeTemp[i]);
+			this->funcTypeValue_.push_back(funcTypeValTemp[i]);
 		};
 		for (i = 0; i < AT_ELEMENT_TYPES_SIZE; i++){
 			this->typeName_.push_back(typeNameTemp[i]);
-			this->elemType_.push_back(elemTypeTemp[i]);
+			this->elemTypeValue_.push_back(elemTypeValTemp[i]);
+		};
+		for (i = 0; i < AT_COMPARE_SIZE; i++){
+			this->compareName_.push_back(compareNameTemp[i]);
+			this->compareValue_.push_back(compareValTemp[i]);
+		};
+		for (i = 0; i < AT_OPERATION_SIZE; i++){
+			this->operationName_.push_back(operationNameTemp[i]);
+			this->operationValue_.push_back(operationValTemp[i]);
 		};
 	};
 
-	char* Info::getName(AT::DATATYPE dataType){
-		std::vector<AT::DATATYPE>::iterator firstIt = this->type_.begin();
+	char* Info::getName(DATATYPE dataType){
+		std::vector<DATATYPE>::iterator firstIt = this->typeValue_.begin();
 		std::vector<char*>::iterator secondIt = this->name_.begin();
 		for (; secondIt != this->name_.end(); firstIt++, secondIt++){
 			if (*firstIt == dataType) return *secondIt;
@@ -34,54 +46,90 @@ namespace AT{
 		return "unknown";
 	};
 
-	char* Info::getFuncName(AT::DATATYPE type){
-		std::vector<AT::DATATYPE>::iterator firstIt = this->funcType_.begin();
+	char* Info::getFuncName(DATATYPE type){
+		std::vector<DATATYPE>::iterator firstIt = this->funcTypeValue_.begin();
 		std::vector<char*>::iterator secondIt = this->funcName_.begin();
-		for (; firstIt != this->funcType_.end(); firstIt++, secondIt++){
+		for (; firstIt != this->funcTypeValue_.end(); firstIt++, secondIt++){
 			if (*firstIt == type) return *secondIt;
 		};
 		return NULL_STR;
 	};
 
-	char* Info::getTypeName(AT::TYPE type){
-		std::vector<AT::TYPE>::iterator firstIt = this->elemType_.begin();
+	char* Info::getTypeName(TYPE type){
+		std::vector<TYPE>::iterator firstIt = this->elemTypeValue_.begin();
 		std::vector<char*>::iterator secondIt = this->typeName_.begin();
-		for (; firstIt != this->elemType_.end(); firstIt++, secondIt++){
+		for (; firstIt != this->elemTypeValue_.end(); firstIt++, secondIt++){
 			if (*firstIt == type) return *secondIt;
 		};
 		return NULL_STR;
 	};
 
-	DATATYPE Info::getType(char* line){
+	char* Info::getCompareName(COMPARE value){
+		std::vector<COMPARE>::iterator firstIt = this->compareValue_.begin();
+		std::vector<char*>::iterator secondIt = this->compareName_.begin();
+		for (; firstIt != this->compareValue_.end(); firstIt++, secondIt++){
+			if (*firstIt == value) return *secondIt;
+		};
+		return NULL_STR;
+	};
+
+	char* Info::getOperationName(OPERATION value){
+		std::vector<OPERATION>::iterator firstIt = this->operationValue_.begin();
+		std::vector<char*>::iterator secondIt = this->operationName_.begin();
+		for (; firstIt != this->operationValue_.end(); firstIt++, secondIt++){
+			if (*firstIt == value) return *secondIt;
+		};
+		return NULL_STR;
+	};
+
+	DATATYPE Info::getType(char* name){
 		std::vector<char*>::iterator firstIt = this->name_.begin();
-		std::vector<DATATYPE>::iterator secondIt = this->type_.begin();
+		std::vector<DATATYPE>::iterator secondIt = this->typeValue_.begin();
 		for (; firstIt != this->name_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, line)) return *secondIt;
+			if (!strcmp(*firstIt, name)) return *secondIt;
 		};
-		return AT::DATATYPE::UNKNOWN;
+		return DATATYPE::UNKNOWN;
 	};
 
-	DATATYPE Info::getFuncType(char* line){
+	DATATYPE Info::getFuncType(char* name){
 		std::vector<char*>::iterator firstIt = this->funcName_.begin();
-		std::vector<DATATYPE>::iterator secondIt = this->funcType_.begin();
+		std::vector<DATATYPE>::iterator secondIt = this->funcTypeValue_.begin();
 		for (; firstIt != this->funcName_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, line)) return *secondIt;
+			if (!strcmp(*firstIt, name)) return *secondIt;
 		};
-		return AT::DATATYPE::UNKNOWN;
+		return DATATYPE::UNKNOWN;
 	};
 
-	TYPE Info::getElemType(char* line){
+	TYPE Info::getElemType(char* name){
 		std::vector<char*>::iterator firstIt = this->typeName_.begin();
-		std::vector<TYPE>::iterator secondIt = this->elemType_.begin();
+		std::vector<TYPE>::iterator secondIt = this->elemTypeValue_.begin();
 		for (; firstIt != this->typeName_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, line)) return *secondIt;
+			if (!strcmp(*firstIt, name)) return *secondIt;
 		};
-		return AT::TYPE::U;
+		return TYPE::U;
+	};
+
+	COMPARE Info::getCompareValue(char* name){
+		std::vector<char*>::iterator firstIt = this->compareName_.begin();
+		std::vector<COMPARE>::iterator secondIt = this->compareValue_.begin();
+		for (; firstIt != this->compareName_.end(); firstIt++, secondIt++){
+			if (!strcmp(*firstIt, name)) return *secondIt;
+		};
+		return COMPARE::OTHER;
+	};
+
+	OPERATION Info::getOperationValue(char* name){
+		std::vector<char*>::iterator firstIt = this->operationName_.begin();
+		std::vector<OPERATION>::iterator secondIt = this->operationValue_.begin();
+		for (; firstIt != this->operationName_.end(); firstIt++, secondIt++){
+			if (!strcmp(*firstIt, name)) return *secondIt;
+		};
+		return OPERATION::NOT_ALLOWED;
 	};
 
 	bool Info::isNewFunction(char* name){
 		std::vector<char*>::iterator firstIt = this->funcName_.begin();
-		std::vector<AT::DATATYPE>::iterator secondIt = this->funcType_.begin();
+		std::vector<DATATYPE>::iterator secondIt = this->funcTypeValue_.begin();
 		for (; firstIt != this->funcName_.end(); firstIt++, secondIt++){
 			if (!strcmp(*firstIt, name)) return false;
 		};
@@ -92,8 +140,8 @@ namespace AT{
 		this->funcName_.push_back(line);
 	};
 
-	void Info::pushFuncType(AT::DATATYPE type){
-		this->funcType_.push_back(type);
+	void Info::pushFuncType(DATATYPE type){
+		this->funcTypeValue_.push_back(type);
 	};
 
 	Element::Element(){
@@ -169,50 +217,56 @@ namespace AT{
 
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
 		char** arrOfLines, int& i, int counter){
-		char lexeme = la->getElemLT(la->getLTsize() - 1)->getLex();
-		this->ltIndex_ = la->getLTsize() - 1;
+		char lexeme = la->getElemLt(la->getLtSize() - 1)->getLex();
+		this->ltIndex_ = la->getLtSize() - 1;
 		this->dataType_ = la->getDataType(arrOfLines, i);
-		this->type_ = la->getElemType(arrOfLines[i]);
+		this->type_ = lexeme == LEX_BEGIN ? TYPE::F : la->getElemType(arrOfLines[i]);
 		this->setFuncName(funcName);
-
-		if (lexeme == LEX_LITERAL){
+		switch (lexeme){
+		case LEX_LITERAL:
 			_itoa_s(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_PREFIX_LITERAL);
 			setValue(lexeme, arrOfLines[i]);
-		}
-		else if (lexeme == LEX_IDENTIFIER){
+			break;
+
+		case LEX_IDENTIFIER: case LEX_BEGIN:
 			this->setName(arrOfLines[i]);
 			setValue(lexeme);
-		}
-		else if (lexeme == LEX_OPERATION){
+			break;
+
+		case LEX_OPERATION:
 			_itoa_s(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_PREFIX_OPERATION);
 			setValue(lexeme, arrOfLines[i]);
-		}
-		else if (lexeme == LEX_COMPARE){
+			break;
+
+		case  LEX_COMPARE:
 			_itoa_s(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_PREFIX_COMPARE);
 			setValue(lexeme, arrOfLines[i]);
+			break;
+
+		default: break;
 		};
 	};
 
   	void Element::setValue(char lexeme, char* line){
 		switch (lexeme){
 		case LEX_LITERAL:
-			if (this->dataType_ == AT::DATATYPE::NUM){
+			if (this->dataType_ == DATATYPE::NUM){
 				this->setNumVal(std::atoi(line));
 			}
-			else if (this->dataType_ == AT::DATATYPE::LINE){
+			else if (this->dataType_ == DATATYPE::LINE){
 				line = createStrVal(line);
 				this->setLineVal(line);
 			};
 			break;
 
 		case LEX_IDENTIFIER:
-			if (this->dataType_ == AT::DATATYPE::NUM){
+			if (this->dataType_ == DATATYPE::NUM){
 				this->setNumVal(AT_NUM_DEFAULT);
 			}
-			else if (this->dataType_ == AT::DATATYPE::LINE){
+			else if (this->dataType_ == DATATYPE::LINE){
 				this->setLineVal(AT_LINE_DEFAULT);
 			};
 			break;
@@ -224,8 +278,8 @@ namespace AT{
 
 	void Element::reset(){
 		memset(this->name_, -52, AT_NAME_MAXSIZE);
-		this->dataType_ = AT::DATATYPE::UNKNOWN;
-		this->type_ = AT::TYPE::U;
+		this->dataType_ = DATATYPE::UNKNOWN;
+		this->type_ = TYPE::U;
 		this->ltIndex_ = AT_NULL_INDEX;
 		this->setNumVal(AT_NUM_DEFAULT);
 		this->setLineVal(AT_LINE_DEFAULT);
@@ -263,27 +317,29 @@ namespace AT{
 	};
 
 	bool Table::isIncluded(char* name, char* funcName){
+		char tempName[AT_NAME_MAXSIZE];
+		char tempFuncName[AT_NAME_MAXSIZE];
+		strncpy_s(tempName, name, AT_NAME_MAXSIZE - 1);
+		strncpy_s(tempFuncName, funcName, AT_NAME_MAXSIZE - 1);
 		if (this->size_ == NULL) return false;
-		else{
-			for (int i = 0; i < size_; i++){
-				if ((!strcmp(this->table_[i].getName(), name)
-					&& !strcmp(this->table_[i].getFuncName(), funcName))
-					|| (!strcmp(this->table_[i].getFuncName(), name))){
-						return true;
-				};
+
+		for (int i = 0; i < size_; i++){
+			if ((!strcmp(this->table_[i].getName(), tempName)
+				&& !strcmp(this->table_[i].getFuncName(), tempFuncName))
+				|| (!strcmp(this->table_[i].getFuncName(), tempName))){
+				return true;
 			};
 		};
 		return false;
 	};
 
 	int Table::getIndex(char* name, char* funcName){
-		if (this->size_ == NULL)	return -1;
-		else{
-			for (int i = 0; i < this->size_; i++){
-				if (!strcmp(this->table_[i].getName(), name)
-					&& !strcmp(this->table_[i].getFuncName(), funcName)){
-						return i;
-				};
+		if (this->size_ == NULL) return -1;
+
+		for (int i = 0; i < this->size_; i++){
+			if (!strcmp(this->table_[i].getName(), name)
+				&& !strcmp(this->table_[i].getFuncName(), funcName)){
+				return i;
 			};
 		};
 		return -1;
@@ -298,12 +354,12 @@ namespace AT{
 		char temp[AT_ARR_MAXSIZE];
 		strcpy_s(temp, dest);
 		strncpy(dest, prefix, AT_NAME_MAXSIZE - 1);
-		strncat(dest, temp, AT_NAME_MAXSIZE - strlen(prefix) - 1);
+		strncat(dest, temp, AT_NAME_MAXSIZE - static_cast<int> (strlen(prefix)) - 1);
 	};
 
 	char* createStrVal(char* line){
 		char* rc = new char;
-		strncpy(rc, line + 1, (strlen(line) - 2));
+		strncpy(rc, line + 1, static_cast<int> (strlen(line)) - 2); // due to 2	quotes
 		rc[static_cast<int> (strlen(line)) - 2] = NULL_STR;
 		return rc;
 	};

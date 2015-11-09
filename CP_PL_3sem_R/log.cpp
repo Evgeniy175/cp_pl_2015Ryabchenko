@@ -11,6 +11,8 @@ namespace LOG
 
 		else
 			throw ERROR_THROW(104);
+
+		this->writeLog();
 	}
 
 	wchar_t* Log::getLogFile(){
@@ -105,30 +107,30 @@ namespace LOG
 		int currentLineNumber = 0;
 
 		*(this->getStream()) << std::endl << "---Lexeme table start---"
-			<< std::endl << "Size: " << la->getLT()->getSize() << std::endl << std::endl
+			<< std::endl << "Size: " << la->getLtSize() << std::endl << std::endl
 			<< "NUMBER\t\t" << "LEXEME\t\t" << "LINE\t\t" << "AUX_INDEX\t\t"
 			<< "PARAMETER_COUNTER"<< std::endl;
 
-		for (int i = 0; i < la->getLT()->getSize(); i++){
+		for (int i = 0; i < la->getLtSize(); i++){
 			*(this->getStream()) << i << "\t\t";
 			
-			if (la->getLT()->getElem(i)->getLex() != LT_NULL_LEX)
-				*(this->getStream()) << la->getElemLT(i)->getLex() << "\t\t";
+			if (la->getElemLt(i)->getLex() != LT_NULL_LEX)
+				*(this->getStream()) << la->getElemLt(i)->getLex() << "\t\t";
 			else
 				*(this->getStream()) << "null\t\t";
 
-			if (la->getLT()->getElem(i)->getLine() >= NULL)
-				*(this->getStream()) << la->getElemLT(i)->getLine() << "\t\t";
+			if (la->getElemLt(i)->getLine() >= NULL)
+				*(this->getStream()) << la->getElemLt(i)->getLine() << "\t\t";
 			else
 				*(this->getStream()) << "null\t\t";
 
-			if (la->getLT()->getElem(i)->getIndex() >= NULL)
-				*(this->getStream()) << la->getElemLT(i)->getIndex() << "\t\t\t";
+			if (la->getElemLt(i)->getIndex() >= NULL)
+				*(this->getStream()) << la->getElemLt(i)->getIndex() << "\t\t\t";
 			else
 				*(this->getStream()) << "null\t\t\t";
 
-			if (la->getElemLT(i)->getParmCount() > NULL)
-				*(this->getStream()) << la->getElemLT(i)->getParmCount() << std::endl;
+			if (la->getElemLt(i)->getParmCount() > NULL)
+				*(this->getStream()) << la->getElemLt(i)->getParmCount() << std::endl;
 			else
 				*(this->getStream()) << "null" << std::endl;
 		};
@@ -141,35 +143,34 @@ namespace LOG
 
 		*(this->getStream()) << std::endl << std::endl << "---Auxiliary table start---"
 			<< std::endl << "Size: "
-			<< la->getAT()->getSize() << std::endl << std::endl << "NUMBER\t"
-			<< std::setw(AT_NAME_MAXSIZE) << std::left << "NAME\t\t"
-			<< std::setw(AT_NAME_MAXSIZE) << std::left << "FUNC_NAME\t\t\t"
-			<< "DATA_TYPE\t" << "TYPE\t\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
+			<< la->getAtSize() << std::endl << std::endl << "NUMBER\t"
+			<< std::setw(AT_NAME_MAXSIZE) << std::left << "NAME"
+			<< std::setw(AT_NAME_MAXSIZE) << std::left << "\tFUNC_NAME"
+			<< "\tDATA_TYPE\t" << "TYPE\t\t"	<< "LT_INDEX\t" << "VALUE" << std::endl;
 
-		for (int i = 0; i < la->getAT()->getSize(); i++){
-			lexeme = la->getElemLT(la->getElemAT(i)->getIndex())->getLex();
+		for (int i = 0; i < la->getAtSize(); i++){
+			lexeme = la->getElemLt(la->getElemAt(i)->getIndex())->getLex();
 
 			*(this->getStream()) << i << '\t'
-				<< std::setw(AT_NAME_MAXSIZE) << std::left << la->getElemAT(i)->getName()
-				<< "\t\t" << std::setw(AT_NAME_MAXSIZE) << std::left
-				<< la->getElemAT(i)->getFuncName() << "\t\t"
-				<< la->getDataName(la->getElemAT(i)->getDataType()) << "\t\t"
-				<< la->getTypeName(la->getElemAT(i)->getType());
+				<< std::setw(AT_NAME_MAXSIZE) << std::left << la->getElemAt(i)->getName()
+				<< '\t' << std::setw(AT_NAME_MAXSIZE) << std::left
+				<< la->getElemAt(i)->getFuncName() << '\t'
+				<< la->getDataName(la->getElemAt(i)->getDataType()) << "\t\t"
+				<< la->getTypeName(la->getElemAt(i)->getType());
 
-			*(this->getStream()) << '\t' << la->getElemAT(i)->getIndex() << "\t\t";
+			*(this->getStream()) << '\t' << la->getElemAt(i)->getIndex() << "\t\t";
 
-			if (lexeme == LEX_LITERAL){		//TODO: фция и массив 
-				if (la->getElemAT(i)->getDataType() == AT::DATATYPE::NUM)
-					*(this->getStream()) << la->getElemAT(i)->getNumVal();
+			if (lexeme == LEX_LITERAL){		//TODO: фция
+				if (la->getElemAt(i)->getDataType() == AT::DATATYPE::NUM)
+					*(this->getStream()) << la->getElemAt(i)->getNumVal();
  
-				else if (la->getElemAT(i)->getDataType() == AT::DATATYPE::LINE)
-					*(this->getStream()) << la->getElemAT(i)->getLineVal();
+				else if (la->getElemAt(i)->getDataType() == AT::DATATYPE::LINE)
+					*(this->getStream()) << la->getElemAt(i)->getLineVal();
  			}
 			else if (lexeme == LEX_OPERATION || lexeme == LEX_COMPARE){
-				*(this->getStream()) << la->getElemAT(i)->getOtherVal();
+				*(this->getStream()) << la->getElemAt(i)->getOtherVal();
 			}
- 			else
-				*(this->getStream()) << "none";
+ 			else *(this->getStream()) << "none";
 
 			*(this->getStream()) << std::endl;
 		};
