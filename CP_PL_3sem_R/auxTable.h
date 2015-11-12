@@ -23,9 +23,9 @@
 	AT::DATATYPE::LINE, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, AT::DATATYPE::NUM, \
 	AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL, AT::DATATYPE::NIL}
 
-#define AT_PRIMITIVE_TYPES_SIZE	5
-#define AT_PRIMITIVE_TYPES_NAMES { "num", "line", "wash", "bool", "nil" }
-#define AT_PRIMITIVE_TYPES	{ AT::DATATYPE::NUM, AT::DATATYPE::LINE,AT::DATATYPE::WASH, AT::DATATYPE::BOOL, AT::DATATYPE::NIL }
+#define AT_PRIMITIVE_TYPES_SIZE	6
+#define AT_PRIMITIVE_TYPES_NAMES { "unknown", "num", "line", "wash", "bool", "nil" }
+#define AT_PRIMITIVE_TYPES	{ AT::DATATYPE::UNKNOWN, AT::DATATYPE::NUM, AT::DATATYPE::LINE,AT::DATATYPE::WASH, AT::DATATYPE::BOOL, AT::DATATYPE::NIL }
 
 #define AT_ELEMENT_TYPES_SIZE 7
 #define AT_ELEMENT_TYPES_NAMES { "unknown ", "variable", "parameter", "literal ", "function", "operation", "compare " }
@@ -45,11 +45,11 @@ namespace LA { class LexAnalyser; };
 
 namespace AT{			// auxiliary table namespace
 	enum SERVICE{			// service enum for universal values
-		ERROR_VALUE = -1
+		ERROR_VALUE = 0
 	};
 
 	enum DATATYPE{
-		UNKNOWN = -1,		// unknown
+		UNKNOWN = 0,		// unknown
 		NUM,				// integer
 		LINE,				// string
 		WASH,				// wash
@@ -58,7 +58,7 @@ namespace AT{			// auxiliary table namespace
 	};
 
 	enum TYPE{
-		U = -1,				// unknown
+		U = 0,				// unknown
 		V,					// variable
 		P,					// parameter
 		L,					// literal
@@ -68,7 +68,7 @@ namespace AT{			// auxiliary table namespace
 	};
 
 	enum COMPARE{
-		OTHER = -1,
+		OTHER = 0,
 		EQUAL,				// == equal
 		EQUAL_OR_GREATER,	// >= equal or greater than
 		EQUAL_OR_LESS,		// <= equal or less than
@@ -78,7 +78,7 @@ namespace AT{			// auxiliary table namespace
 	};
 
 	enum OPERATION{
-		NOT_ALLOWED = -1,
+		NOT_ALLOWED = 0,
 		PLUS,				// +
 		MINUS,				// -
 		MULTIPLY,			// *

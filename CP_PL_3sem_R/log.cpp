@@ -39,13 +39,15 @@ namespace LOG
 		*(this->getStream()) << line << ' ';
 	};
 
+	void Log::newLine(){
+		*(this->getStream()) << std::endl;
+	};
+
 	void Log::writeLine(char* c, ...){
 		char **p = &c;
 
 		for (int i = 0; *(p + i)[0] != NULL_STR; i++)
 			*(this->getStream()) << *(p + i);
-
-		*(this->getStream()) << std::endl;
 	};
 
 	void Log::writeLine(wchar_t* c, ...){

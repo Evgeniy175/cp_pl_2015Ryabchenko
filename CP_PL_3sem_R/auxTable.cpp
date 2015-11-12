@@ -37,49 +37,29 @@ namespace AT{
 		};
 	};
 
-	char* Info::getName(DATATYPE dataType){
-		std::vector<DATATYPE>::iterator firstIt = this->typeValue_.begin();
-		std::vector<char*>::iterator secondIt = this->name_.begin();
-		for (; secondIt != this->name_.end(); firstIt++, secondIt++){
-			if (*firstIt == dataType) return *secondIt;
-		};
-		return "unknown";
+	char* Info::getName(DATATYPE type){
+		return type < static_cast<int> (this->typeValue_.size())
+			? this->name_[type] : "unknown";
 	};
 
 	char* Info::getFuncName(DATATYPE type){
-		std::vector<DATATYPE>::iterator firstIt = this->funcTypeValue_.begin();
-		std::vector<char*>::iterator secondIt = this->funcName_.begin();
-		for (; firstIt != this->funcTypeValue_.end(); firstIt++, secondIt++){
-			if (*firstIt == type) return *secondIt;
-		};
-		return NULL_STR;
+		return type < static_cast<int> (this->funcTypeValue_.size())
+			? this->funcName_[type] : NULL_STR;
 	};
 
 	char* Info::getTypeName(TYPE type){
-		std::vector<TYPE>::iterator firstIt = this->elemTypeValue_.begin();
-		std::vector<char*>::iterator secondIt = this->typeName_.begin();
-		for (; firstIt != this->elemTypeValue_.end(); firstIt++, secondIt++){
-			if (*firstIt == type) return *secondIt;
-		};
-		return NULL_STR;
+		return type < static_cast<int> (this->elemTypeValue_.size())
+			? this->typeName_[type] : NULL_STR;
 	};
 
 	char* Info::getCompareName(COMPARE value){
-		std::vector<COMPARE>::iterator firstIt = this->compareValue_.begin();
-		std::vector<char*>::iterator secondIt = this->compareName_.begin();
-		for (; firstIt != this->compareValue_.end(); firstIt++, secondIt++){
-			if (*firstIt == value) return *secondIt;
-		};
-		return NULL_STR;
+		return value < static_cast<int> (this->compareValue_.size())
+			? this->compareName_[value] : NULL_STR;
 	};
 
 	char* Info::getOperationName(OPERATION value){
-		std::vector<OPERATION>::iterator firstIt = this->operationValue_.begin();
-		std::vector<char*>::iterator secondIt = this->operationName_.begin();
-		for (; firstIt != this->operationValue_.end(); firstIt++, secondIt++){
-			if (*firstIt == value) return *secondIt;
-		};
-		return NULL_STR;
+		return value < static_cast<int> (this->operationValue_.size())
+			? this->operationName_[value] : NULL_STR;
 	};
 
 	DATATYPE Info::getType(char* name){
@@ -128,12 +108,7 @@ namespace AT{
 	};
 
 	bool Info::isNewFunction(char* name){
-		std::vector<char*>::iterator firstIt = this->funcName_.begin();
-		std::vector<DATATYPE>::iterator secondIt = this->funcTypeValue_.begin();
-		for (; firstIt != this->funcName_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, name)) return false;
-		};
-		return true;
+		return getFuncType(name) == DATATYPE::UNKNOWN ? true : false;
 	};
 
 	void Info::pushFuncName(char* line){
@@ -327,7 +302,7 @@ namespace AT{
 			if ((!strcmp(this->table_[i].getName(), tempName)
 				&& !strcmp(this->table_[i].getFuncName(), tempFuncName))
 				|| (!strcmp(this->table_[i].getFuncName(), tempName))){
-				return true;
+					return true;
 			};
 		};
 		return false;
@@ -339,7 +314,7 @@ namespace AT{
 		for (int i = 0; i < this->size_; i++){
 			if (!strcmp(this->table_[i].getName(), name)
 				&& !strcmp(this->table_[i].getFuncName(), funcName)){
-				return i;
+					return i;
 			};
 		};
 		return -1;

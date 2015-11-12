@@ -42,13 +42,17 @@ namespace LA{
 		bool			isIncludedInAT(char* name, char* funcName);					// element is included into auxTable?
 		void			execute(int size, LOG::Log* log, IN::In* in);
 
+		static void		setFst(){
+			
+		};
+
 		~LexAnalyser();
 
 	private:
 		LT::Table*		getLt();													// return lexTable
 		AT::Table*		getAt();													// return auxTable
 
-		LT::Table* lexTable;
-		AT::Table* auxTable;
+		LT::Table*			lexTable_;
+		AT::Table*			auxTable_;
 	};
 };

@@ -2,8 +2,6 @@
 #include "path.h"
 
 namespace PATH{
-	Path::Path(){}
-
 	wchar_t* Path::getIn(){
 		return this->in_;
 	};

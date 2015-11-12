@@ -21,9 +21,9 @@ namespace AT{ enum TYPE; enum DATATYPE; class Table; class Element; };
 namespace CP{
 	class Compiler{
 	public:
-		Compiler(PATH::Path* filesPath);
-		Compiler(wchar_t* in);
-		Compiler(char* in);
+		void				execute(PATH::Path& filesPath);
+		void				execute(wchar_t* in);
+		void				execute(char* in);
 
 		wchar_t*			getInName();
 		wchar_t*			getOutName();

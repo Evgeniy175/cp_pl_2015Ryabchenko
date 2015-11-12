@@ -31,6 +31,7 @@ namespace LOG{
 		void 			line(wchar_t* line);				// write 1 line to a file
 		void 			writeLine(char* c, ...);			// write a set of lines to a file
 		void 			writeLine(wchar_t* c, ...);			// write a set of lines to a file
+		void			newLine();							// write new line to a file
 		void 			writeLog();							// write log info to a file
 		void 			writeCp(CP::Compiler* cp);			// write path's of input file to a file
 		void 			writeIn(IN::In* in);				// write info about input data to a file

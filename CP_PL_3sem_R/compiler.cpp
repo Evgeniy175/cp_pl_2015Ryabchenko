@@ -2,26 +2,29 @@
 #include "compiler.h"
 
 namespace CP{
-	Compiler::Compiler(PATH::Path* filesPath){
+	void Compiler::execute(PATH::Path& filesPath){
 		this->reset();
-		wcscpy_s(this->inPath_, filesPath->getIn());
-		wcscpy_s(this->outPath_, filesPath->getOut());
-		wcscpy_s(this->logPath_, filesPath->getLog());
+		wcscpy_s(this->inPath_, filesPath.getIn());
+		wcscpy_s(this->outPath_, filesPath.getOut());
+		wcscpy_s(this->logPath_, filesPath.getLog());
 		this->log_ = new LOG::Log(this->logPath_);
 		this->in_ = new IN::In();
 		this->la_ = new LA::LexAnalyser();
+		this->writeCp();
 	};
 
-	Compiler::Compiler(wchar_t* in){
+	void Compiler::execute(wchar_t* in){
 		this->reset();
 		wcscpy_s(this->inPath_, in);
 		wcscpy_s(this->logPath_, this->inPath_);
 		wcscat_s(this->logPath_, PATH_LOG_POSTFIX);
 		wcscpy_s(this->outPath_, this->inPath_);
 		wcscat_s(this->outPath_, PATH_OUT_POSTFIX);
+		this->writeCp();
+
 	};
 
-	Compiler::Compiler(char* in){
+	void Compiler::execute(char* in){
 		this->reset();
 		wchar_t temp[PATH_MAX_NAMESIZE];
 		mbstowcs(temp, in, static_cast<int> (wcslen(temp)) - 1);
@@ -30,14 +33,18 @@ namespace CP{
 		wcscat_s(this->logPath_, PATH_LOG_POSTFIX);
 		wcscpy_s(this->outPath_, this->inPath_);
 		wcscat_s(this->outPath_, PATH_OUT_POSTFIX);
+		this->writeCp();
 	};
 
 	void Compiler::executeIn(){
 		this->in_->execute(this->log_, this->inPath_);
+		this->writeIn();
 	};
 
 	void Compiler::executeLa(){
 		this->la_->execute(this->in_->getNumOfChains(), this->log_, this->in_);
+		this->writeLt();
+		this->writeAt();
 	};
 
 	wchar_t* Compiler::getInName(){
@@ -96,7 +103,7 @@ namespace CP{
 		for (int i = 0; *(p + i)[0] != NULL_STR; i++)
 			this->log_->line(*(p + i));
 
-		this->log_->line("\n");
+		this->log_->newLine();
 	};
 
 	void Compiler::writeLine(wchar_t* line, ...){
@@ -109,7 +116,7 @@ namespace CP{
 			p = temp;
 			this->log_->line(p);
 		};
-		this->log_->writeLine("\n");
+		this->log_->newLine();
 	};
 
 	void Compiler::writeCp(){
@@ -172,8 +179,6 @@ namespace CP{
 		int startPos = position;
 		std::stack<LT::Element*> stack;
 		std::list<LT::Element> exitArr;
-
-		if (this->getElemLt(position)->getLex() == LEX_EQUAL) startPos++;
 
 		for (; this->getElemLt(position)->getLex() != LEX_SEMICOLON
 			&& this->getElemLt(position)->getLex() != LEX_CLOSE_PARENTHESIS
@@ -245,11 +250,12 @@ namespace CP{
 	};
 
 	void Compiler::polishNotation(){
-		this->writeLine("\n\n", "");
+		this->writeLine("");
+		this->writeLine("");
+
 		for (int i = 0; i < this->getLtSize(); i++){
 			if (this->getElemLt(i)->getLex() == LEX_IDENTIFIER
-				|| this->getElemLt(i)->getLex() == LEX_LITERAL
-				|| this->getElemLt(i)->getLex() == LEX_EQUAL){
+				|| this->getElemLt(i)->getLex() == LEX_LITERAL){
 					if (executePn(i)){
 						this->writeLine("Польская запись построена", "");
 					}
@@ -258,6 +264,10 @@ namespace CP{
 					};
 			};
 		};
+
+		this->modifyAt();
+		this->writeLt();
+		this->writeAt();
 	};
 
 	void Compiler::modifyAt(){
@@ -289,6 +299,7 @@ namespace CP{
 	};
 
 	Compiler::~Compiler(){
+		this->closeLog();
 		delete this->log_;
 		delete this->in_;
 		delete this->la_;

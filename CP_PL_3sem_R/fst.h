@@ -4,6 +4,29 @@
 #include <iostream>
 #include <vector>
 
+#define FST_ARRAY {\
+	FST::FST(NULL_STR, GRAPH_TYPE),\
+	FST::FST(NULL_STR, GRAPH_NEW_LINE), \
+	FST::FST(NULL_STR, GRAPH_SEMICOLON),\
+	FST::FST(NULL_STR, GRAPH_COMMA),\
+	FST::FST(NULL_STR, GRAPH_COMPARE),\
+	FST::FST(NULL_STR, GRAPH_EQUAL),\
+	FST::FST(NULL_STR, GRAPH_OPEN_BRACE),\
+	FST::FST(NULL_STR, GRAPH_CLOSE_BRACE),\
+	FST::FST(NULL_STR, GRAPH_OPEN_PARENTHESIS),\
+	FST::FST(NULL_STR, GRAPH_CLOSE_PARENTHESIS),\
+	FST::FST(NULL_STR, GRAPH_OPEN_SQBRACE),\
+	FST::FST(NULL_STR, GRAPH_CLOSE_SQBRACE),\
+	FST::FST(NULL_STR, GRAPH_OPERATIONS),\
+	FST::FST(NULL_STR, GRAPH_CONDITION),\
+	FST::FST(NULL_STR, GRAPH_FUNCTION),\
+	FST::FST(NULL_STR, GRAPH_RETURN),\
+	FST::FST(NULL_STR, GRAPH_BEGIN),\
+	FST::FST(NULL_STR, GRAPH_ID),\
+	FST::FST(NULL_STR, GRAPH_LITERAL_STRING),\
+	FST::FST(NULL_STR, GRAPH_LITERAL_NUMBER)\
+}
+
 namespace FST{
 	class RELATION{
 	public:
@@ -50,8 +73,6 @@ namespace FST{
 			NODE* node, ...);
 
 		void							setString(char* str);
-
-		void							createFst();					// create fst with null strings and default graphs
 		bool							execute();						// try to execute current line using fst
 
 		~FST();

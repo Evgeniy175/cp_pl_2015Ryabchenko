@@ -5,11 +5,11 @@ namespace LA{
 	LexAnalyser::LexAnalyser(){}
 
 	LT::Table* LexAnalyser::getLt(){
-		return this->lexTable;
+		return this->lexTable_;
 	};
 
 	AT::Table* LexAnalyser::getAt(){
-		return this->auxTable;
+		return this->auxTable_;
 	};
 
 	LT::Element* LexAnalyser::getElemLt(int i){
@@ -70,6 +70,22 @@ namespace LA{
 		this->getLt()->addElem(elem);
 	};
 
+	void LexAnalyser::addElemAt(AT::Element& elem){
+		this->getAt()->addElem(elem);
+	};
+
+	bool LexAnalyser::isIncludedInAT(char* name, char* funcName){
+		return this->getAt()->isIncluded(name, funcName);
+	};
+
+	char* LexAnalyser::getDataName(AT::DATATYPE dataType){
+		return this->getAt()->getInfo()->getName(dataType);
+	};
+
+	char* LexAnalyser::getTypeName(AT::TYPE type){
+		return this->getAt()->getInfo()->getTypeName(type);
+	};
+
 	AT::TYPE LexAnalyser::getElemType(char* line){
 		AT::TYPE rc = AT::TYPE::U;
 		std::vector<char*>::iterator firstIt;
@@ -101,22 +117,6 @@ namespace LA{
 		return rc;
 	};
 
-	void LexAnalyser::addElemAt(AT::Element& elem){
-		this->getAt()->addElem(elem);
-	};
-
-	bool LexAnalyser::isIncludedInAT(char* name, char* funcName){
-		return this->getAt()->isIncluded(name, funcName);
-	};
-
-	char* LexAnalyser::getDataName(AT::DATATYPE dataType){
-		return this->getAt()->getInfo()->getName(dataType);
-	};
-
-	char* LexAnalyser::getTypeName(AT::TYPE type){
-		return this->getAt()->getInfo()->getTypeName(type);
-	};
-
 	AT::DATATYPE LexAnalyser::getDataType(char** arrOfLines, int i){
 		AT::DATATYPE rc = AT::DATATYPE::UNKNOWN;
 		std::vector<char*>::iterator firstIt;
@@ -143,19 +143,17 @@ namespace LA{
 	};
 
 	void LexAnalyser::execute(int size, LOG::Log* log, IN::In* in){
-		this->lexTable = new LT::Table(size);
-		this->auxTable = new AT::Table(size);
+		this->lexTable_ = new LT::Table(size);
+		this->auxTable_ = new AT::Table(size);
+		FST::FST fst[] = FST_ARRAY;
 		LT::Element elemLt;								// lexTable element
 		AT::Element elemAt;								// auxTable element
-		FST::FST* fst = new FST::FST[NUMBER_OF_GRAPHS];	// final state machine
 		bool isCorrect = false;							// is this string executed by graphs?
 		int  lineNumber = 0;							// number of lines in input file
 		int	 literalCounter = 0;
 		int  operationCounter = 0;
 		int  compareCounter = 0;
 		char funcName[AT_NAME_MAXSIZE];				// function name
-
-		fst->createFst();
 
 		log->writeLine("---Начало работы КА---", "");
 
@@ -225,11 +223,10 @@ namespace LA{
 			};
 		};
 		log->writeLine("---Конец работы КА---", "");
-		delete[] fst;
 	};
 
 	LexAnalyser::~LexAnalyser(){
-		delete this->lexTable;
-		delete this->auxTable;
+		delete this->lexTable_;
+		delete this->auxTable_;
 	};
 };

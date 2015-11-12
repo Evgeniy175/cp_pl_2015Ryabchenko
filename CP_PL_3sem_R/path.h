@@ -20,8 +20,6 @@ namespace PATH
 {
 	class Path{
 	public:
-		Path();
-
 		void initialExecute(int linesNumber, char* lines[]);		// create initial path's
 		void initialExecute(int linesNumber, wchar_t* lines[]);		// create initial path's
 
