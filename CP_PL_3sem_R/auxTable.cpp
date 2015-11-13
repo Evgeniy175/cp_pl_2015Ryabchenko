@@ -12,24 +12,24 @@ namespace AT{
 		char* nameTemp[] = AT_PRIMITIVE_TYPES_NAMES;
 		char* funcNameTemp[] = AT_STL_FUNCTIONS;
 		char* typeNameTemp[] = AT_ELEMENT_TYPES_NAMES;
-		char* compareNameTemp[] = AT_COMPARE_NAME;
-		char* operationNameTemp[] = AT_OPERATION_NAME;
-		DATATYPE funcTypeValTemp[AT_STL_FUNCSIZE] = AT_STL_FUNCTIONS_TYPES;
-		DATATYPE primTypesValueTemp[AT_PRIMITIVE_TYPES_SIZE] = AT_PRIMITIVE_TYPES_TYPES;
+		char* compareNameTemp[] = AT_COMPARES_NAMES;
+		char* operationNameTemp[] = AT_OPERATIONS_NAMES;
+		DATATYPE funcTypeValTemp[AT_STL_FUNCTIONS_SIZE] = AT_STL_FUNCTIONS_TYPES;
+		DATATYPE primTypesValueTemp[AT_PRIMITIVE_TYPES_SIZE] = AT_PRIMITIVE_TYPES_VALUES;
 
 		for (i = 0; i < AT_PRIMITIVE_TYPES_SIZE; i++){
 			this->primTypes_.push_back(Element(nameTemp[i], i));
 		};
-		for (i = 0; i < AT_STL_FUNCSIZE; i++){
+		for (i = 0; i < AT_STL_FUNCTIONS_SIZE; i++){
 			this->functions_.push_back(Element(funcNameTemp[i], funcTypeValTemp[i]));
 		};
 		for (i = 0; i < AT_ELEMENT_TYPES_SIZE; i++){
 			this->elementsTypes_.push_back(Element(typeNameTemp[i], primTypesValueTemp[i]));
 		};
-		for (i = 0; i < AT_COMPARE_SIZE; i++){
+		for (i = 0; i < AT_COMPARES_SIZE; i++){
 			this->compares_.push_back(Element(compareNameTemp[i], i));
 		};
-		for (i = 0; i < AT_OPERATION_SIZE; i++){
+		for (i = 0; i < AT_OPERATIONS_SIZE; i++){
 			this->operations_.push_back(Element(operationNameTemp[i], i));
 		};
 	};
@@ -113,8 +113,8 @@ namespace AT{
 		return getFuncValue(name) == SERVICE::ERROR_VALUE ? true : false;
 	};
 
-	void Info::pushFunc(char* name, int value){
-		this->functions_.push_back(Element(name, value));
+	void Info::pushToFuncList(char* name, int type){
+		this->functions_.push_back(Element(name, type));
 	};
 
 	Element::Element(){

@@ -107,7 +107,7 @@ namespace LA{
 	};
 
 	void LexAnalyser::pushToFuncList(char* line, int type){
-		this->auxTable_->getInfo()->pushFunc(line, type);
+		this->auxTable_->getInfo()->pushToFuncList(line, type);
 	};
 
 	void LexAnalyser::addElemLt(LT::Element& elem){
