@@ -157,8 +157,8 @@ namespace LOG
 				<< std::setw(AT_NAME_MAXSIZE) << std::left << la->getElemAt(i)->getName()
 				<< '\t' << std::setw(AT_NAME_MAXSIZE) << std::left
 				<< la->getElemAt(i)->getFuncName() << '\t'
-				<< la->getDataName(la->getElemAt(i)->getDataType()) << "\t\t"
-				<< la->getTypeName(la->getElemAt(i)->getType());
+				<< la->getPrimTypeName(la->getElemAt(i)->getDataType()) << "\t\t"
+				<< la->getElemTypeName(la->getElemAt(i)->getType());
 
 			*(this->getStream()) << '\t' << la->getElemAt(i)->getIndex() << "\t\t";
 

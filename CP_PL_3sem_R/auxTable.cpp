@@ -2,6 +2,11 @@
 #include "auxTable.h"
 
 namespace AT{
+	Info::Element::Element(char* name, int value){
+		this->name_ = name;
+		this->value_ = value;
+	}
+
 	Info::Info(){
 		int i;
 		char* nameTemp[] = AT_PRIMITIVE_TYPES_NAMES;
@@ -9,123 +14,112 @@ namespace AT{
 		char* typeNameTemp[] = AT_ELEMENT_TYPES_NAMES;
 		char* compareNameTemp[] = AT_COMPARE_NAME;
 		char* operationNameTemp[] = AT_OPERATION_NAME;
-		DATATYPE typeValTemp[AT_PRIMITIVE_TYPES_SIZE] = AT_PRIMITIVE_TYPES;
 		DATATYPE funcTypeValTemp[AT_STL_FUNCSIZE] = AT_STL_FUNCTIONS_TYPES;
-		TYPE elemTypeValTemp[AT_ELEMENT_TYPES_SIZE] = AT_ELEMENT_TYPES;
-		COMPARE compareValTemp[AT_COMPARE_SIZE] = AT_COMPARE_VALUE;
-		OPERATION operationValTemp[AT_OPERATION_SIZE] = AT_OPERATION_VALUE;
+		DATATYPE primTypesValueTemp[AT_PRIMITIVE_TYPES_SIZE] = AT_PRIMITIVE_TYPES_TYPES;
 
-		for (i = 0; i < AT_PRIMITIVE_TYPES_SIZE; i++){			// заполнение векторов для встроенных типов
-			this->name_.push_back(nameTemp[i]);
-			this->typeValue_.push_back(typeValTemp[i]);
+		for (i = 0; i < AT_PRIMITIVE_TYPES_SIZE; i++){
+			this->primTypes_.push_back(Element(nameTemp[i], i));
 		};
 		for (i = 0; i < AT_STL_FUNCSIZE; i++){
-			this->funcName_.push_back(funcNameTemp[i]);
-			this->funcTypeValue_.push_back(funcTypeValTemp[i]);
+			this->functions_.push_back(Element(funcNameTemp[i], funcTypeValTemp[i]));
 		};
 		for (i = 0; i < AT_ELEMENT_TYPES_SIZE; i++){
-			this->typeName_.push_back(typeNameTemp[i]);
-			this->elemTypeValue_.push_back(elemTypeValTemp[i]);
+			this->elementsTypes_.push_back(Element(typeNameTemp[i], primTypesValueTemp[i]));
 		};
 		for (i = 0; i < AT_COMPARE_SIZE; i++){
-			this->compareName_.push_back(compareNameTemp[i]);
-			this->compareValue_.push_back(compareValTemp[i]);
+			this->compares_.push_back(Element(compareNameTemp[i], i));
 		};
 		for (i = 0; i < AT_OPERATION_SIZE; i++){
-			this->operationName_.push_back(operationNameTemp[i]);
-			this->operationValue_.push_back(operationValTemp[i]);
+			this->operations_.push_back(Element(operationNameTemp[i], i));
 		};
 	};
 
-	char* Info::getName(DATATYPE type){
-		return type < static_cast<int> (this->typeValue_.size())
-			? this->name_[type] : "unknown";
+	char* Info::getPrimTypeName(int value){
+		return (value < static_cast<int> (this->primTypes_.size()) && value >= NULL)
+			? this->primTypes_[value].name_ : "unknown";
 	};
 
-	char* Info::getFuncName(DATATYPE type){
-		return type < static_cast<int> (this->funcTypeValue_.size())
-			? this->funcName_[type] : NULL_STR;
+	char* Info::getFuncName(int value){
+		return (value < static_cast<int> (this->functions_.size()) && value >= NULL)
+			? this->functions_[value].name_ : NULL_STR;
 	};
 
-	char* Info::getTypeName(TYPE type){
-		return type < static_cast<int> (this->elemTypeValue_.size())
-			? this->typeName_[type] : NULL_STR;
+	char* Info::getElemTypeName(int value){
+		return (value < static_cast<int> (this->elementsTypes_.size()) && value >= NULL)
+			? this->elementsTypes_[value].name_ : NULL_STR;
 	};
 
-	char* Info::getCompareName(COMPARE value){
-		return value < static_cast<int> (this->compareValue_.size())
-			? this->compareName_[value] : NULL_STR;
+	char* Info::getCompareName(int value){
+		return (value < static_cast<int> (this->compares_.size()) && value >= NULL)
+			? this->compares_[value].name_ : NULL_STR;
 	};
 
-	char* Info::getOperationName(OPERATION value){
-		return value < static_cast<int> (this->operationValue_.size())
-			? this->operationName_[value] : NULL_STR;
+	char* Info::getOperationName(int value){
+		return (value < static_cast<int> (this->operations_.size()) && value >= NULL)
+			? this->operations_[value].name_ : NULL_STR;
 	};
 
-	DATATYPE Info::getType(char* name){
-		std::vector<char*>::iterator firstIt = this->name_.begin();
-		std::vector<DATATYPE>::iterator secondIt = this->typeValue_.begin();
-		for (; firstIt != this->name_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, name)) return *secondIt;
+	int Info::getPrimTypeValue(char* name){
+		std::vector<Element>::iterator it = this->primTypes_.begin();
+		for (; it != this->primTypes_.end(); it++){
+			if (!strcmp(*(&it->name_), name)){
+				return *(&it->value_);
+			};
 		};
-		return DATATYPE::UNKNOWN;
+		return SERVICE::ERROR_VALUE;
 	};
 
-	DATATYPE Info::getFuncType(char* name){
-		std::vector<char*>::iterator firstIt = this->funcName_.begin();
-		std::vector<DATATYPE>::iterator secondIt = this->funcTypeValue_.begin();
-		for (; firstIt != this->funcName_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, name)) return *secondIt;
+	int Info::getFuncValue(char* name){
+		std::vector<Element>::iterator it = this->functions_.begin();
+		for (; it != this->functions_.end(); it++){
+			if (!strcmp(*(&it->name_), name)){
+				return *(&it->value_);
+			};
 		};
-		return DATATYPE::UNKNOWN;
+		return SERVICE::ERROR_VALUE;
 	};
 
-	TYPE Info::getElemType(char* name){
-		std::vector<char*>::iterator firstIt = this->typeName_.begin();
-		std::vector<TYPE>::iterator secondIt = this->elemTypeValue_.begin();
-		for (; firstIt != this->typeName_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, name)) return *secondIt;
+	int Info::getElemTypeValue(char* name){
+		std::vector<Element>::iterator it = this->elementsTypes_.begin();
+		for (; it != this->elementsTypes_.end(); it++){
+			if (!strcmp(*(&it->name_), name)){
+				return *(&it->value_);
+			};
 		};
-		return TYPE::U;
+		return SERVICE::ERROR_VALUE;
 	};
 
-	COMPARE Info::getCompareValue(char* name){
-		std::vector<char*>::iterator firstIt = this->compareName_.begin();
-		std::vector<COMPARE>::iterator secondIt = this->compareValue_.begin();
-
-		while (strcmp(*firstIt, name)){
-			firstIt++;
-			secondIt++;
+	int Info::getCompareValue(char* name){
+		std::vector<Element>::iterator it = this->compares_.begin();
+		for (; it != this->compares_.end(); it++){
+			if (!strcmp(*(&it->name_), name)){
+				return *(&it->value_);
+			};
 		};
-		return *secondIt;
+		return SERVICE::ERROR_VALUE;
 	};
 
-	OPERATION Info::getOperationValue(char* name){
-		std::vector<char*>::iterator firstIt = this->operationName_.begin();
-		std::vector<OPERATION>::iterator secondIt = this->operationValue_.begin();
-
-		while (strcmp(*firstIt, name)){
-			firstIt++;
-			secondIt++;
+	int Info::getOperationValue(char* name){
+		std::vector<Element>::iterator it = this->operations_.begin();
+		for (; it != this->operations_.end(); it++){
+			if (!strcmp(*(&it->name_), name)){
+				return *(&it->value_);
+			};
 		};
-		return *secondIt;
+		return SERVICE::ERROR_VALUE;
 	};
 
 	bool Info::isNewFunction(char* name){
-		return getFuncType(name) == DATATYPE::UNKNOWN ? true : false;
+		return getFuncValue(name) == SERVICE::ERROR_VALUE ? true : false;
 	};
 
-	void Info::pushFuncName(char* line){
-		this->funcName_.push_back(line);
-	};
-
-	void Info::pushFuncType(DATATYPE type){
-		this->funcTypeValue_.push_back(type);
+	void Info::pushFunc(char* name, int value){
+		this->functions_.push_back(Element(name, value));
 	};
 
 	Element::Element(){
-		this->dataType_ = DATATYPE::UNKNOWN;
-		this->type_ = TYPE::U;
+		this->dataType_ = SERVICE::ERROR_VALUE;
+		this->type_ = SERVICE::ERROR_VALUE;
 		setNumVal(AT_NUM_DEFAULT);
 		setLineVal(AT_LINE_DEFAULT);
 	}
@@ -158,11 +152,11 @@ namespace AT{
 		return this->value_.otherValue_[0];
 	};
 
-	TYPE Element::getType(){
+	int Element::getType(){
 		return this->type_;
 	};
 
-	DATATYPE Element::getDataType(){
+	int Element::getDataType(){
 		return this->dataType_;
 	};
 
@@ -199,7 +193,7 @@ namespace AT{
 		char lexeme = la->getElemLt(la->getLtSize() - 1)->getLex();
 		this->ltIndex_ = la->getLtSize() - 1;
 		this->dataType_ = la->getDataType(arrOfLines, i);
-		this->type_ = lexeme == LEX_BEGIN ? TYPE::F : la->getElemType(arrOfLines[i]);
+		this->type_ = lexeme == LEX_BEGIN ? TYPE::F : la->getElemTypeValue(arrOfLines[i]);
 		this->setFuncName(funcName);
 		switch (lexeme){
 		case LEX_LITERAL:
@@ -257,8 +251,8 @@ namespace AT{
 
 	void Element::reset(){
 		memset(this->name_, -52, AT_NAME_MAXSIZE);
-		this->dataType_ = DATATYPE::UNKNOWN;
-		this->type_ = TYPE::U;
+		this->dataType_ = SERVICE::ERROR_VALUE;
+		this->type_ = SERVICE::ERROR_VALUE;
 		this->ltIndex_ = AT_NULL_INDEX;
 		this->setNumVal(AT_NUM_DEFAULT);
 		this->setLineVal(AT_LINE_DEFAULT);
@@ -278,6 +272,15 @@ namespace AT{
 
 		this->table_ = new Element[maxSize];
 	}
+
+	int Table::getFuncIndex(char* name){
+		for (int i = 0; i < this->size_; i++){
+			if (!strcmp(this->table_[i].getName(), name)){
+				return i;
+			};
+		};
+		return AT_NULL_INDEX;
+	};
 
 	Info* Table::getInfo(){
 		return this->info_;

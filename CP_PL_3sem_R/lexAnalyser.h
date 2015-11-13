@@ -18,41 +18,33 @@ namespace LA{
 	public:
 		LexAnalyser();
 		
-		AT::DATATYPE	getDataType(char** arrOfLines, int chainNumber);			// return DATATYPE for this line
 		LT::Element*	getElemLt(int i);											// return lexTable element(i)
 		AT::Element*	getElemAt(int i);											// return auxTable element(i)
-		int				getAtIndex(char* name, char* funcName);						// return index of this element from auxTable
+		int				getDataType(char** arrOfLines, int chainNumber);			// return data type of arrOfLines[chainNumber]
 		int				getAtSize();												// return auxTable size
 		int				getLtSize();												// return lexTable size
+		int				getAtIndex(char* name, char* funcName);						// return index from auxTable for name & funcName
 		int				getFuncIndex(char* name);									// return function index in auxTable
-		bool			isNewFunc(char* name);										// is new function?
-
-		char*			getDataName(AT::DATATYPE dataType);							// return char* name of this DATATYPE for this line
-		char*			getTypeName(AT::TYPE type);
-		char*			getFuncName(AT::DATATYPE);									// return char* name of function type from vector
-		AT::DATATYPE	getType(char* line);										// return type from vector
-		AT::DATATYPE	getFuncType(char* line);
-		AT::TYPE		getElemType(char* line);									// return last element type
-
-		void			pushToFuncList(char* line, AT::DATATYPE type);
+		
+		char*			getPrimTypeName(int primitiveTypeValue);					// return name of primitive data type
+		char*			getElemTypeName(int elemTypeValue);							// return name of element type
+		char*			getFuncName(int funcValue);									// return name of function
+		int				getTypeValue(char* name);									// return type value of type name
+		int				getFuncTypeValue(char* name);								// return function type value of function name
+		int				getElemTypeValue(char* name);								// return element type value of element name
 
 		void			addElemLt(LT::Element& elem);								// add element into lexTable
 		void			addElemAt(AT::Element& elem);								// add element into auxTable
-		
-		bool			isIncludedInAT(char* name, char* funcName);					// element is included into auxTable?
-		void			execute(int size, LOG::Log* log, IN::In* in);
 
-		static void		setFst(){
-			
-		};
+		bool			isNewFunc(char* name);										// is new function?
+		bool			isIncludedInAt(char* name, char* funcName);					// element is included into auxTable?
+		void			pushToFuncList(char* line, int type);						// add function to functions vector
+		void			execute(int size, LOG::Log* log, IN::In* in);
 
 		~LexAnalyser();
 
 	private:
-		LT::Table*		getLt();													// return lexTable
-		AT::Table*		getAt();													// return auxTable
-
-		LT::Table*			lexTable_;
-		AT::Table*			auxTable_;
+		LT::Table*		lexTable_;
+		AT::Table*		auxTable_;
 	};
 };

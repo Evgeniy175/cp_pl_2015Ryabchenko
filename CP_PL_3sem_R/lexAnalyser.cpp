@@ -4,90 +4,79 @@
 namespace LA{
 	LexAnalyser::LexAnalyser(){}
 
-	LT::Table* LexAnalyser::getLt(){
-		return this->lexTable_;
-	};
-
-	AT::Table* LexAnalyser::getAt(){
-		return this->auxTable_;
-	};
-
 	LT::Element* LexAnalyser::getElemLt(int i){
-		return this->getLt()->getElem(i);
+		return this->lexTable_->getElem(i);
 	};
 
 	AT::Element* LexAnalyser::getElemAt(int i){
-		return this->getAt()->getElem(i);
+		return this->auxTable_->getElem(i);
 	};
 
 	int LexAnalyser::getFuncIndex(char* name){
-		for (int i = 0; i < this->getAtSize(); i++){
-			if (!strcmp(this->getElemAt(i)->getName(), name)){
-				return i;
-			};
-		};
-		return AT_NULL_INDEX;
-	};
-
-	bool LexAnalyser::isNewFunc(char* name){
-		return this->getAt()->getInfo()->isNewFunction(name);
+		return this->auxTable_->getFuncIndex(name);
 	};
 
 	int LexAnalyser::getAtIndex(char* name, char* funcName){
-		int rc = this->getAt()->getIndex(name, funcName);
-
+		int rc = this->auxTable_->getIndex(name, funcName);
 		if (rc == AT_NULL_INDEX && !isNewFunc(name)) rc = getFuncIndex(name);
-
 		return rc;
 	};
 
 	int LexAnalyser::getAtSize(){
-		return this->getAt()->getSize();
+		return this->auxTable_->getSize();
 	};
 
 	int LexAnalyser::getLtSize(){
-		return this->getLt()->getSize();
+		return this->lexTable_->getSize();
 	};
 
-	char* LexAnalyser::getFuncName(AT::DATATYPE type){
-		return this->getAt()->getInfo()->getFuncName(type);
+	int LexAnalyser::getDataType(char** arrOfLines, int i){
+		int rc = AT::SERVICE::ERROR_VALUE;
+		std::vector<char*>::iterator firstIt;
+		std::vector<AT::DATATYPE>::iterator secondIt;
+
+		if (this->getElemLt(this->getLtSize() - 1)->getLex() == LEX_OPERATION
+			|| this->getElemLt(this->getLtSize() - 1)->getLex() == LEX_COMPARE){
+				return rc;
+		};
+
+		switch (this->getElemLt(this->getLtSize() - 2)->getLex()){
+		case LEX_COMPARE: case LEX_OPERATION: case LEX_EQUAL:
+		case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:
+			return arrOfLines[i][0] == 'С' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;				// for literals
+			break;
+
+		case LEX_TYPE: return this->getTypeValue(arrOfLines[i - 1]);
+
+		default:
+			return this->getFuncTypeValue(arrOfLines[i]);
+			break;
+		};
+		return rc;
 	};
 
-	AT::DATATYPE LexAnalyser::getType(char* line){
-		return this->getAt()->getInfo()->getType(line);
+	char* LexAnalyser::getPrimTypeName(int primitiveTypeValue){
+		return this->auxTable_->getInfo()->getPrimTypeName(primitiveTypeValue);
 	};
 
-	AT::DATATYPE LexAnalyser::getFuncType(char* line){
-		return this->getAt()->getInfo()->getFuncType(line);
+	char* LexAnalyser::getElemTypeName(int elemTypeValue){
+		return this->auxTable_->getInfo()->getElemTypeName(elemTypeValue);
 	};
 
-	void LexAnalyser::pushToFuncList(char* line, AT::DATATYPE type){
-		this->getAt()->getInfo()->pushFuncName(line);
-		this->getAt()->getInfo()->pushFuncType(type);
+	char* LexAnalyser::getFuncName(int type){
+		return this->auxTable_->getInfo()->getFuncName(type);
 	};
 
-	void LexAnalyser::addElemLt(LT::Element& elem){
-		this->getLt()->addElem(elem);
+	int LexAnalyser::getTypeValue(char* line){
+		return this->auxTable_->getInfo()->getPrimTypeValue(line);
 	};
 
-	void LexAnalyser::addElemAt(AT::Element& elem){
-		this->getAt()->addElem(elem);
+	int LexAnalyser::getFuncTypeValue(char* line){
+		return this->auxTable_->getInfo()->getFuncValue(line);
 	};
 
-	bool LexAnalyser::isIncludedInAT(char* name, char* funcName){
-		return this->getAt()->isIncluded(name, funcName);
-	};
-
-	char* LexAnalyser::getDataName(AT::DATATYPE dataType){
-		return this->getAt()->getInfo()->getName(dataType);
-	};
-
-	char* LexAnalyser::getTypeName(AT::TYPE type){
-		return this->getAt()->getInfo()->getTypeName(type);
-	};
-
-	AT::TYPE LexAnalyser::getElemType(char* line){
-		AT::TYPE rc = AT::TYPE::U;
+	int LexAnalyser::getElemTypeValue(char* line){
+		int rc = AT::SERVICE::ERROR_VALUE;
 		std::vector<char*>::iterator firstIt;
 
 		switch (this->getElemLt(this->getLtSize() - 1)->getLex())
@@ -105,7 +94,7 @@ namespace LA{
 				if (this->getElemLt(this->getLtSize() - 2)->getLex() == LEX_TYPE){
 					return AT::TYPE::V;
 				}
-				else if (this->getAt()->getInfo()->getFuncType(line) != AT::DATATYPE::UNKNOWN){
+				else if (this->auxTable_->getInfo()->getFuncValue(line) != AT::SERVICE::ERROR_VALUE){
 					return AT::TYPE::F;
 				};
 				break;
@@ -117,29 +106,24 @@ namespace LA{
 		return rc;
 	};
 
-	AT::DATATYPE LexAnalyser::getDataType(char** arrOfLines, int i){
-		AT::DATATYPE rc = AT::DATATYPE::UNKNOWN;
-		std::vector<char*>::iterator firstIt;
-		std::vector<AT::DATATYPE>::iterator secondIt;
+	void LexAnalyser::pushToFuncList(char* line, int type){
+		this->auxTable_->getInfo()->pushFunc(line, type);
+	};
 
-		if (this->getElemLt(this->getLtSize() - 1)->getLex() == LEX_OPERATION
-			|| this->getElemLt(this->getLtSize() - 1)->getLex() == LEX_COMPARE){
-				return AT::DATATYPE::UNKNOWN;
-		};
+	void LexAnalyser::addElemLt(LT::Element& elem){
+		this->lexTable_->addElem(elem);
+	};
 
-		switch (this->getElemLt(this->getLtSize() - 2)->getLex()){
-		case LEX_COMPARE: case LEX_OPERATION: case LEX_EQUAL:
-		case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:
-			return arrOfLines[i][0] == 'С' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;				// дл€ литералов
-			break;
+	void LexAnalyser::addElemAt(AT::Element& elem){
+		this->auxTable_->addElem(elem);
+	};
 
-		case LEX_TYPE: return this->getType(arrOfLines[i - 1]);
+	bool LexAnalyser::isIncludedInAt(char* name, char* funcName){
+		return this->auxTable_->isIncluded(name, funcName);
+	};
 
-		default:
-			return this->getFuncType(arrOfLines[i]);
-			break;
-		};
-		return rc;
+	bool LexAnalyser::isNewFunc(char* name){
+		return this->auxTable_->getInfo()->isNewFunction(name);
 	};
 
 	void LexAnalyser::execute(int size, LOG::Log* log, IN::In* in){
@@ -180,15 +164,15 @@ namespace LA{
 					case LEX_NEW_LINE:	lineNumber++; break;
 
 					case LEX_IDENTIFIER:
-						if (this->getElemType(in->getLine(chainNumber)) == AT::TYPE::F
+						if (this->getElemTypeValue(in->getLine(chainNumber)) == AT::TYPE::F
 							&& this->isNewFunc(in->getLine(chainNumber))){
 								strncpy_s(funcName, in->getLine(chainNumber), AT_NAME_MAXSIZE - 1);
 								this->pushToFuncList(in->getLine(chainNumber), this->getDataType(in->getArr(), chainNumber));
 						}
-						if (!this->isIncludedInAT(in->getLine(chainNumber), funcName)){		// isincludedfunc?
+						if (!this->isIncludedInAt(in->getLine(chainNumber), funcName)){		// isincludedfunc?
 							elemAt.setElem(this, funcName, in->getArr(), chainNumber);
 							this->addElemAt(elemAt);
-							if (elemAt.getType() == AT::TYPE::U)
+							if (elemAt.getType() == AT::SERVICE::ERROR_VALUE)
 								throw ERROR_THROW_FULL(203, in->getLine(chainNumber), lineNumber, -1);
 						};
 						this->getElemLt(chainNumber)->setIndex(this->getAtIndex(in->getLine(chainNumber), funcName));
