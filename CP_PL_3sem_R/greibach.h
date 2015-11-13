@@ -78,4 +78,4 @@ namespace Greibach{
 		GRALPHABET			stackBottom_;
 		Rule*				rules_;
 	};
-}
+};

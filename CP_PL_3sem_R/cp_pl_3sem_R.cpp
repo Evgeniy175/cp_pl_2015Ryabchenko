@@ -1,5 +1,5 @@
 // by Evgeniy Ryabchenko
-// TODO: 
+// TODO: NULL_STR â stdafx.h
 
 #include "stdafx.h"
 #include "cp_pl_3sem_R.h"

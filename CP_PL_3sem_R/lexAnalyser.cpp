@@ -153,7 +153,7 @@ namespace LA{
 		int	 literalCounter = 0;
 		int  operationCounter = 0;
 		int  compareCounter = 0;
-		char funcName[AT_NAME_MAXSIZE];				// function name
+		char funcName[AT_NAME_MAXSIZE];					// function name
 
 		log->writeLine("---Начало работы КА---", "");
 

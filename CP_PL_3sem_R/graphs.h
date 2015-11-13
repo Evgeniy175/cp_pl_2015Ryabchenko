@@ -101,7 +101,7 @@
 	/* 1 */ new FST::NODE(1, new FST::RELATION('f', 2)), \
 	/* 2 */ new FST::NODE()
 
-#define GRAPH_ID 1, \
+#define GRAPH_IDENTIFICATOR 1, \
 	/* 0 */ new FST::NODE(0, 1, "abcdefghijklmnopqrstuvwxyz_"), \
 	/* 1 */ new FST::NODE()
 

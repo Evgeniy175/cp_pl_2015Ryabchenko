@@ -68,8 +68,7 @@ namespace AT{			// auxiliary table namespace
 	};
 
 	enum COMPARE{
-		OTHER = 0,
-		EQUAL,				// == equal
+		EQUAL = 0,			// == equal
 		EQUAL_OR_GREATER,	// >= equal or greater than
 		EQUAL_OR_LESS,		// <= equal or less than
 		NOT_EQUAL,			// != not equal
@@ -78,10 +77,9 @@ namespace AT{			// auxiliary table namespace
 	};
 
 	enum OPERATION{
-		NOT_ALLOWED = 0,
-		PLUS,				// +
+		PLUS = 0,				// +
 		MINUS,				// -
-		MULTIPLY,			// *
+		MULTIPLY,				// *
 		DIVIDE				// /
 	};
 

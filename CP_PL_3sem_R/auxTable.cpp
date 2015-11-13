@@ -92,19 +92,23 @@ namespace AT{
 	COMPARE Info::getCompareValue(char* name){
 		std::vector<char*>::iterator firstIt = this->compareName_.begin();
 		std::vector<COMPARE>::iterator secondIt = this->compareValue_.begin();
-		for (; firstIt != this->compareName_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, name)) return *secondIt;
+
+		while (strcmp(*firstIt, name)){
+			firstIt++;
+			secondIt++;
 		};
-		return COMPARE::OTHER;
+		return *secondIt;
 	};
 
 	OPERATION Info::getOperationValue(char* name){
 		std::vector<char*>::iterator firstIt = this->operationName_.begin();
 		std::vector<OPERATION>::iterator secondIt = this->operationValue_.begin();
-		for (; firstIt != this->operationName_.end(); firstIt++, secondIt++){
-			if (!strcmp(*firstIt, name)) return *secondIt;
+
+		while (strcmp(*firstIt, name)){
+			firstIt++;
+			secondIt++;
 		};
-		return OPERATION::NOT_ALLOWED;
+		return *secondIt;
 	};
 
 	bool Info::isNewFunction(char* name){

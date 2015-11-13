@@ -1,3 +1,5 @@
+#pragma once
+
 #include "greibach.h"
 
 #define GREIBACH_ERROR_SERIES 300
