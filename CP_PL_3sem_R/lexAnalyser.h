@@ -18,31 +18,77 @@ namespace LA{
 	public:
 		LexAnalyser();
 		
-		LT::Element*	getElemLt(int i);											// return lexTable element(i)
-		AT::Element*	getElemAt(int i);											// return auxTable element(i)
-		int				getDataType(char** arrOfLines, int chainNumber);			// return data type of arrOfLines[chainNumber]
-		int				getAtSize();												// return auxTable size
-		int				getLtSize();												// return lexTable size
-		int				getAtIndex(char* name, char* funcName);						// return index from auxTable for name & funcName
-		int				getFuncIndex(char* name);									// return function index in auxTable
+						/*return lexTable element(i)*/
+		LT::Element*	getElemLt(int i);
+
+						/*return auxTable element(i)*/
+		AT::Element*	getElemAt(int i);
+
+						/*return data type of arrOfLines[chainNumber]*/
+		int				getDataType(char** arrOfLines, int chainNumber);
+
+						/*return auxTable size*/
+		int				getAtSize();
+
+						/*return lexTable size*/
+		int				getLtSize();
+
+						/*return index from auxTable for name & funcName*/
+		int				getAtIndex(char* name, char* funcName);
+
+						/*return function index in auxTable*/
+		int				getFuncIndex(char* name);
 		
-		char*			getPrimTypeName(int primitiveTypeValue);					// return name of primitive data type
-		char*			getElemTypeName(int elemTypeValue);							// return name of element type
-		char*			getFuncName(int funcValue);									// return name of function
+						/*return name of primitive data type value*/
+		char*			getPrimTypeName(int primitiveTypeValue);
+
+						/*return name of element type value*/
+		char*			getElemTypeName(int elemTypeValue);
+
+						/*return name of function value*/
+		char*			getFuncName(int funcValue);
+
+						/*return name of compare value*/
 		char*			getCompareName(int compareValue);
+
+						/*return name of operation value*/
 		char			getOperationName(int operationValue);
-		int				getTypeValue(char* name);									// return type value of type name
-		int				getFuncTypeValue(char* name);								// return function type value of function name
-		int				getElemTypeValue(char* name);								// return element type value of element name
+
+						/*return value of type name*/
+		int				getTypeValue(char* name);
+
+						/*return value of function name*/
+		int				getFuncTypeValue(char* name);
+
+						/*return value of element type name*/
+		int				getElemTypeValue(char* name);
+
+						/*return value of compare name*/
 		int				getCompareValue(char* name);
+		
+						/*return value of operation name*/
 		int				getOperationValue(char* name);
 
-		void			addElemLt(LT::Element& elem);								// add element into lexTable
-		void			addElemAt(AT::Element& elem);								// add element into auxTable
+						/*add element into lexTable*/
+		void			addElemLt(LT::Element& elem);
+		
+						/*add element into auxTable*/
+		void			addElemAt(AT::Element& elem);
 
-		bool			isNewFunc(char* name);										// is new function?
-		bool			isIncludedInAt(char* name, char* funcName, char lexeme = 'M');					// element is included into auxTable?
-		void			pushToFuncList(char* line, int type);						// add function to functions vector
+						/*is new function?*/
+		bool			isNewFunc(char* name);
+						
+						/*is element included into auxiliary table?*/
+		bool			isIncludedInAt(char* name,
+							char* funcName,
+							char lexeme = 'M');
+
+						/*add function to functions vector;
+						line - function name
+						type - function data type*/
+		void			pushToFuncList(char* line, int type);
+
+						/*execute lexeme analyser*/
 		void			execute(int size, LOG::Log* log, IN::In* in);
 
 		~LexAnalyser();

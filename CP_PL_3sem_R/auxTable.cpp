@@ -237,7 +237,7 @@ namespace AT{
   	};
 
 	void Element::reset(){
-		memset(this->name_, -52, AT_NAME_MAXSIZE);
+		memset(this->name_, LT_NULL_LEX, AT_NAME_MAXSIZE);
 		this->dataType_ = SERVICE::ERROR_VALUE;
 		this->type_ = SERVICE::ERROR_VALUE;
 		this->ltIndex_ = AT_NULL_INDEX;
