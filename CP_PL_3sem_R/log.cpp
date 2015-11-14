@@ -101,7 +101,7 @@ namespace LOG
 		*(this->stream_) << std::endl << std::endl;
 	};
 
-	void Log::writeLt(LA::LexAnalyser* la){
+	void Log::writeLt(LA::LexAnalyzer* la){
 		int currentLineNumber = 0;
 
 		*(this->stream_) << std::endl << "---Lexeme table start---"
@@ -136,7 +136,7 @@ namespace LOG
 		*(this->stream_) << "---Lexeme table end---" << std::endl;
 	};
 
-	void Log::writeAt(LA::LexAnalyser* la){
+	void Log::writeAt(LA::LexAnalyzer* la){
 		char lexeme;
 
 		*(this->stream_) << std::endl << std::endl << "---Auxiliary table start---"
@@ -152,7 +152,7 @@ namespace LOG
 			*(this->stream_) << i << '\t'
 				<< std::setw(AT_NAME_MAXSIZE) << std::left << la->getElemAt(i)->getName()
 				<< '\t' << std::setw(AT_NAME_MAXSIZE) << std::left
-				<< la->getElemAt(i)->getFuncName() << '\t'
+				<< la->getElemAt(i)->getFunctionName() << '\t'
 				<< la->getPrimTypeName(la->getElemAt(i)->getDataType()) << "\t\t"
 				<< la->getElemTypeName(la->getElemAt(i)->getType());
 

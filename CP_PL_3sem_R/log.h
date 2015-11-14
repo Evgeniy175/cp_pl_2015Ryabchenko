@@ -2,7 +2,7 @@
 
 #include "errors.h"
 #include "in.h"
-#include "lexAnalyser.h"
+#include "lexAnalyzer.h"
 #include "compiler.h"
 #include "time.h"
 #include <iomanip>
@@ -13,7 +13,7 @@
 #define SIZE_CHAR_ARRAY 256
 
 namespace CP{ class Compiler; };
-namespace LA{ class LexAnalyser; };
+namespace LA{ class LexAnalyzer; };
 namespace IN{ class In; };
 
 namespace LOG{
@@ -36,8 +36,8 @@ namespace LOG{
 		void 			writeCp(CP::Compiler* cp);			// write path's of input file to a file
 		void 			writeIn(IN::In* in);				// write info about input data to a file
 		void 			writeError(ERROR::Error* error);	// write error to a file
-		void 			writeLt(LA::LexAnalyser* la);		// write lexeme table to a file
-		void 			writeAt(LA::LexAnalyser* la);		// write auxiliary table to a file
+		void 			writeLt(LA::LexAnalyzer* la);		// write lexeme table to a file
+		void 			writeAt(LA::LexAnalyzer* la);		// write auxiliary table to a file
 
 		void close();										// close a stream
 

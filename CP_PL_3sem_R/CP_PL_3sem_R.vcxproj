@@ -88,7 +88,7 @@
     <ClInclude Include="greibach.h" />
     <ClInclude Include="greibachGrammar.h" />
     <ClInclude Include="in.h" />
-    <ClInclude Include="lexAnalyser.h" />
+    <ClInclude Include="lexAnalyzer.h" />
     <ClInclude Include="lexTable.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="mfst.h" />
@@ -104,7 +104,7 @@
     <ClCompile Include="auxTable.cpp" />
     <ClCompile Include="greibach.cpp" />
     <ClCompile Include="in.cpp" />
-    <ClCompile Include="lexAnalyser.cpp" />
+    <ClCompile Include="lexAnalyzer.cpp" />
     <ClCompile Include="lexTable.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="path.cpp" />

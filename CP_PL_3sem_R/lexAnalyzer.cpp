@@ -1,36 +1,46 @@
 #include "stdafx.h"
-#include "lexAnalyser.h"
+#include "lexAnalyzer.h"
 
 namespace LA{
-	LexAnalyser::LexAnalyser(){}
+	LexAnalyzer::LexAnalyzer(){}
 
-	LT::Element* LexAnalyser::getElemLt(int i){
+	LT::Element* LexAnalyzer::getElemLt(int i){
 		return this->lexTable_->getElem(i);
 	};
 
-	AT::Element* LexAnalyser::getElemAt(int i){
+	AT::Element* LexAnalyzer::getElemAt(int i){
 		return this->auxTable_->getElem(i);
 	};
 
-	int LexAnalyser::getFuncIndex(char* name){
-		return this->auxTable_->getFuncIndex(name);
+	int LexAnalyzer::getFunctionIndex(char* name){
+		return this->auxTable_->getFunctionIndex(name);
 	};
 
-	int LexAnalyser::getAtIndex(char* name, char* funcName){
+	int LexAnalyzer::getAtIndex(char* value, AT::TYPE type){
+		switch (type){
+		case AT::TYPE::L: return this->auxTable_->getLiteralIndex(value);
+		case AT::TYPE::O: return this->auxTable_->getOperationIndex(value);
+		case AT::TYPE::C: return this->auxTable_->getCompareIndex(value);
+		default: break;
+		};
+		return AT_NULL_INDEX;
+	};
+
+	int LexAnalyzer::getAtIndex(char* name, char* funcName){
 		int rc = this->auxTable_->getIndex(name, funcName);
-		if (rc == AT_NULL_INDEX && !isNewFunc(name)) rc = getFuncIndex(name);
+		if (rc == AT_NULL_INDEX && !isNewFunc(name)) rc = getFunctionIndex(name);
 		return rc;
 	};
 
-	int LexAnalyser::getAtSize(){
+	int LexAnalyzer::getAtSize(){
 		return this->auxTable_->getSize();
 	};
 
-	int LexAnalyser::getLtSize(){
+	int LexAnalyzer::getLtSize(){
 		return this->lexTable_->getSize();
 	};
 
-	int LexAnalyser::getDataType(char** arrOfLines, int i){
+	int LexAnalyzer::getDataType(char** arrOfLines, int i){
 		int rc = AT::SERVICE::ERROR_VALUE;
 		std::vector<char*>::iterator firstIt;
 		std::vector<AT::DATATYPE>::iterator secondIt;
@@ -55,35 +65,35 @@ namespace LA{
 		return rc;
 	};
 
-	char* LexAnalyser::getPrimTypeName(int primitiveTypeValue){
+	char* LexAnalyzer::getPrimTypeName(int primitiveTypeValue){
 		return this->auxTable_->getInfo()->getPrimTypeName(primitiveTypeValue);
 	};
 
-	char* LexAnalyser::getElemTypeName(int elemTypeValue){
+	char* LexAnalyzer::getElemTypeName(int elemTypeValue){
 		return this->auxTable_->getInfo()->getElemTypeName(elemTypeValue);
 	};
 
-	char* LexAnalyser::getFuncName(int type){
-		return this->auxTable_->getInfo()->getFuncName(type);
+	char* LexAnalyzer::getFuncName(int type){
+		return this->auxTable_->getInfo()->getFunctionName(type);
 	};
 
-	char* LexAnalyser::getCompareName(int compareValue){
+	char* LexAnalyzer::getCompareName(int compareValue){
 		return this->auxTable_->getInfo()->getCompareName(compareValue);
 	};
 
-	char LexAnalyser::getOperationName(int operationValue){
+	char LexAnalyzer::getOperationName(int operationValue){
 		return this->auxTable_->getInfo()->getOperationName(operationValue);
 	};
 
-	int LexAnalyser::getTypeValue(char* line){
+	int LexAnalyzer::getTypeValue(char* line){
 		return this->auxTable_->getInfo()->getPrimTypeValue(line);
 	};
 
-	int LexAnalyser::getFuncTypeValue(char* line){
-		return this->auxTable_->getInfo()->getFuncValue(line);
+	int LexAnalyzer::getFuncTypeValue(char* line){
+		return this->auxTable_->getInfo()->getFunctionValue(line);
 	};
 
-	int LexAnalyser::getElemTypeValue(char* line){
+	int LexAnalyzer::getElemTypeValue(char* line){
 		int rc = AT::SERVICE::ERROR_VALUE;
 		std::vector<char*>::iterator firstIt;
 
@@ -102,7 +112,7 @@ namespace LA{
 				if (this->getElemLt(this->getLtSize() - 2)->getLex() == LEX_TYPE){
 					return AT::TYPE::V;
 				}
-				else if (this->auxTable_->getInfo()->getFuncValue(line) != AT::SERVICE::ERROR_VALUE){
+				else if (this->auxTable_->getInfo()->getFunctionValue(line) != AT::SERVICE::ERROR_VALUE){
 					return AT::TYPE::F;
 				};
 				break;
@@ -114,35 +124,48 @@ namespace LA{
 		return rc;
 	};
 
-	int LexAnalyser::getCompareValue(char* name){
+	int LexAnalyzer::getCompareValue(char* name){
 		return this->auxTable_->getInfo()->getCompareValue(name);
 	};
 
-	int LexAnalyser::getOperationValue(char* name){
+	int LexAnalyzer::getOperationValue(char* name){
 		return this->auxTable_->getInfo()->getOperationValue(name);
 	};
 
-	void LexAnalyser::pushToFuncList(char* line, int type){
-		this->auxTable_->getInfo()->pushToFuncList(line, type);
+	void LexAnalyzer::pushToFuncList(char* line, int type){
+		this->auxTable_->getInfo()->pushToFunctionList(line, type);
 	};
 
-	void LexAnalyser::addElemLt(LT::Element& elem){
+	void LexAnalyzer::addElemLt(LT::Element& elem){
 		this->lexTable_->addElem(elem);
 	};
 
-	void LexAnalyser::addElemAt(AT::Element& elem){
+	void LexAnalyzer::addElemAt(AT::Element& elem){
 		this->auxTable_->addElem(elem);
 	};
 
-	bool LexAnalyser::isIncludedInAt(char* name, char* funcName, char lexeme){
-		return this->auxTable_->isIncluded(name, funcName, lexeme);
+	bool LexAnalyzer::isIncluded(char* name, AT::TYPE type){
+		switch (type){
+		case AT::TYPE::L: return this->auxTable_->getLiteralIndex(name)
+									!= AT_NULL_INDEX ? true : false;
+		case AT::TYPE::O: return this->auxTable_->getOperationIndex(name)
+									!= AT_NULL_INDEX ? true : false;
+		case AT::TYPE::C: return this->auxTable_->getCompareIndex(name)
+									!= AT_NULL_INDEX ? true : false;
+		default: break;
+		};
+		return false;
 	};
 
-	bool LexAnalyser::isNewFunc(char* name){
+	bool LexAnalyzer::isIncluded(char* name, char* funcName){
+		return this->auxTable_->getIndex(name, funcName) != AT_NULL_INDEX ? true : false;
+	};
+
+	bool LexAnalyzer::isNewFunc(char* name){
 		return this->auxTable_->getInfo()->isNewFunction(name);
 	};
 
-	void LexAnalyser::execute(int size, LOG::Log* log, IN::In* in){
+	void LexAnalyzer::execute(int size, LOG::Log* log, IN::In* in){
 		this->lexTable_ = new LT::Table(size);
 		this->auxTable_ = new AT::Table(size);
 		FST::FST fst[] = FST_ARRAY;
@@ -185,7 +208,7 @@ namespace LA{
 								strncpy_s(funcName, in->getLine(chainNumber), AT_NAME_MAXSIZE - 1);
 								this->pushToFuncList(in->getLine(chainNumber), this->getDataType(in->getArr(), chainNumber));
 						}
-						if (!this->isIncludedInAt(in->getLine(chainNumber), funcName)){		// isincludedfunc?
+						if (!this->isIncluded(in->getLine(chainNumber), funcName)){		// isincludedfunc?
 							elemAt.setElem(this, funcName, in->getArr(), chainNumber);
 							this->addElemAt(elemAt);
 							if (elemAt.getType() == AT::SERVICE::ERROR_VALUE)
@@ -194,24 +217,28 @@ namespace LA{
 						this->getElemLt(chainNumber)->setIndex(this->getAtIndex(in->getLine(chainNumber), funcName));
 						break;
 
-					case LEX_LITERAL: // туду: не добавлять повторно литерал
-						if (!this->isIncludedInAt(in->getLine(chainNumber), funcName)){
+					case LEX_LITERAL:
+						if (!this->isIncluded(in->getLine(chainNumber), AT::TYPE::L)){
 							elemAt.setElem(this, funcName, in->getArr(), chainNumber, literalCounter++);
 							this->addElemAt(elemAt);
 						};
-						this->getElemLt(chainNumber)->setIndex(this->getAtSize() - 1); //setIndex(this->getAtIndex(in->getLine(chainNumber), funcName));
+						this->getElemLt(chainNumber)->setIndex(this->getAtIndex(in->getLine(chainNumber), AT::TYPE::L));
 						break;
 
 					case LEX_OPERATION:
-						elemAt.setElem(this, funcName, in->getArr(), chainNumber, operationCounter++);
-						this->addElemAt(elemAt);
-						this->getElemLt(chainNumber)->setIndex(this->getAtSize() - 1);
+						if (!this->isIncluded(in->getLine(chainNumber), AT::TYPE::O)){
+							elemAt.setElem(this, funcName, in->getArr(), chainNumber, operationCounter++);
+							this->addElemAt(elemAt);
+						};
+						this->getElemLt(chainNumber)->setIndex(this->getAtIndex(in->getLine(chainNumber), AT::TYPE::O));
 						break;
 
 					case LEX_COMPARE:
-						elemAt.setElem(this, funcName, in->getArr(), chainNumber, compareCounter++);
-						this->addElemAt(elemAt);
-						this->getElemLt(chainNumber)->setIndex(this->getAtSize() - 1);
+						if (!this->isIncluded(in->getLine(chainNumber), AT::TYPE::C)){
+							elemAt.setElem(this, funcName, in->getArr(), chainNumber, compareCounter++);
+							this->addElemAt(elemAt);
+						};
+						this->getElemLt(chainNumber)->setIndex(this->getAtIndex(in->getLine(chainNumber), AT::TYPE::C));
 						break;
 
 					default: break;
@@ -227,7 +254,7 @@ namespace LA{
 		log->writeLine("---Конец работы КА---", "");
 	};
 
-	LexAnalyser::~LexAnalyser(){
+	LexAnalyzer::~LexAnalyzer(){
 		delete this->lexTable_;
 		delete this->auxTable_;
 	};

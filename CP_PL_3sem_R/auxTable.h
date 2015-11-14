@@ -1,5 +1,5 @@
 #pragma once
-#include "lexAnalyser.h"
+#include "lexAnalyzer.h"
 #include "errors.h"
 #include <vector>
 
@@ -31,7 +31,7 @@
 #define AT_OPERATIONS_SIZE	4
 #define AT_OPERATIONS_NAMES	{ "+", "-", "*", "/" }
 
-namespace LA { class LexAnalyser; };
+namespace LA { class LexAnalyzer; };
 
 namespace AT{		// auxiliary table namespace
 	enum SERVICE{		// service enum for universal values
@@ -59,7 +59,7 @@ namespace AT{		// auxiliary table namespace
 	public:
 		Info();
 					/*return name of function*/
-		char*		getFuncName(int);
+		char*		getFunctionName(int);
 
 					/*return name of type*/
 		char*		getElemTypeName(int);
@@ -74,7 +74,7 @@ namespace AT{		// auxiliary table namespace
 		char*		getPrimTypeName(int);
 
 					/*return DATATYPE value for function*/
-		int			getFuncValue(char* name);
+		int			getFunctionValue(char* name);
 
 					/*return TYPE value for type name*/
 		int			getElemTypeValue(char* name);
@@ -89,7 +89,7 @@ namespace AT{		// auxiliary table namespace
 		int			getPrimTypeValue(char* name);
 
 					/*push this name & type to function list*/
-		void		pushToFuncList(char* name, int type);
+		void		pushToFunctionList(char* name, int type);
 
 					/*name is a new function?*/
 		bool		isNewFunction(char* name);
@@ -117,21 +117,21 @@ namespace AT{		// auxiliary table namespace
 		int		getType();						// return element type
 		int		getDataType();					// return element data type
 		char*	getName();						// return element name
-		char*	getFuncName();					// return function name
+		char*	getFunctionName();					// return function name
 		int		getIndex();						// return lexTable index
 		int		getNumVal();					// return element num value
 		char*	getLineVal();					// return element line value
 
 		void	setIndex(int value);			// set lexTable index
 		void	setName(char* name);			// set element name
-		void	setFuncName(char* name);		// set element function name
+		void	setFunctionName(char* name);		// set element function name
 		void	setValue(						// set element value
 					char lexeme,
 					char* line = NULL_STR);
 		void	setNumVal(int value);			// set num element value
 		void	setLineVal(char* value);		// set line element value
 		void	setElem(						// set element
-					LA::LexAnalyser*	la,				// lexTable
+					LA::LexAnalyzer*	la,				// lexTable
 					char*				funcName,		// function name
 					char**				arrOfLines,		// array of lines
 					int&				i,				// chain index number
@@ -162,15 +162,16 @@ namespace AT{		// auxiliary table namespace
 		Info*					getInfo();									// return all names and types of functions, primitive types etc.
 		Element*				getElem(int index);							// return element by index
 		int						getSize();									// return size of auxiliary table
-		int						getFuncIndex(char* name);					// return function index in auxTable
+		int						getFunctionIndex(char* name);					// return function index in auxTable
+		int						getIndex(char* name, char* funcName);		// return index of element from auxiliary table
 		int						getLiteralDataType(char* line);
+		int						getLiteralIndex(char* value);
+		int						getOperationIndex(char* value);
+		int						getCompareIndex(char* value);
 
 		char					getOperation(int value);
 
 		void					addElem(Element& elem);						// add element to auxiliary table
-
-		bool					isIncluded(char* name, char* funcName, char lexeme);		// is name&funcName element included into auxiliary table?
-		int						getIndex(char* name, char* funcName);		// return index of element from auxiliary table
 
 		~Table();
 

@@ -9,7 +9,7 @@ namespace CP{
 		wcscpy_s(this->logPath_, filesPath.getLog());
 		this->log_ = new LOG::Log(this->logPath_);
 		this->in_ = new IN::In();
-		this->la_ = new LA::LexAnalyser();
+		this->la_ = new LA::LexAnalyzer();
 		this->writeCp();
 	};
 
@@ -75,7 +75,7 @@ namespace CP{
 		return this->getLa()->getAtSize();
 	};
 
-	LA::LexAnalyser* Compiler::getLa(){
+	LA::LexAnalyzer* Compiler::getLa(){
 		return this->la_;
 	};
 

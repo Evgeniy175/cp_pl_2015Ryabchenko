@@ -2,7 +2,7 @@
 
 #include "errors.h"
 #include "log.h"
-#include "lexAnalyser.h"
+#include "lexAnalyzer.h"
 #include "in.h"
 #include "path.h"
 #include <cwchar>
@@ -11,7 +11,7 @@
 #include <list>
 #include <stack>
 
-namespace LA{ class LexAnalyser; };
+namespace LA{ class LexAnalyzer; };
 namespace LT{ class Table; class Element; };
 namespace IN{ class In; };
 namespace LOG{ class Log; };
@@ -28,7 +28,7 @@ namespace CP{
 		wchar_t*			getInName();
 		wchar_t*			getOutName();
 		wchar_t*			getLogName();
-		LA::LexAnalyser*	getLa();							// return LexAnalyser
+		LA::LexAnalyzer*	getLa();							// return LexAnalyser
 		IN::In*				getIn();
 		LOG::Log*			getLog();
 		int					getLtSize();						// return lexTable size
@@ -68,6 +68,6 @@ namespace CP{
 		wchar_t				logPath_[PATH_MAX_NAMESIZE];		// path of a out file
 		LOG::Log*			log_;								// write log into file
 		IN::In*				in_;								// in for read a file
-		LA::LexAnalyser*	la_;								// lexAnalyser
+		LA::LexAnalyzer*	la_;								// lexAnalyser
 	};
 };

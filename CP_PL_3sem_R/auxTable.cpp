@@ -39,7 +39,7 @@ namespace AT{
 			? this->primTypes_[value].name_ : "unknown";
 	};
 
-	char* Info::getFuncName(int value){
+	char* Info::getFunctionName(int value){
 		return (value < static_cast<int> (this->functions_.size()) && value >= NULL)
 			? this->functions_[value].name_ : NULL_STR;
 	};
@@ -69,7 +69,7 @@ namespace AT{
 		return SERVICE::ERROR_VALUE;
 	};
 
-	int Info::getFuncValue(char* name){
+	int Info::getFunctionValue(char* name){
 		std::vector<Element>::iterator it = this->functions_.begin();
 		for (; it != this->functions_.end(); it++){
 			if (!strcmp(*(&it->name_), name)){
@@ -110,10 +110,10 @@ namespace AT{
 	};
 
 	bool Info::isNewFunction(char* name){
-		return getFuncValue(name) == SERVICE::ERROR_VALUE ? true : false;
+		return getFunctionValue(name) == SERVICE::ERROR_VALUE ? true : false;
 	};
 
-	void Info::pushToFuncList(char* name, int type){
+	void Info::pushToFunctionList(char* name, int type){
 		this->functions_.push_back(Element(name, type));
 	};
 
@@ -132,7 +132,7 @@ namespace AT{
 		return this->name_;
 	};
 
-	char* Element::getFuncName(){
+	char* Element::getFunctionName(){
 		return this->funcName_;
 	};
 
@@ -160,7 +160,7 @@ namespace AT{
 		strncpy_s(this->name_, name, AT_NAME_MAXSIZE - 1);
 	};
 
-	void Element::setFuncName(char* name){
+	void Element::setFunctionName(char* name){
 		strncpy_s(this->funcName_, name, AT_NAME_MAXSIZE - 1);
 	};
 
@@ -176,13 +176,13 @@ namespace AT{
 			memset(this->value_.lineValue_, AT_ARR_MAXSIZE, 'M');
 	};
 
-	void Element::setElem(LA::LexAnalyser* la, char* funcName,
+	void Element::setElem(LA::LexAnalyzer* la, char* funcName,
 		char** arrOfLines, int& i, int counter){
 		char lexeme = la->getElemLt(la->getLtSize() - 1)->getLex();
 		this->ltIndex_ = la->getLtSize() - 1;
 		this->dataType_ = la->getDataType(arrOfLines, i);
 		this->type_ = lexeme == LEX_BEGIN ? TYPE::F : la->getElemTypeValue(arrOfLines[i]);
-		this->setFuncName(funcName);
+		this->setFunctionName(funcName);
 		switch (lexeme){
 		case LEX_LITERAL:
 			_itoa_s(counter++, this->name_, 10);
@@ -259,7 +259,7 @@ namespace AT{
 		this->table_ = new Element[maxSize];
 	}
 
-	int Table::getFuncIndex(char* name){
+	int Table::getFunctionIndex(char* name){
 		for (int i = 0; i < this->size_; i++){
 			if (!strcmp(this->table_[i].getName(), name)){
 				return i;
@@ -292,45 +292,65 @@ namespace AT{
 		this->table_[this->size_++] = elem;
 	};
 
-	bool Table::isIncluded(char* name, char* funcName, char lexeme){
-		char tempName[AT_NAME_MAXSIZE];
-		char tempFuncName[AT_NAME_MAXSIZE];
-
-		if (this->size_ == NULL) return false;
-
-		strncpy_s(tempName, name, AT_NAME_MAXSIZE - 1);
-		strncpy_s(tempFuncName, funcName, AT_NAME_MAXSIZE - 1);
-
-		if (lexeme == LEX_LITERAL){
-			if (this->getLiteralDataType(tempName) == DATATYPE::LINE){
-				name = createStrVal(tempName);
-			};
-			for (int i = 0; i < this->size_; i++){
-				if (this->table_[i].getType() == TYPE::L
-					&& !strcmp(this->table_[i].getLineVal(), name)
-					&& !strcmp(this->table_[i].getFuncName(), tempFuncName)){
-						return true;
-				};
-			};
-		}
-		else{
-			for (int i = 0; i < size_; i++){
-				if ((!strcmp(this->table_[i].getName(), tempName)
-					&& !strcmp(this->table_[i].getFuncName(), tempFuncName))
-					|| (!strcmp(this->table_[i].getFuncName(), tempName))){
-						return true;
-				};
-			};
-		};
-		return false;
-	};
-
 	int Table::getIndex(char* name, char* funcName){
-		if (this->size_ == NULL) return -1;
+		if (this->size_ == NULL) return AT_NULL_INDEX;
 
 		for (int i = 0; i < this->size_; i++){
 			if (!strcmp(this->table_[i].getName(), name)
-				&& !strcmp(this->table_[i].getFuncName(), funcName)){
+				&& (!strcmp(this->table_[i].getFunctionName(), funcName)
+				|| !strcmp(this->table_[i].getFunctionName(), name))){
+						return i;
+			};
+		};
+		return AT_NULL_INDEX;
+	};
+
+	int Table::getLiteralIndex(char* value){
+		char* tempValue;
+
+		if (this->size_ == NULL) return AT_NULL_INDEX;
+
+		if (this->getLiteralDataType(value) == DATATYPE::LINE){
+			tempValue = createStrVal(value);
+		}
+		else tempValue = value;
+
+		for (int i = 0; i < this->size_; i++){
+			if (this->table_[i].getType() == TYPE::L
+				&& (!strcmp(this->table_[i].getLineVal(), tempValue)
+					|| atoi(tempValue) == this->table_[i].getNumVal())){
+						return i;
+			};
+		};
+		return AT_NULL_INDEX;
+	};
+
+	int Table::getOperationIndex(char* value){
+		int numValue;
+
+		if (this->size_ == NULL) return AT_NULL_INDEX;
+
+		numValue = this->getInfo()->getOperationValue(value);
+
+		for (int i = 0; i < this->size_; i++){
+			if (this->table_[i].getType() == TYPE::O
+				&& this->table_[i].getNumVal() == numValue){
+					return i;
+			};
+		};
+		return AT_NULL_INDEX;
+	};
+
+	int Table::getCompareIndex(char* value){
+		int numValue;
+
+		if (this->size_ == NULL) return AT_NULL_INDEX;
+
+		numValue = this->getInfo()->getCompareValue(value);
+
+		for (int i = 0; i < this->size_; i++){
+			if (this->table_[i].getType() == TYPE::C
+				&& this->table_[i].getNumVal() == numValue){
 					return i;
 			};
 		};
