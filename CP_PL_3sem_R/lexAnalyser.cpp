@@ -43,7 +43,7 @@ namespace LA{
 		switch (this->getElemLt(this->getLtSize() - 2)->getLex()){
 		case LEX_COMPARE: case LEX_OPERATION: case LEX_EQUAL:
 		case LEX_COMMA: case LEX_OPEN_SQBRACE: case LEX_RETURN:
-			return arrOfLines[i][0] == '‘' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;				// for literals
+			return this->auxTable_->getLiteralDataType(arrOfLines[i]);				// for literals
 			break;
 
 		case LEX_TYPE: return this->getTypeValue(arrOfLines[i - 1]);
@@ -65,6 +65,14 @@ namespace LA{
 
 	char* LexAnalyser::getFuncName(int type){
 		return this->auxTable_->getInfo()->getFuncName(type);
+	};
+
+	char* LexAnalyser::getCompareName(int compareValue){
+		return this->auxTable_->getInfo()->getCompareName(compareValue);
+	};
+
+	char LexAnalyser::getOperationName(int operationValue){
+		return this->auxTable_->getInfo()->getOperationName(operationValue);
 	};
 
 	int LexAnalyser::getTypeValue(char* line){
@@ -106,6 +114,14 @@ namespace LA{
 		return rc;
 	};
 
+	int LexAnalyser::getCompareValue(char* name){
+		return this->auxTable_->getInfo()->getCompareValue(name);
+	};
+
+	int LexAnalyser::getOperationValue(char* name){
+		return this->auxTable_->getInfo()->getOperationValue(name);
+	};
+
 	void LexAnalyser::pushToFuncList(char* line, int type){
 		this->auxTable_->getInfo()->pushToFuncList(line, type);
 	};
@@ -118,8 +134,8 @@ namespace LA{
 		this->auxTable_->addElem(elem);
 	};
 
-	bool LexAnalyser::isIncludedInAt(char* name, char* funcName){
-		return this->auxTable_->isIncluded(name, funcName);
+	bool LexAnalyser::isIncludedInAt(char* name, char* funcName, char lexeme){
+		return this->auxTable_->isIncluded(name, funcName, lexeme);
 	};
 
 	bool LexAnalyser::isNewFunc(char* name){
@@ -178,10 +194,12 @@ namespace LA{
 						this->getElemLt(chainNumber)->setIndex(this->getAtIndex(in->getLine(chainNumber), funcName));
 						break;
 
-					case LEX_LITERAL:
-						elemAt.setElem(this, funcName, in->getArr(), chainNumber, literalCounter++);
-						this->addElemAt(elemAt);
-						this->getElemLt(chainNumber)->setIndex(this->getAtSize() - 1);
+					case LEX_LITERAL: // туду: не добавлять повторно литерал
+						if (!this->isIncludedInAt(in->getLine(chainNumber), funcName)){
+							elemAt.setElem(this, funcName, in->getArr(), chainNumber, literalCounter++);
+							this->addElemAt(elemAt);
+						};
+						this->getElemLt(chainNumber)->setIndex(this->getAtSize() - 1); //setIndex(this->getAtIndex(in->getLine(chainNumber), funcName));
 						break;
 
 					case LEX_OPERATION:

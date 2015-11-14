@@ -10,7 +10,6 @@
 #define AT_NUM_DEFAULT		0xffffffff		// default value for num
 #define AT_LINE_DEFAULT		0x00			// default value for line
 #define AT_NULL_INDEX		0xffffffff		// default value for index
-#define AT_NULL_OTHER_VALUE	"M"				// default value for operation
 #define AT_PREFIX_LITERAL	"L"				// prefix of literal
 #define AT_PREFIX_OPERATION	"O"				// prefix of operation
 #define AT_PREFIX_COMPARE	"C"				// prefix of compare
@@ -69,7 +68,7 @@ namespace AT{		// auxiliary table namespace
 		char*		getCompareName(int);
 
 					/*return name of operation*/
-		char*		getOperationName(int);
+		char		getOperationName(int);
 
 					/*return name of primitive data type*/
 		char*		getPrimTypeName(int);
@@ -122,8 +121,6 @@ namespace AT{		// auxiliary table namespace
 		int		getIndex();						// return lexTable index
 		int		getNumVal();					// return element num value
 		char*	getLineVal();					// return element line value
-		char*	getOtherVal();					// return element other value
-		char	getOperation();					// return element operation value
 
 		void	setIndex(int value);			// set lexTable index
 		void	setName(char* name);			// set element name
@@ -133,7 +130,6 @@ namespace AT{		// auxiliary table namespace
 					char* line = NULL_STR);
 		void	setNumVal(int value);			// set num element value
 		void	setLineVal(char* value);		// set line element value
-		void	setOtherVal(char* value);		// set element other value
 		void	setElem(						// set element
 					LA::LexAnalyser*	la,				// lexTable
 					char*				funcName,		// function name
@@ -155,7 +151,6 @@ namespace AT{		// auxiliary table namespace
 		struct {
 			int		numValue_;							// field for numerical values
 			char	lineValue_[AT_ARR_MAXSIZE];			// field for line values
-			char	otherValue_[AT_ARR_MAXSIZE];		// field for other values
 		} value_;								// element value
 	};
 
@@ -168,10 +163,13 @@ namespace AT{		// auxiliary table namespace
 		Element*				getElem(int index);							// return element by index
 		int						getSize();									// return size of auxiliary table
 		int						getFuncIndex(char* name);					// return function index in auxTable
+		int						getLiteralDataType(char* line);
+
+		char					getOperation(int value);
 
 		void					addElem(Element& elem);						// add element to auxiliary table
 
-		bool					isIncluded(char* name, char* funcName);		// is name&funcName element included into auxiliary table?
+		bool					isIncluded(char* name, char* funcName, char lexeme);		// is name&funcName element included into auxiliary table?
 		int						getIndex(char* name, char* funcName);		// return index of element from auxiliary table
 
 		~Table();

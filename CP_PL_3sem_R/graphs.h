@@ -105,7 +105,7 @@
 	/* 0 */ new FST::NODE(0, 1, "abcdefghijklmnopqrstuvwxyz_"), \
 	/* 1 */ new FST::NODE()
 
-#define GRAPH_LITERAL_STRING 3, \
+#define GRAPH_LITERAL_LINE 3, \
 	/* 0 */ new FST::NODE(1, new FST::RELATION('‘', 1)), \
 	/* 1 */ new FST::NODE(1, 2, "abcdefghijklmnopqrstuvwxyz. 0123456789"), \
 	/* 2 */ new FST::NODE(1, new FST::RELATION('’', 3)), \

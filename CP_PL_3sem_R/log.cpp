@@ -6,7 +6,7 @@ namespace LOG
 	Log::Log(wchar_t logFile[]){
 		this->setStream(new std::ofstream(logFile));
 
-		if ((this->getStream())->good())
+		if ((this->stream_)->good())
 			this->setLogFile(logFile);
 
 		else
@@ -19,10 +19,6 @@ namespace LOG
 		return this->logFile_;
 	};
 
-	std::ofstream* Log::getStream(){
-		return this->stream_;
-	};
-
 	void Log::setLogFile(wchar_t* logFile){
 		wcscpy_s(this->logFile_, logFile);
 	};
@@ -32,22 +28,22 @@ namespace LOG
 	}; 
 	
 	void Log::line(char* line){
-		*(this->getStream()) << line;
+		*(this->stream_) << line;
 	};
 
 	void Log::line(wchar_t* line){
-		*(this->getStream()) << line << ' ';
+		*(this->stream_) << line << ' ';
 	};
 
 	void Log::newLine(){
-		*(this->getStream()) << std::endl;
+		*(this->stream_) << std::endl;
 	};
 
 	void Log::writeLine(char* c, ...){
 		char **p = &c;
 
 		for (int i = 0; *(p + i)[0] != NULL_STR; i++)
-			*(this->getStream()) << *(p + i);
+			*(this->stream_) << *(p + i);
 	};
 
 	void Log::writeLine(wchar_t* c, ...){
@@ -58,10 +54,10 @@ namespace LOG
 		for (int i = 0; *(CyclePointer + i)[0] != NULL_STR; i++){
 			wcstombs_s(0, temp, *(CyclePointer + i), sizeof(temp));
 			p = temp;
-			*(this->getStream()) << p << ' ';
+			*(this->stream_) << p << ' ';
 		};
 
-		*(this->getStream()) << std::endl;
+		*(this->stream_) << std::endl;
 	};
 
 	void Log::writeLog(){
@@ -71,79 +67,79 @@ namespace LOG
 		time(&rawtime);
 		localtime_s(&timeinfo, &rawtime);
 		strftime(buf, sizeof(buf), "%d.%m.%Y  %H:%M:%S", &timeinfo);
-		*(this->getStream()) << "--- Протокол ---" << std::endl << "Дата:  " << buf << std::endl;
+		*(this->stream_) << "--- Протокол ---" << std::endl << "Дата:  " << buf << std::endl;
 	};
 
 	void Log::writeCp(CP::Compiler* cp){
-		*(this->getStream()) << std::endl << "---Параметры---" << std::endl << "-log: ";
+		*(this->stream_) << std::endl << "---Параметры---" << std::endl << "-log: ";
 		writeLine(cp->getLogName());
-		*(this->getStream()) << "-out: ";
+		*(this->stream_) << "-out: ";
 		writeLine(cp->getOutName());
-		*(this->getStream()) << "-in: ";
+		*(this->stream_) << "-in: ";
 		writeLine(cp->getInName());
-		*(this->getStream()) << std::endl;
+		*(this->stream_) << std::endl;
 	};
 
 	void Log::writeIn(IN::In* in){
-		*(this->getStream()) << "---Исходные данные---" << std::endl
+		*(this->stream_) << "---Исходные данные---" << std::endl
 			<< "Количество символов: "	<< in->getSizeCounter()	 << std::endl
 			<< "Проигнорировано: "		<< in->getIgnorCounter() << std::endl 
 			<< "Количество строк: "		<< in->getLinesCounter() << std::endl << std::endl;
 	};
 
 	void Log::writeError(ERROR::Error* error){
-		*(this->getStream()) << std::endl << "Ошибка " << error->getId() << ": " 
+		*(this->stream_) << std::endl << "Ошибка " << error->getId() << ": " 
 			<< error->getMessage();
 
 		if (error->getPosition()->getLine() != -1)
-			*(this->getStream()) << " строка " << error->getPosition()->getLine();
+			*(this->stream_) << " строка " << error->getPosition()->getLine();
 
 		if (error->getPosition()->getLinePosition() != -1)
-			*(this->getStream()) << ", позиция "
+			*(this->stream_) << ", позиция "
 				<< error->getPosition()->getLinePosition();
 
-		*(this->getStream()) << std::endl << std::endl;
+		*(this->stream_) << std::endl << std::endl;
 	};
 
 	void Log::writeLt(LA::LexAnalyser* la){
 		int currentLineNumber = 0;
 
-		*(this->getStream()) << std::endl << "---Lexeme table start---"
+		*(this->stream_) << std::endl << "---Lexeme table start---"
 			<< std::endl << "Size: " << la->getLtSize() << std::endl << std::endl
 			<< "NUMBER\t\t" << "LEXEME\t\t" << "LINE\t\t" << "AUX_INDEX\t\t"
 			<< "PARAMETER_COUNTER"<< std::endl;
 
 		for (int i = 0; i < la->getLtSize(); i++){
-			*(this->getStream()) << i << "\t\t";
+			*(this->stream_) << i << "\t\t";
 			
 			if (la->getElemLt(i)->getLex() != LT_NULL_LEX)
-				*(this->getStream()) << la->getElemLt(i)->getLex() << "\t\t";
+				*(this->stream_) << la->getElemLt(i)->getLex() << "\t\t";
 			else
-				*(this->getStream()) << "null\t\t";
+				*(this->stream_) << "null\t\t";
 
 			if (la->getElemLt(i)->getLine() >= NULL)
-				*(this->getStream()) << la->getElemLt(i)->getLine() << "\t\t";
+				*(this->stream_) << la->getElemLt(i)->getLine() << "\t\t";
 			else
-				*(this->getStream()) << "null\t\t";
+				*(this->stream_) << "null\t\t";
 
 			if (la->getElemLt(i)->getIndex() >= NULL)
-				*(this->getStream()) << la->getElemLt(i)->getIndex() << "\t\t\t";
+				*(this->stream_) << la->getElemLt(i)->getIndex() << "\t\t\t";
 			else
-				*(this->getStream()) << "null\t\t\t";
+				*(this->stream_) << "null\t\t\t";
 
 			if (la->getElemLt(i)->getParmCount() > NULL)
-				*(this->getStream()) << la->getElemLt(i)->getParmCount() << std::endl;
+				*(this->stream_) << la->getElemLt(i)->getParmCount() << std::endl;
 			else
-				*(this->getStream()) << "null" << std::endl;
+				*(this->stream_) << "null" << std::endl;
 		};
 
-		*(this->getStream()) << "---Lexeme table end---" << std::endl;
+		*(this->stream_) << "---Lexeme table end---" << std::endl;
 	};
 
 	void Log::writeAt(LA::LexAnalyser* la){
 		char lexeme;
 
-		*(this->getStream()) << std::endl << std::endl << "---Auxiliary table start---"
+		*(this->stream_) << std::endl << std::endl << "---Auxiliary table start---"
 			<< std::endl << "Size: "
 			<< la->getAtSize() << std::endl << std::endl << "NUMBER\t"
 			<< std::setw(AT_NAME_MAXSIZE) << std::left << "NAME"
@@ -153,35 +149,40 @@ namespace LOG
 		for (int i = 0; i < la->getAtSize(); i++){
 			lexeme = la->getElemLt(la->getElemAt(i)->getIndex())->getLex();
 
-			*(this->getStream()) << i << '\t'
+			*(this->stream_) << i << '\t'
 				<< std::setw(AT_NAME_MAXSIZE) << std::left << la->getElemAt(i)->getName()
 				<< '\t' << std::setw(AT_NAME_MAXSIZE) << std::left
 				<< la->getElemAt(i)->getFuncName() << '\t'
 				<< la->getPrimTypeName(la->getElemAt(i)->getDataType()) << "\t\t"
 				<< la->getElemTypeName(la->getElemAt(i)->getType());
 
-			*(this->getStream()) << '\t' << la->getElemAt(i)->getIndex() << "\t\t";
+			*(this->stream_) << '\t' << la->getElemAt(i)->getIndex() << "\t\t";
 
 			if (lexeme == LEX_LITERAL){		//TODO: фция
 				if (la->getElemAt(i)->getDataType() == AT::DATATYPE::NUM)
-					*(this->getStream()) << la->getElemAt(i)->getNumVal();
+					*(this->stream_) << la->getElemAt(i)->getNumVal();
  
 				else if (la->getElemAt(i)->getDataType() == AT::DATATYPE::LINE)
-					*(this->getStream()) << la->getElemAt(i)->getLineVal();
+					*(this->stream_) << la->getElemAt(i)->getLineVal();
  			}
-			else if (lexeme == LEX_OPERATION || lexeme == LEX_COMPARE){
-				*(this->getStream()) << la->getElemAt(i)->getOtherVal();
+			else if (lexeme == LEX_OPERATION){
+				*(this->stream_) << la->getOperationName(la->getElemAt(i)->getNumVal());
 			}
- 			else *(this->getStream()) << "none";
+			else if (lexeme == LEX_COMPARE){
+				*(this->stream_) << la->getCompareName(la->getElemAt(i)->getNumVal());
+			}
+ 			else *(this->stream_) << "none";
 
-			*(this->getStream()) << std::endl;
+			*(this->stream_) << std::endl;
 		};
 
-		*(this->getStream()) << "---Auxiliary table end---";
+		*(this->stream_) << "---Auxiliary table end---";
 	};
 
 	void Log::close(){
-		this->getStream()->close();
+		if (this != nullptr){
+			this->stream_->close();
+		};
 	};
 
 	Log::~Log(){

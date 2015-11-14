@@ -29,15 +29,19 @@ namespace LA{
 		char*			getPrimTypeName(int primitiveTypeValue);					// return name of primitive data type
 		char*			getElemTypeName(int elemTypeValue);							// return name of element type
 		char*			getFuncName(int funcValue);									// return name of function
+		char*			getCompareName(int compareValue);
+		char			getOperationName(int operationValue);
 		int				getTypeValue(char* name);									// return type value of type name
 		int				getFuncTypeValue(char* name);								// return function type value of function name
 		int				getElemTypeValue(char* name);								// return element type value of element name
+		int				getCompareValue(char* name);
+		int				getOperationValue(char* name);
 
 		void			addElemLt(LT::Element& elem);								// add element into lexTable
 		void			addElemAt(AT::Element& elem);								// add element into auxTable
 
 		bool			isNewFunc(char* name);										// is new function?
-		bool			isIncludedInAt(char* name, char* funcName);					// element is included into auxTable?
+		bool			isIncludedInAt(char* name, char* funcName, char lexeme = 'M');					// element is included into auxTable?
 		void			pushToFuncList(char* line, int type);						// add function to functions vector
 		void			execute(int size, LOG::Log* log, IN::In* in);
 

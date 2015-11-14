@@ -51,7 +51,7 @@ namespace PATH{
 	};
 
 	void Path::initialExecute(int linesNumber, wchar_t* lines[]){
-		if (linesNumber < 1){
+		if (linesNumber < 2){
 			throw ERROR_THROW(100);
 		}
 		else{

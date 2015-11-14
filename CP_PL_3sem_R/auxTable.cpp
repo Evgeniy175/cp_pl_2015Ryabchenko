@@ -54,9 +54,9 @@ namespace AT{
 			? this->compares_[value].name_ : NULL_STR;
 	};
 
-	char* Info::getOperationName(int value){
+	char Info::getOperationName(int value){
 		return (value < static_cast<int> (this->operations_.size()) && value >= NULL)
-			? this->operations_[value].name_ : NULL_STR;
+			? this->operations_[value].name_[0] : NULL_STR;
 	};
 
 	int Info::getPrimTypeValue(char* name){
@@ -144,14 +144,6 @@ namespace AT{
 		return this->value_.lineValue_;
 	};
 
-	char* Element::getOtherVal(){
-		return this->value_.otherValue_;
-	};
-
-	char Element::getOperation(){
-		return this->value_.otherValue_[0];
-	};
-
 	int Element::getType(){
 		return this->type_;
 	};
@@ -184,10 +176,6 @@ namespace AT{
 			memset(this->value_.lineValue_, AT_ARR_MAXSIZE, 'M');
 	};
 
-	void Element::setOtherVal(char* value){
-		strcpy_s(this->value_.otherValue_, value);
-	};
-
 	void Element::setElem(LA::LexAnalyser* la, char* funcName,
 		char** arrOfLines, int& i, int counter){
 		char lexeme = la->getElemLt(la->getLtSize() - 1)->getLex();
@@ -210,13 +198,13 @@ namespace AT{
 		case LEX_OPERATION:
 			_itoa_s(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_PREFIX_OPERATION);
-			setValue(lexeme, arrOfLines[i]);
+			this->setNumVal(la->getOperationValue(arrOfLines[i]));
 			break;
 
 		case  LEX_COMPARE:
 			_itoa_s(counter++, this->name_, 10);
 			addPrefix(this->name_, AT_PREFIX_COMPARE);
-			setValue(lexeme, arrOfLines[i]);
+			this->setNumVal(la->getCompareValue(arrOfLines[i]));
 			break;
 
 		default: break;
@@ -244,7 +232,6 @@ namespace AT{
 			};
 			break;
 
-		case LEX_OPERATION: case LEX_COMPARE: this->setOtherVal(line); break;
 		default: break;
 		};
   	};
@@ -256,7 +243,6 @@ namespace AT{
 		this->ltIndex_ = AT_NULL_INDEX;
 		this->setNumVal(AT_NUM_DEFAULT);
 		this->setLineVal(AT_LINE_DEFAULT);
-		this->setOtherVal(AT_NULL_OTHER_VALUE);
 	};
 
 	Table::Table(){
@@ -294,22 +280,46 @@ namespace AT{
 		return this->size_;
 	};
 
+	int Table::getLiteralDataType(char* line){
+		return line[0] == '‘' ? AT::DATATYPE::LINE : AT::DATATYPE::NUM;
+	};
+
+	char Table::getOperation(int value){
+		return this->getInfo()->getOperationName(value);
+	};
+
 	void Table::addElem(Element& elem){
 		this->table_[this->size_++] = elem;
 	};
 
-	bool Table::isIncluded(char* name, char* funcName){
+	bool Table::isIncluded(char* name, char* funcName, char lexeme){
 		char tempName[AT_NAME_MAXSIZE];
 		char tempFuncName[AT_NAME_MAXSIZE];
-		strncpy_s(tempName, name, AT_NAME_MAXSIZE - 1);
-		strncpy_s(tempFuncName, funcName, AT_NAME_MAXSIZE - 1);
+
 		if (this->size_ == NULL) return false;
 
-		for (int i = 0; i < size_; i++){
-			if ((!strcmp(this->table_[i].getName(), tempName)
-				&& !strcmp(this->table_[i].getFuncName(), tempFuncName))
-				|| (!strcmp(this->table_[i].getFuncName(), tempName))){
-					return true;
+		strncpy_s(tempName, name, AT_NAME_MAXSIZE - 1);
+		strncpy_s(tempFuncName, funcName, AT_NAME_MAXSIZE - 1);
+
+		if (lexeme == LEX_LITERAL){
+			if (this->getLiteralDataType(tempName) == DATATYPE::LINE){
+				name = createStrVal(tempName);
+			};
+			for (int i = 0; i < this->size_; i++){
+				if (this->table_[i].getType() == TYPE::L
+					&& !strcmp(this->table_[i].getLineVal(), name)
+					&& !strcmp(this->table_[i].getFuncName(), tempFuncName)){
+						return true;
+				};
+			};
+		}
+		else{
+			for (int i = 0; i < size_; i++){
+				if ((!strcmp(this->table_[i].getName(), tempName)
+					&& !strcmp(this->table_[i].getFuncName(), tempFuncName))
+					|| (!strcmp(this->table_[i].getFuncName(), tempName))){
+						return true;
+				};
 			};
 		};
 		return false;
@@ -324,7 +334,7 @@ namespace AT{
 					return i;
 			};
 		};
-		return -1;
+		return AT_NULL_INDEX;
 	};
 
 	Table::~Table(){
@@ -341,7 +351,7 @@ namespace AT{
 
 	char* createStrVal(char* line){
 		char* rc = new char;
-		strncpy(rc, line + 1, static_cast<int> (strlen(line)) - 2); // due to 2	quotes
+		strncpy(rc, line + 1, static_cast<int> (strlen(line)) - 2); // -2 due to 2	quotes
 		rc[static_cast<int> (strlen(line)) - 2] = NULL_STR;
 		return rc;
 	};

@@ -128,7 +128,13 @@ namespace CP{
 	};
 
 	void Compiler::writeError(ERROR::Error* error){
-		this->log_->writeError(error);
+		if (this->log_ != nullptr){
+			this->log_->writeError(error);
+		}
+		else{
+			this->log_ = new LOG::Log(L"errors.txt");
+			this->log_->writeError(error);
+		};
 	};
 
 	void Compiler::writeLt(){
@@ -195,14 +201,14 @@ namespace CP{
 				}
 				else{
 					while (stack.size() != NULL
-						&& (getPriority(this->getElemAt(this->getElemLt(position)->getIndex())->getOperation())
-						<= getPriority(this->getElemAt(stack.top()->getIndex())->getOperation()))){
+						&& (getPriority(this->la_->getOperationName(this->getElemAt(this->getElemLt(position)->getIndex())->getNumVal()))
+						<= getPriority(this->la_->getOperationName(this->getElemAt(stack.top()->getIndex())->getNumVal())))){
 							exitArr.push_back(*(stack.top()));
 							stack.pop();
 					};
 					if (stack.size() == NULL
-						|| (getPriority(this->getElemAt(this->getElemLt(position)->getIndex())->getOperation())
-						> getPriority(this->getElemAt(stack.top()->getIndex())->getOperation()))){
+						|| (getPriority(this->la_->getOperationName(this->getElemAt(this->getElemLt(position)->getIndex())->getNumVal()))
+						> getPriority(this->la_->getOperationName(this->getElemAt(stack.top()->getIndex())->getNumVal())))){
 							stack.push(this->getElemLt(position));
 					};
 				};
