@@ -54,13 +54,7 @@
     <ClInclude Include="path.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="greibach.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="greibachGrammar.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="mfst.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="lexAnalyzer.h">
@@ -96,9 +90,6 @@
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="path.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="greibach.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="lexAnalyzer.cpp">

@@ -193,11 +193,12 @@ namespace LA{
 					this->addElemLt(elemLt);
 
 					switch (LT::getLex(i)){
-					case LEX_BEGIN:
+					case LEX_BEGIN:			// проверка на одну точку входа, иначе - throw
 						strncpy_s(funcName, in->getLine(chainNumber), 
 								  static_cast<int> (strlen(in->getLine(chainNumber))));
 						elemAt.setElem(this, funcName, in->getArr(), chainNumber);
 						this->addElemAt(elemAt);
+						this->getElemLt(chainNumber)->setIndex(this->getAtSize() - 1);
 						break;
 
 					case LEX_NEW_LINE:	lineNumber++; break;
